@@ -1,3 +1,26 @@
 {
-  "extends": "next/core-web-vitals"
+  "root": true,
+  "env": { "browser": true, "es6": true },
+  "extends": [
+    "plugin:@typescript-eslint/strict-type-checked",
+    "plugin:@typescript-eslint/stylistic-type-checked",
+    "next/core-web-vitals",
+    "next"
+  ],
+  "plugins": ["@typescript-eslint"],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
+  "rules": {
+    "@typescript-eslint/no-unused-vars": "warn",
+    "@typescript-eslint/explicit-function-return-type": "warn",
+    "@typescript-eslint/consistent-type-definitions": ["warn", "type"],
+    "@typescript-eslint/no-confusing-void-expression": [
+      "error",
+      {
+        "ignoreArrowShorthand": true
+      }
+    ]
+  }
 }
