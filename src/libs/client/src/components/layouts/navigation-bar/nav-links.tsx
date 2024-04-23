@@ -16,18 +16,20 @@ const navLinks = cva("", {
 export type NavLinksProps = React.ComponentProps<"div"> &
   VariantProps<typeof navLinks> & {
     routesArr: NavLinkArr;
+    rootPathname: string;
   };
 
 export default function NavLinks({
   device,
   routesArr,
   className,
+  rootPathname,
   ...props
 }: NavLinksProps): React.ReactElement {
   return (
     <div className={cn(navLinks({ device }), className)} {...props}>
       {routesArr.map((value, i) => (
-        <NavLink routeObj={value} key={i} device={device} />
+        <NavLink routeObj={value} key={i} device={device} rootPathname={rootPathname} />
       ))}
     </div>
   );
