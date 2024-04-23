@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { GeistSans } from "geist/font/sans";
+import { ReactElement } from "react";
+import NavBar from "../libs/client/src/components/layouts/navigation-bar/nav-bar";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -11,10 +13,15 @@ export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) {
+}>): ReactElement {
   return (
     <html lang="en" className={GeistSans.variable}>
-      <body suppressHydrationWarning={true}>{children}</body>
+      <body suppressHydrationWarning={true}>
+        <main>
+          <NavBar />
+          {children}
+        </main>
+      </body>
     </html>
   );
 }
