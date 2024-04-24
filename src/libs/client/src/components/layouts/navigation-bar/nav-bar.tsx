@@ -7,8 +7,8 @@ import NavBarRight from "./nav-bar-right";
 import NavMenu from "./nav-menu";
 import Hamburger from "@/client/components/ui/icons/hamburger";
 import Close from "@/client/components/ui/icons/close";
-import { cn, containerStyleClasses } from "@/client/utils";
 import { usePathname } from "next/navigation";
+import Container from "../../ui/container";
 
 const navLinkArr = [
   { name: "Home", path: "/" },
@@ -41,7 +41,7 @@ export default function NavBar(): React.ReactElement {
 
   return (
     <nav className="relative w-full shadow-lg">
-      <div className={cn("flex items-center justify-between py-2", containerStyleClasses)}>
+      <Container className="flex items-center justify-between py-2">
         <div>
           <Logo className="hidden md:block" onClick={() => setShowMobileMenu(false)} />
           {showMobileMenu ? (
@@ -59,7 +59,7 @@ export default function NavBar(): React.ReactElement {
         </div>
 
         <NavBarRight routesArr={navAuthLinkArr} />
-      </div>
+      </Container>
       {showMobileMenu ? (
         <NavMenu className="block md:hidden" onClick={() => setShowMobileMenu(false)}>
           <NavLinks device={"mobile"} routesArr={navLinkArr} rootPathname={rootPathname} />
