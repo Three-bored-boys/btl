@@ -1,5 +1,5 @@
 import { ReactElement } from "react";
 
-export default function HomePage(): ReactElement {
+export default function LoginPage(): ReactElement {
   return <main className="text-3xl">Home</main>;
 }
