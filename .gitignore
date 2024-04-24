@@ -38,3 +38,6 @@ next-env.d.ts
 # vscode
 .vscode/*
 !.vscode/settings.json
+
+# others
+todo.txt
