@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { GeistSans } from "geist/font/sans";
 import { ReactElement } from "react";
+import Providers from "./providers";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -16,7 +17,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={GeistSans.variable}>
       <body suppressHydrationWarning={true}>
-        <main>{children}</main>
+        <Providers>
+          <main>{children}</main>
+        </Providers>
       </body>
     </html>
   );
