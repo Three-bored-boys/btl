@@ -4,60 +4,55 @@ import { genres } from "../../data/genres.json";
 import { GoogleBooksService } from "../../services/google.service";
 import { NYTimesService } from "../../services/ny-times.service";
 
-const books = new Hono();
+const books = new Hono()
+  .get(
+    "/best-sellers",
+    cache({
+      cacheName: "best-sellers",
+      cacheControl: "public, max-age=172800, s-maxage=17280", // Cache for 2 days
+    }),
+    async (c) => {
+      const nytService = new NYTimesService(process.env.NY_TIMES_BOOKS_API_KEY);
+      const bestSellers = await nytService.getBestSellers();
 
-books.get(
-  "/best-sellers",
-  cache({
-    cacheName: "best-sellers",
-    cacheControl: "public, max-age=172800, s-maxage=17280" // Cache for 2 days
-  }),
-  async (c) => {
-    const nytService = new NYTimesService(process.env.NY_TIMES_BOOKS_API_KEY);
-    const bestSellers = await nytService.getBestSellers();
+      return c.json({ bestSellers });
+    },
+  )
+  .get("/genres", (c) => {
+    return c.json({ genres, count: genres.length });
+  })
+  .get("/genres/:genre", async (c) => {
+    const genre = c.req.param("genre");
 
-    return c.json({ bestSellers });
-  }
-);
+    if (!genre) {
+      return c.json({ error: "Genre is required" }, { status: 400 });
+    }
 
-books.get("/genres", async (c) => {
-  return c.json({ genres, count: genres.length });
-});
+    const googleBooksService = new GoogleBooksService(process.env.GOOGLE_BOOKS_API_KEY);
+    const books = await googleBooksService.getBooksByGenre(genre);
 
-books.get("/genres/:genre", async (c) => {
-  const genre = c.req.param("genre");
+    return c.json({ books });
+  })
+  .get("/:isbn", async (c) => {
+    const isbn = c.req.param("isbn");
+    if (!isbn) {
+      return c.json({ error: "ISBN is required" }, { status: 400 });
+    }
 
-  if (!genre) {
-    return c.json({ error: "Genre is required" }, { status: 400 });
-  }
+    const googleBooksService = new GoogleBooksService(process.env.GOOGLE_BOOKS_API_KEY);
+    const book = await googleBooksService.getBookByISBN(isbn);
 
-  const googleBooksService = new GoogleBooksService(process.env.GOOGLE_BOOKS_API_KEY);
-  const books = await googleBooksService.getBooksByGenre(genre);
+    if (!book) {
+      return c.json({ error: "Book not found" }, { status: 404 });
+    }
 
-  return c.json({ books });
-});
+    return c.json({ book });
+  })
+  .get("/latest-books", async (c) => {
+    const googleBooksService = new GoogleBooksService(process.env.GOOGLE_BOOKS_API_KEY);
+    const books = await googleBooksService.getLatestBooks();
 
-books.get("/:isbn", async (c) => {
-  const isbn = c.req.param("isbn");
-  if (!isbn) {
-    return c.json({ error: "ISBN is required" }, { status: 400 });
-  }
-
-  const googleBooksService = new GoogleBooksService(process.env.GOOGLE_BOOKS_API_KEY);
-  const book = await googleBooksService.getBookByISBN(isbn);
-
-  if (!book) {
-    return c.json({ error: "Book not found" }, { status: 404 });
-  }
-
-  return c.json({ book });
-});
-
-books.get("/latest-books", async (c) => {
-  const googleBooksService = new GoogleBooksService(process.env.GOOGLE_BOOKS_API_KEY);
-  const books = await googleBooksService.getLatestBooks();
-
-  return c.json({ books });
-});
+    return c.json({ books });
+  });
 
 export default books;
