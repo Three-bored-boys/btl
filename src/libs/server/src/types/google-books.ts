@@ -1,10 +1,10 @@
-export interface GoogleBooksResponse {
+export type GoogleBooksResponse = {
   kind: string;
   totalItems: number;
   items: Item[];
 }
 
-interface Item {
+type Item = {
   kind: string;
   id: string;
   etag: string;
@@ -14,7 +14,7 @@ interface Item {
   accessInfo: AccessInfo;
 }
 
-interface VolumeInfo {
+type VolumeInfo = {
   title: string;
   authors: string[];
   publisher?: string;
@@ -38,27 +38,27 @@ interface VolumeInfo {
   ratingsCount?: number;
 }
 
-interface IndustryIdentifier {
+type IndustryIdentifier = {
   type: string;
   identifier: string;
 }
 
-interface ReadingModes {
+type ReadingModes = {
   text: boolean;
   image: boolean;
 }
 
-interface PanelizationSummary {
+type PanelizationSummary = {
   containsEpubBubbles: boolean;
   containsImageBubbles: boolean;
 }
 
-interface ImageLinks {
+type ImageLinks = {
   smallThumbnail: string;
   thumbnail: string;
 }
 
-interface SaleInfo {
+type SaleInfo = {
   country: string;
   saleability: string;
   isEbook: boolean;
@@ -67,17 +67,17 @@ interface SaleInfo {
   buyLink?: string;
 }
 
-interface ListPrice {
+type ListPrice = {
   amount: number;
   currencyCode: string;
 }
 
-interface RetailPrice {
+type RetailPrice = {
   amount: number;
   currencyCode: string;
 }
 
-interface AccessInfo {
+type AccessInfo = {
   country: string;
   viewability: string;
   embeddable: boolean;
@@ -90,11 +90,11 @@ interface AccessInfo {
   quoteSharingAllowed: boolean;
 }
 
-interface Epub {
+type Epub = {
   isAvailable: boolean;
   acsTokenLink?: string;
 }
 
-interface Pdf {
+type Pdf = {
   isAvailable: boolean;
 }

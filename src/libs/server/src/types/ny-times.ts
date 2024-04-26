@@ -1,26 +1,26 @@
-export interface NYTimesBestSellersResponse {
+export type NYTimesBestSellersResponse = {
   status: string;
   copyright: string;
   num_results: number;
   results: Results;
 }
 
-interface Results {
+type Results = {
   bestsellers_date: string;
   published_date: string;
   lists: List[];
 }
 
-interface List {
+type List = {
   list_id: number;
   list_name: string;
   display_name: string;
   updated: string;
   list_image: string;
-  books: Book[];
+  books: BookResponse[];
 }
 
-interface Book {
+type BookResponse = {
   age_group: string;
   amazon_product_url: string;
   article_chapter_link: string;
@@ -48,7 +48,7 @@ interface Book {
   buy_links: BuyLink[];
 }
 
-export interface BuyLink {
+export type BuyLink = {
   name: string;
   url: string;
 }
