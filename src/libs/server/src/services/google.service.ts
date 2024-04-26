@@ -22,23 +22,23 @@ export class GoogleBooksService {
   private mapBook(item: Item): Book {
     return {
       title: item.volumeInfo.title,
-      author: item.volumeInfo.authors?.join(", ") || "Unknown Author",
-      image: item.volumeInfo.imageLinks?.thumbnail || "",
-      description: item.volumeInfo.description || "No description available",
+      author: item.volumeInfo.authors?.join(", ") ?? "Unknown Author",
+      image: item.volumeInfo.imageLinks?.thumbnail ?? "",
+      description: item.volumeInfo.description ?? "No description available",
       isbn13: this.findIdentifier(item, "ISBN_13"),
       isbn10: this.findIdentifier(item, "ISBN_10"),
-      price: item.saleInfo.retailPrice?.amount || item.saleInfo.listPrice?.amount || 0,
-      priceUnit: item.saleInfo.retailPrice?.currencyCode || "GBP",
-      categories: item.volumeInfo.categories || [],
-      publisher: item.volumeInfo.publisher || "N/A",
+      price: item.saleInfo.retailPrice?.amount ?? item.saleInfo.listPrice?.amount ?? 0,
+      priceUnit: item.saleInfo.retailPrice?.currencyCode ?? "GBP",
+      categories: item.volumeInfo.categories ?? [],
+      publisher: item.volumeInfo.publisher ?? "N/A",
       createdAt: new Date(item.volumeInfo.publishedDate),
-      updatedAt: new Date(item.volumeInfo.publishedDate)
+      updatedAt: new Date(item.volumeInfo.publishedDate),
     };
   }
 
   private findIdentifier(item: Item, type: string): string {
     const identifier = item.volumeInfo.industryIdentifiers?.find((id) => id.type === type);
-    return identifier?.identifier || "";
+    return identifier?.identifier ?? "";
   }
 
   async getBooksByGenre(genre: string): Promise<Book[]> {
