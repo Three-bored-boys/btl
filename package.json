@@ -11,6 +11,7 @@
     "commitlint": "commitlint --edit"
   },
   "dependencies": {
+    "@hono/zod-validator": "^0.2.1",
     "@tanstack/react-query": "^5.32.0",
     "@tanstack/react-query-devtools": "^5.32.0",
     "axios": "^1.6.8",
@@ -21,7 +22,8 @@
     "next": "14.2.1",
     "react": "^18",
     "react-dom": "^18",
-    "tailwind-merge": "^2.3.0"
+    "tailwind-merge": "^2.3.0",
+    "zod": "^3.23.4"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.2.2",
