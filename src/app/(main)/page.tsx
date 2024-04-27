@@ -1,11 +1,8 @@
-"use client";
-
 import Container from "@/libs/client/src/components/ui/container";
-import { ReactElement } from "react";
 import { client } from "@/libs/server/src/hono";
-import { useQuery } from "@tanstack/react-query";
+import type { Book } from "@/libs/server/src/types";
 
-const getBooksByGenre = async function (genre: string) {
+const getBooksByGenreRPC = async function (genre: string) {
   const res = await client.api.books.genres[":genre"].$get({ param: { genre } });
   console.log(res);
   if (!res.ok) {
@@ -16,29 +13,28 @@ const getBooksByGenre = async function (genre: string) {
   return data;
 };
 
-export default function HomePage(): ReactElement {
-  const genre = "Fiction";
-  const { data, error, isLoading } = useQuery({
-    queryKey: ["genres", genre],
-    queryFn: async () => {
-      return await getBooksByGenre(genre);
-    },
-  });
-
-  if (isLoading) {
-    console.log(isLoading);
-    return <main>Loading...</main>;
+const getBooksByGenreFetch = async function (genre: string) {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/books/genres/${genre}`, { cache: "no-store" });
+  if (!res.ok) {
+    const errorMessage = await res.text();
+    throw new Error(errorMessage);
   }
+  const data = (await res.json()) as Book[];
+  return data;
+};
 
-  if (error) {
-    console.log(error);
+export default async function HomePage() {
+  try {
+    const genre = "Fiction";
+    const data = await getBooksByGenreFetch(genre);
+    return (
+      <main className="text-3xl">
+        <Container>{JSON.stringify(data)}</Container>
+      </main>
+    );
+  } catch (e) {
+    const error = e as Error;
+    console.log(error.message);
     return <main>{error.message}</main>;
   }
-
-  console.log(data);
-  return (
-    <main className="text-3xl">
-      <Container>{JSON.stringify(data)}</Container>
-    </main>
-  );
 }
