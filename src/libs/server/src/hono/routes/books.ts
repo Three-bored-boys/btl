@@ -3,6 +3,7 @@ import { cache } from "hono/cache";
 import { genres } from "../../data/genres.json";
 import { GoogleBooksService } from "../../services/google.service";
 import { NYTimesService } from "../../services/ny-times.service";
+import { HTTPException } from "hono/http-exception";
 
 const books = new Hono()
   .get(
@@ -15,6 +16,10 @@ const books = new Hono()
       const nytService = new NYTimesService(process.env.NY_TIMES_BOOKS_API_KEY);
       const bestSellers = await nytService.getBestSellers();
 
+      if (bestSellers.length === 0) {
+        throw new HTTPException(400, { message: "Trouble getting NYT Best Sellers List" });
+      }
+
       return c.json({ bestSellers });
     },
   )
@@ -25,11 +30,15 @@ const books = new Hono()
     const genre = c.req.param("genre");
 
     if (!genre) {
-      return c.json({ error: "Genre is required" }, { status: 400 });
+      throw new HTTPException(400, { message: "Genre is required" });
     }
 
     const googleBooksService = new GoogleBooksService(process.env.GOOGLE_BOOKS_API_KEY);
     const books = await googleBooksService.getBooksByGenre(genre);
+
+    if (books.length === 0) {
+      throw new HTTPException(400, { message: "Trouble getting requested books" });
+    }
 
     return c.json({ books });
   })
@@ -43,7 +52,7 @@ const books = new Hono()
     const book = await googleBooksService.getBookByISBN(isbn);
 
     if (!book) {
-      return c.json({ error: "Book not found" }, { status: 404 });
+      throw new HTTPException(404, { message: "Book not found" });
     }
 
     return c.json({ book });
@@ -51,6 +60,10 @@ const books = new Hono()
   .get("/latest-books", async (c) => {
     const googleBooksService = new GoogleBooksService(process.env.GOOGLE_BOOKS_API_KEY);
     const books = await googleBooksService.getLatestBooks();
+
+    if (books.length === 0) {
+      throw new HTTPException(400, { message: "Trouble getting books" });
+    }
 
     return c.json({ books });
   });
