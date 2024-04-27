@@ -1,9 +1,9 @@
 import React from "react";
 import { cn } from "@/client/utils";
 
-type CloseProps =  React.ComponentProps<"svg">;
+type CloseProps = React.ComponentProps<"svg">;
 
-export default function Close({ className, onClick }: CloseProps): React.ReactElement {
+export default function Close({ className, onClick, ...props }: CloseProps): React.ReactElement {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -13,6 +13,7 @@ export default function Close({ className, onClick }: CloseProps): React.ReactEl
       stroke="currentColor"
       className={cn("h-6 w-6 cursor-pointer", className)}
       onClick={onClick}
+      {...props}
     >
       <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
     </svg>
