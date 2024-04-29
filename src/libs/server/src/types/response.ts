@@ -1,5 +1,6 @@
-export type JSONResponse<T = NonNullable<unknown>> = {
-  success: boolean;
-  error?: string;
-  data?: T;
-};
+export type JSONResponse<T = NonNullable<unknown>> =
+  | {
+      success: true;
+      data: T;
+    }
+  | { success: false; error: string };
