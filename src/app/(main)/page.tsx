@@ -1,33 +1,39 @@
 import Container from "@/libs/client/src/components/ui/container";
-import { client } from "@/libs/server/src/hono";
-import type { Book } from "@/libs/server/src/types";
+import { Book } from "@/libs/server/src/types";
+import { useFetch } from "@/libs/client/src/hooks";
+// import { cache } from "hono/cache";
 
-const getBooksByGenreRPC = async function (genre: string) {
-  const res = await client.api.books.genres[":genre"].$get({ param: { genre: undefined } });
+/* const getBooksByGenreRPC = async function (genre: string) {
+  const res = await client.api.books.genres[":genre"].$get({ param: { genre } });
+  console.log(res.status);
+  console.log(res.ok);
+  const result = await res.json();
+  if (!result.success) {
+    console.log(result.error);
+    throw new Error(result.error);
+  }
+  console.log(result);
+  return result;
+}; */
+
+/* const getBooksByGenreFetch = async function (genre: string) {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/books/genres/${genre}`, { cache: "no-store" });
   console.log({ res });
   console.log(res.ok);
-  /* if (!res.ok) {
-    const errorMessage = await res.text();
-    throw new Error(errorMessage);
-  } */
-  const data = await res.json();
-  return data;
-};
-
-const getBooksByGenreFetch = async function (genre: string) {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/books/genres/${genre}`, { cache: "no-store" });
   if (!res.ok) {
-    const errorMessage = await res.text();
-    throw new Error(errorMessage);
+    const errorMessage = (await res.json()) as { success: false; error: string };
+    console.log(errorMessage.error);
+    throw new Error(`${errorMessage.error} with status of ${res.status.toString()}`);
   }
-  const data = (await res.json()) as Book[];
+  const data = (await res.json()) as { success: true; data: Book[] };
   return data;
-};
+}; */
 
 export default async function HomePage() {
   const genre = "Fiction";
-  const data = await getBooksByGenreRPC(genre);
-  console.log(data);
+  const data = await useFetch<Book[]>(`${process.env.NEXT_PUBLIC_URL}/api/books/genres/${genre}`, {
+    cache: "no-store",
+  });
   return (
     <main className="text-3xl">
       <Container>{JSON.stringify(data)}</Container>
