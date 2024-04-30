@@ -1,33 +1,27 @@
 import { Hono } from "hono";
-// import { cache } from "hono/cache";
 import genres from "../../data/genres.json";
 import { GoogleBooksService } from "../../services/google.service";
 import { NYTimesService } from "../../services/ny-times.service";
-import { HTTPException } from "hono/http-exception";
 import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
-import type { BadResponse, GoodResponse } from "../../types";
+import type { BadResponse, GoodResponse, Genres, BestSeller, Book } from "../../types";
 
 const books = new Hono()
-  .get(
-    "/best-sellers",
-    /*  cache({
-      cacheName: "best-sellers",
-      cacheControl: "public, max-age=172800, s-maxage=17280", // Cache for 2 days
-    }), */
-    async (c) => {
-      const nytService = new NYTimesService(process.env.NY_TIMES_BOOKS_API_KEY);
-      const bestSellers = await nytService.getBestSellers();
+  .get("/best-sellers", async (c) => {
+    const nytService = new NYTimesService(process.env.NY_TIMES_BOOKS_API_KEY);
+    const bestSellers = await nytService.getBestSellers();
 
-      if (bestSellers.length === 0) {
-        throw new HTTPException(400, { message: "Trouble getting NYT Best Sellers List" });
-      }
+    if (bestSellers.length === 0) {
+      const responseData: BadResponse = { success: false, error: "Trouble getting NYT Best Sellers List" };
+      return c.json(responseData, 400);
+    }
 
-      return c.json({ bestSellers });
-    },
-  )
+    const responseData: GoodResponse<BestSeller[]> = { success: true, data: bestSellers };
+    return c.json(responseData);
+  })
   .get("/genres", (c) => {
-    return c.json({ genres, count: genres.length });
+    const responseData: GoodResponse<Genres> = { success: true, data: { genres, count: genres.length } };
+    return c.json(responseData);
   })
   .get(
     "/genres/:genre",
@@ -41,7 +35,7 @@ const books = new Hono()
       }),
       (result, c) => {
         if (!result.success) {
-          const responseData: BadResponse = { success: false, error: "Invalid In" };
+          const responseData: BadResponse = { success: false, error: "Invalid Input" };
           return c.json(responseData, 404);
         }
       },
@@ -49,15 +43,10 @@ const books = new Hono()
     async (c) => {
       const { genre } = c.req.valid("param");
 
-      /*  if (genre === "null" || genre === "undefined") {
-        const responseData: JSONResponse = { success: false, error: "Invalid Input" };
-        return c.json(responseData, 400);
-      } */
-
       const googleBooksService = new GoogleBooksService(process.env.GOOGLE_BOOKS_API_KEY);
       const books = await googleBooksService.getBooksByGenre(genre);
 
-      const responseData: GoodResponse<typeof books> = { success: true, data: books };
+      const responseData: GoodResponse<Book[]> = { success: true, data: books };
 
       return c.json(responseData);
     },
@@ -65,27 +54,32 @@ const books = new Hono()
   .get("/:isbn", async (c) => {
     const isbn = c.req.param("isbn");
     if (!isbn) {
-      return c.json({ error: "ISBN is required" }, { status: 400 });
+      const responseData: BadResponse = { success: false, error: "ISBN is required" };
+      return c.json(responseData, 400);
     }
 
     const googleBooksService = new GoogleBooksService(process.env.GOOGLE_BOOKS_API_KEY);
     const book = await googleBooksService.getBookByISBN(isbn);
 
     if (!book) {
-      throw new HTTPException(404, { message: "Book not found" });
+      const responseData: BadResponse = { success: false, error: "Book not found" };
+      return c.json(responseData, 400);
     }
 
-    return c.json({ book });
+    const responseData: GoodResponse<Book> = { success: true, data: book };
+    return c.json(responseData);
   })
   .get("/latest-books", async (c) => {
     const googleBooksService = new GoogleBooksService(process.env.GOOGLE_BOOKS_API_KEY);
     const books = await googleBooksService.getLatestBooks();
 
     if (books.length === 0) {
-      throw new HTTPException(400, { message: "Trouble getting books" });
+      const responseData: BadResponse = { success: false, error: "Trouble getting books" };
+      return c.json(responseData, 400);
     }
 
-    return c.json({ books });
+    const responseData: GoodResponse<Book[]> = { success: true, data: books };
+    return c.json(responseData);
   });
 
 export default books;
