@@ -1,5 +1,5 @@
 import { ReactElement } from "react";
-import Container from "@/libs/client/src/components/ui/container";
+import Container from "@/libs/client/src/components/layouts/container";
 
 export default function LoginPage(): ReactElement {
   return (

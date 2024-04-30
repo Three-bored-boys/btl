@@ -1,4 +1,4 @@
-import Container from "@/libs/client/src/components/ui/container";
+import Container from "@/libs/client/src/components/layouts/container";
 import { ReactElement } from "react";
 
 export default function SearchPage(): ReactElement {

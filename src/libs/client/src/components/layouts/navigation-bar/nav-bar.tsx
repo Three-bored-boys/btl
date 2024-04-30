@@ -8,7 +8,7 @@ import NavMenu from "./nav-menu";
 import Hamburger from "@/client/components/ui/icons/hamburger";
 import Close from "@/client/components/ui/icons/close";
 import { usePathname } from "next/navigation";
-import Container from "../../ui/container";
+import Container from "../container";
 
 const navLinkArr = [
   { name: "Home", path: "/" },

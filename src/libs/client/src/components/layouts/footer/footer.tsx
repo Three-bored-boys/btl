@@ -1,6 +1,6 @@
 import React from "react";
 import NavLogo from "../../ui/logo";
-import Container from "../../ui/container";
+import Container from "../container";
 
 function Footer(): React.ReactElement {
   return (
