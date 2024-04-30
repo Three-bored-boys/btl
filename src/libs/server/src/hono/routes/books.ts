@@ -1,11 +1,12 @@
 import { Hono } from "hono";
-import { cache } from "hono/cache";
-import genresList from "../../data/genres.json";
+// import { cache } from "hono/cache";
+import genres from "../../data/genres.json";
 import { GoogleBooksService } from "../../services/google.service";
 import { NYTimesService } from "../../services/ny-times.service";
 import { HTTPException } from "hono/http-exception";
 import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
+import type { BadResponse, GoodResponse } from "../../types";
 
 const books = new Hono()
   .get(
@@ -26,36 +27,39 @@ const books = new Hono()
     },
   )
   .get("/genres", (c) => {
-    return c.json({ genres: genresList, count: genresList.length });
+    return c.json({ genres, count: genres.length });
   })
   .get(
     "/genres/:genre",
     zValidator(
       "param",
       z.object({
-        genre: z.string().optional(),
+        genre: z
+          .string()
+          .min(1)
+          .refine((val) => val !== "null" && val !== "undefined"),
       }),
+      (result, c) => {
+        if (!result.success) {
+          const responseData: BadResponse = { success: false, error: "Invalid In" };
+          return c.json(responseData, 404);
+        }
+      },
     ),
     async (c) => {
-      console.log("Start of function");
       const { genre } = c.req.valid("param");
-      console.log({ genre });
 
-      if (Boolean(genre) && genre !== undefined) {
-        console.log("We are here");
-        const googleBooksService = new GoogleBooksService(process.env.GOOGLE_BOOKS_API_KEY);
-        const books = await googleBooksService.getBooksByGenre(genre);
+      /*  if (genre === "null" || genre === "undefined") {
+        const responseData: JSONResponse = { success: false, error: "Invalid Input" };
+        return c.json(responseData, 400);
+      } */
 
-        /*  if (books.length === 0) {
-      throw new HTTPException(400, { message: "Trouble getting requested books" });
-    } */
+      const googleBooksService = new GoogleBooksService(process.env.GOOGLE_BOOKS_API_KEY);
+      const books = await googleBooksService.getBooksByGenre(genre);
 
-        return c.json({ books });
-      }
+      const responseData: GoodResponse<typeof books> = { success: true, data: books };
 
-      console.log("We are in error part");
-      throw new HTTPException(400, { message: "Genre is required" });
-      return;
+      return c.json(responseData);
     },
   )
   .get("/:isbn", async (c) => {
