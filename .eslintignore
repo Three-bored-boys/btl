@@ -2,3 +2,4 @@ tailwind.config.ts
 commitlint.config.js
 postcss.config.mjs
 prettier.config.js
+next.config.mjs
