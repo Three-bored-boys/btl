@@ -11,7 +11,7 @@ export default function ArrowRight({ className, onClick, ...props }: ArrowRightP
       viewBox="0 0 24 24"
       strokeWidth="1.5"
       stroke="currentColor"
-      className={cn("h-6 w-6 cursor-pointer", className)}
+      className={cn("h-10 w-10 cursor-pointer", className)}
       onClick={onClick}
       {...props}
     >
