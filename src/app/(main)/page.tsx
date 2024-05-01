@@ -1,9 +1,9 @@
-import Container from "@/libs/client/src/components/layouts/container";
+import GenresSection from "@/libs/client/src/components/modules/home/genres-section/genres-section";
 
 export default function Home() {
   return (
-    <main className="text-3xl">
-      <Container>Home</Container>
+    <main className="w-full">
+      <GenresSection />
     </main>
   );
 }
