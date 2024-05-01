@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import genres from "../../data/genres.json";
+import genresList from "../../data/genres.json";
 import { GoogleBooksService } from "../../services/google.service";
 import { NYTimesService } from "../../services/ny-times.service";
 import { zValidator } from "@hono/zod-validator";
@@ -22,6 +22,7 @@ books.get("/best-sellers", async (c) => {
 });
 
 books.get("/genres", (c) => {
+  const genres = genresList.filter((genObj) => genObj.name !== "Non-fiction");
   const responseData: GoodResponse<Genres> = { success: true, data: { genres, count: genres.length } };
   return c.json(responseData);
 });
