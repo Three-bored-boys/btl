@@ -4,5 +4,6 @@ declare namespace NodeJS {
     readonly GOOGLE_BOOKS_API_KEY: string;
     readonly NY_TIMES_BOOKS_API_KEY: string;
     readonly NEXT_PUBLIC_URL: string;
+    readonly NEXT_PUBLIC_API_URL: string;
   }
 }
