@@ -50,7 +50,10 @@ books.get(
     const googleBooksService = new GoogleBooksService(process.env.GOOGLE_BOOKS_API_KEY);
     const books = await googleBooksService.getBooksByGenre(genre);
 
-    const responseData: GoodResponse<Book[]> = { success: true, data: books };
+    const responseData: GoodResponse<Book[]> = {
+      success: true,
+      data: books.filter((book) => book.isbn10 !== "" && book.isbn13 !== ""),
+    };
 
     return c.json(responseData);
   },
