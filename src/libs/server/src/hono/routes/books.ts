@@ -51,24 +51,43 @@ const books = new Hono()
       return c.json(responseData);
     },
   )
-  .get("/:isbn", async (c) => {
-    const isbn = c.req.param("isbn");
-    if (!isbn) {
-      const responseData: BadResponse = { success: false, error: "ISBN is required" };
-      return c.json(responseData, 400);
-    }
+  .get(
+    "/:isbn",
+    zValidator(
+      "param",
+      z.object({
+        isbn: z
+          .string()
+          .min(10)
+          .max(13)
+          .refine((val) => Number.isFinite(+val)),
+      }),
+      (result, c) => {
+        if (!result.success) {
+          const responseData: BadResponse = { success: false, error: "Invalid ISBN entry" };
+          return c.json(responseData, 400);
+        }
+      },
+    ),
+    async (c) => {
+      const isbn = c.req.param("isbn");
+      if (!isbn) {
+        const responseData: BadResponse = { success: false, error: "ISBN is required" };
+        return c.json(responseData, 400);
+      }
 
-    const googleBooksService = new GoogleBooksService(process.env.GOOGLE_BOOKS_API_KEY);
-    const book = await googleBooksService.getBookByISBN(isbn);
+      const googleBooksService = new GoogleBooksService(process.env.GOOGLE_BOOKS_API_KEY);
+      const book = await googleBooksService.getBookByISBN(isbn);
 
-    if (!book) {
-      const responseData: BadResponse = { success: false, error: "Book not found" };
-      return c.json(responseData, 400);
-    }
+      if (!book) {
+        const responseData: BadResponse = { success: false, error: "Book not found" };
+        return c.json(responseData, 400);
+      }
 
-    const responseData: GoodResponse<Book> = { success: true, data: book };
-    return c.json(responseData);
-  })
+      const responseData: GoodResponse<Book> = { success: true, data: book };
+      return c.json(responseData);
+    },
+  )
   .get("/latest-books", async (c) => {
     const googleBooksService = new GoogleBooksService(process.env.GOOGLE_BOOKS_API_KEY);
     const books = await googleBooksService.getLatestBooks();
