@@ -11,7 +11,6 @@ export default function GenresSection() {
         <SectionPreamble title="Oldies but Goldies">
           Explore some more older books below according to a select list of popular genres
         </SectionPreamble>
-
         <GetGenresWrapper />
       </Container>
     </section>
