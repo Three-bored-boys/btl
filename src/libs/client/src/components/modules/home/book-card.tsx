@@ -3,7 +3,7 @@ import type { Book } from "@/server/types";
 import Image from "next/image";
 import Link from "next/link";
 
-const genericBookImage = "@/public/assets/images/generic-book.png";
+const genericBookImage = "/assets/images/generic-book.png";
 
 type BookCardTypes = {
   book: Book;
