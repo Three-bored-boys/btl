@@ -17,11 +17,11 @@ export default function GenreBooksShowcase({ heading }: GenreBooksShowcaseProps)
   });
 
   if (isLoading) {
-    return <div className="h-72">Loading...</div>;
+    return <div className="h-72 w-full text-center text-lg font-medium">Loading...</div>;
   }
 
   if (error) {
-    return <div className="h-72">Error has occurred: {error.message}</div>;
+    return <div className="h-72 w-full text-center text-lg font-medium">Error has occurred: {error.message}</div>;
   }
 
   return <>{data?.map((book, i) => <BookCard key={i} book={book} />)}</>;
