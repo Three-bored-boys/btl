@@ -36,7 +36,7 @@ export default function GenresSectionClient({ genres, count, ...props }: GenresS
         </div>
 
         <div className="overflow-x-auto scrollbar-none">
-          <h2 className="cursor-pointer text-center text-base font-semibold uppercase scrollbar-none md:text-lg lg:text-xl">
+          <h2 className="text-center text-base font-semibold uppercase scrollbar-none md:text-lg lg:text-xl">
             {genres[genre].name}
           </h2>
           <hr className="mb-5 h-1 w-full overflow-x-auto bg-primary scrollbar-none" />

@@ -6,7 +6,7 @@ import GenresSectionClient from "./genres-section-client";
 
 export default function GenresSection() {
   return (
-    <section className="mb-10 mt-5 w-full">
+    <section className="mb-10 w-full">
       <Container>
         <SectionPreamble title="Oldies but Goldies">
           Explore some more older books below according to a select list of popular genres
