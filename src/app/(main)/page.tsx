@@ -2,8 +2,8 @@ import GenresSection from "@/libs/client/src/components/modules/home/genres-sect
 
 export default function Home() {
   return (
-    <main className="w-full pt-5">
+    <>
       <GenresSection />
-    </main>
+    </>
   );
 }
