@@ -35,12 +35,12 @@ export default function GenresSectionClient({ genres, count, ...props }: GenresS
           <ArrowLeft />
         </div>
 
-        <div className="overflow-x-auto scrollbar-none">
+        <div className="overflow-x-auto">
           <h2 className="text-center text-base font-semibold uppercase scrollbar-none md:text-lg lg:text-xl">
             {genres[genre].name}
           </h2>
-          <hr className="mb-5 h-1 w-full overflow-x-auto bg-primary scrollbar-none" />
-          <div className="flex w-full items-center justify-between gap-3 overflow-x-auto scrollbar-none">
+          <hr className="mb-5 h-1 w-full bg-primary scrollbar-none" />
+          <div className="flex w-full items-center justify-between gap-3 overflow-x-auto scrollbar-thin">
             <GenreBooksShowcase heading={genres[genre].name} />
           </div>
         </div>
