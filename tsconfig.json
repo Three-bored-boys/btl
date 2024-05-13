@@ -21,7 +21,8 @@
     "paths": {
       "@/*": ["./src/*"],
       "@/server/*": ["./src/libs/server/src/*"],
-      "@/client/*": ["./src/libs/client/src/*"]
+      "@/client/*": ["./src/libs/client/src/*"],
+      "@/public/*": ["./public/*"]
     }
   },
   "include": [

@@ -1,6 +1,6 @@
 import type { GoodResponse, BadResponse } from "@/libs/server/src/types";
 
-export const useFetch = async function <T>(url: string, options?: RequestInit) {
+export const fetchData = async function <T>(url: string, options?: RequestInit) {
   const res = await fetch(url, options);
 
   if (!res.ok) {
