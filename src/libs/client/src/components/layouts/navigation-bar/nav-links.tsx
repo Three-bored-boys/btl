@@ -8,7 +8,7 @@ const navLinks = cva("", {
   variants: {
     device: {
       mobile: "flex flex-col items-start justify-start gap-y-3",
-      "no-mobile": "grid grid-cols-3 gap-x-1 md:gap-x-2 lg:gap-x-3",
+      "no-mobile": "flex gap-x-1",
     },
   },
 });
