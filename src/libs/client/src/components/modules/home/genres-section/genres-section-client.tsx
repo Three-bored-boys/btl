@@ -1,8 +1,8 @@
 "use client";
 
 import { cn } from "@/libs/client/src/utils";
-import ArrowLeft from "../../../ui/icons/arrow-left";
-import ArrowRight from "../../../ui/icons/arrow-right";
+import ArrowLeftCircle from "../../../ui/icons/arrow-left-circle";
+import ArrowRightCircle from "../../../ui/icons/arrow-right-circle";
 import GenreBooksShowcase from "./genre-books-showcase";
 import { Genres } from "@/libs/server/src/types";
 import { ComponentProps, useState } from "react";
@@ -32,7 +32,7 @@ export default function GenresSectionClient({ genres, count, ...props }: GenresS
           onClick={prevGenre}
         >
           <p>Prev. Genre</p>
-          <ArrowLeft />
+          <ArrowLeftCircle />
         </div>
 
         <div className="overflow-x-auto">
@@ -52,7 +52,7 @@ export default function GenresSectionClient({ genres, count, ...props }: GenresS
           )}
           onClick={nextGenre}
         >
-          <ArrowRight />
+          <ArrowRightCircle />
           <p>Next Genre</p>
         </div>
       </div>
@@ -62,13 +62,13 @@ export default function GenresSectionClient({ genres, count, ...props }: GenresS
           className={cn({ "invisible cursor-default": genre === 0 }, "mr-9 flex cursor-pointer items-center")}
         >
           <p>Prev. Genre</p>
-          <ArrowLeft />
+          <ArrowLeftCircle />
         </div>
         <div
           onClick={nextGenre}
           className={cn({ "invisible cursor-default": genre === count - 1 }, "flex cursor-pointer items-center")}
         >
-          <ArrowRight />
+          <ArrowRightCircle />
           <p>Next Genre</p>
         </div>
       </div>
