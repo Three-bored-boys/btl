@@ -27,12 +27,14 @@ export default function GenresSectionClient({ genres, count, ...props }: GenresS
   return (
     <div className="w-full flex-col items-center">
       <div {...props} className="w-full lg:grid lg:grid-cols-[auto_1fr_auto] lg:gap-x-8">
-        <div
-          className={cn({ "invisible cursor-default": genre === 0 }, "hidden cursor-pointer lg:flex lg:items-center")}
-          onClick={prevGenre}
-        >
-          <p>Prev. Genre</p>
-          <ArrowLeftCircle />
+        <div className="flex items-center">
+          <span
+            className={cn({ "invisible cursor-default": genre === 0 }, "hidden cursor-pointer lg:flex lg:items-center")}
+            onClick={prevGenre}
+          >
+            <p>Prev. Genre</p>
+            <ArrowLeftCircle />
+          </span>
         </div>
 
         <div className="overflow-x-auto">
@@ -45,32 +47,34 @@ export default function GenresSectionClient({ genres, count, ...props }: GenresS
           </div>
         </div>
 
-        <div
-          className={cn(
-            { "invisible cursor-default": genre === count - 1 },
-            "hidden cursor-pointer lg:flex lg:items-center",
-          )}
-          onClick={nextGenre}
-        >
-          <ArrowRightCircle />
-          <p>Next Genre</p>
+        <div className="flex items-center">
+          <span
+            className={cn(
+              { "invisible cursor-default": genre === count - 1 },
+              "hidden cursor-pointer lg:flex lg:items-center",
+            )}
+            onClick={nextGenre}
+          >
+            <ArrowRightCircle />
+            <p>Next Genre</p>
+          </span>
         </div>
       </div>
       <div className={cn("mt-5 flex w-full items-center justify-center lg:hidden")}>
-        <div
+        <span
           onClick={prevGenre}
           className={cn({ "invisible cursor-default": genre === 0 }, "mr-9 flex cursor-pointer items-center")}
         >
           <p>Prev. Genre</p>
           <ArrowLeftCircle />
-        </div>
-        <div
+        </span>
+        <span
           onClick={nextGenre}
           className={cn({ "invisible cursor-default": genre === count - 1 }, "flex cursor-pointer items-center")}
         >
           <ArrowRightCircle />
           <p>Next Genre</p>
-        </div>
+        </span>
       </div>
     </div>
   );
