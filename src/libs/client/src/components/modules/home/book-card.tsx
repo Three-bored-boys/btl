@@ -12,7 +12,7 @@ type BookCardTypes = {
 export default function BookCard({ book, ...props }: BookCardTypes): React.ReactElement {
   return (
     <Link href={`/book/${book.isbn13 ? book.isbn13 : book.isbn10}`}>
-      <div className="w-40 min-w-36" {...props}>
+      <div className="w-32 min-w-28 sm:w-40 sm:min-w-36" {...props}>
         <Image
           src={book.image ? book.image : genericBookImage}
           alt={`${book.title} by ${book.author}`}
