@@ -4,7 +4,7 @@ import Container from "../container";
 
 function Footer(): React.ReactElement {
   return (
-    <footer className="w-full">
+    <footer className="w-full py-10">
       <Container className="flex items-center justify-center gap-3">
         <NavLogo />
         <p>Copyright © {new Date().getFullYear()} - All right reserved</p>
