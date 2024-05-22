@@ -38,5 +38,11 @@ export default function GenreBooksShowcase({ heading }: GenreBooksShowcaseProps)
     return <div className="h-72 w-full text-center text-lg font-medium">Error has occurred: {error.message}</div>;
   }
 
+  return (
+    <div className="flex w-full items-center justify-between gap-3 overflow-x-auto scrollbar-thin">
+      {data?.map((book, i) => <BookCard key={i} book={book} />)}
+    </div>
+  );
+
   return <>{data?.map((book, i) => <BookCard key={i} book={book} />)}</>;
 }

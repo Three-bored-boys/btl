@@ -42,9 +42,7 @@ export default function GenresSectionClient({ genres, count, ...props }: GenresS
             {genres[genre].name}
           </h2>
           <hr className="mb-5 h-1 w-full bg-primary scrollbar-none" />
-          <div className="flex w-full items-center justify-between gap-3 overflow-x-auto scrollbar-thin">
-            <GenreBooksShowcase heading={genres[genre].name} />
-          </div>
+          <GenreBooksShowcase heading={genres[genre].name} />
         </div>
 
         <div className="flex items-center">
