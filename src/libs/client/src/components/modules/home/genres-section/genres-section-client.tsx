@@ -25,45 +25,29 @@ export default function GenresSectionClient({ genres, count, ...props }: GenresS
   };
 
   return (
-    <div className="w-full flex-col items-center">
-      <div {...props} className="w-full lg:grid lg:grid-cols-[auto_1fr_auto] lg:gap-x-8">
-        <div className="flex items-center">
-          <span
-            className={cn({ "invisible cursor-default": genre === 0 }, "hidden cursor-pointer lg:flex lg:items-center")}
-            onClick={prevGenre}
-          >
-            <p>Prev. Genre</p>
-            <ArrowLeftCircle />
-          </span>
-        </div>
-
-        <div className="overflow-x-auto">
-          <h2 className="text-center text-base font-semibold uppercase scrollbar-none md:text-lg lg:text-xl">
-            {genres[genre].name}
-          </h2>
-          <hr className="mb-5 h-1 w-full bg-primary scrollbar-none" />
-          <GenreBooksShowcase heading={genres[genre].name} />
-        </div>
-
-        <div className="flex items-center">
-          <span
-            className={cn(
-              { "invisible cursor-default": genre === count - 1 },
-              "hidden cursor-pointer lg:flex lg:items-center",
-            )}
-            onClick={nextGenre}
-          >
-            <ArrowRightCircle />
-            <p>Next Genre</p>
-          </span>
-        </div>
+    <div className="w-full flex-col items-center" {...props}>
+      <div className="w-full overflow-x-auto">
+        <h2 className="text-center text-base font-semibold uppercase scrollbar-none md:text-lg lg:text-xl">
+          {genres[genre].name}
+        </h2>
+        <hr className="mb-5 h-1 w-full bg-primary scrollbar-none" />
+        <GenreBooksShowcase heading={genres[genre].name} />
       </div>
-      <div className={cn("mt-5 flex w-full items-center justify-center lg:hidden")}>
+      <div className="mt-8 flex w-full items-center justify-center gap-2">
+        {genres.map((_, i) => (
+          <div
+            key={i}
+            className={cn("h-2 w-2 cursor-pointer rounded-full bg-secondary-300", { "bg-primary": i === genre })}
+            onClick={() => setGenre(i)}
+            title={_.name}
+          ></div>
+        ))}
+      </div>
+      <div className={cn("mt-5 flex w-full items-center justify-center")}>
         <span
           onClick={prevGenre}
           className={cn({ "invisible cursor-default": genre === 0 }, "mr-9 flex cursor-pointer items-center")}
         >
-          <p>Prev. Genre</p>
           <ArrowLeftCircle />
         </span>
         <span
@@ -71,7 +55,6 @@ export default function GenresSectionClient({ genres, count, ...props }: GenresS
           className={cn({ "invisible cursor-default": genre === count - 1 }, "flex cursor-pointer items-center")}
         >
           <ArrowRightCircle />
-          <p>Next Genre</p>
         </span>
       </div>
     </div>
