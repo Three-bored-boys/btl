@@ -2,7 +2,7 @@ import Container from "@/client/components/layouts/container";
 
 export default function HeroSection() {
   return (
-    <div className="w-full bg-primary pb-10 text-white">
+    <div className="w-full py-10">
       <Container>Yellow</Container>
     </div>
   );
