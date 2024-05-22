@@ -58,6 +58,4 @@ export default function GenreBooksShowcase({ heading }: GenreBooksShowcaseProps)
       {data?.map((book, i) => <BookCard key={i} book={book} />)}
     </div>
   );
-
-  return <>{data?.map((book, i) => <BookCard key={i} book={book} />)}</>;
 }
