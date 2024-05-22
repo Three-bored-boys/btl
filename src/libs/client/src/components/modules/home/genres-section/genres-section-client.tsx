@@ -1,8 +1,8 @@
 "use client";
 
 import { cn } from "@/libs/client/src/utils";
-import ArrowLeft from "../../../ui/icons/arrow-left";
-import ArrowRight from "../../../ui/icons/arrow-right";
+import ArrowLeftCircle from "../../../ui/icons/arrow-left-circle";
+import ArrowRightCircle from "../../../ui/icons/arrow-right-circle";
 import GenreBooksShowcase from "./genre-books-showcase";
 import { Genres } from "@/libs/server/src/types";
 import { ComponentProps, useState } from "react";
@@ -25,52 +25,37 @@ export default function GenresSectionClient({ genres, count, ...props }: GenresS
   };
 
   return (
-    <div className="w-full flex-col items-center">
-      <div {...props} className="w-full lg:grid lg:grid-cols-[auto_1fr_auto] lg:gap-x-8">
-        <div
-          className={cn({ "invisible cursor-default": genre === 0 }, "hidden cursor-pointer lg:flex lg:items-center")}
-          onClick={prevGenre}
-        >
-          <p>Prev. Genre</p>
-          <ArrowLeft />
-        </div>
-
-        <div className="overflow-x-auto">
-          <h2 className="text-center text-base font-semibold uppercase scrollbar-none md:text-lg lg:text-xl">
-            {genres[genre].name}
-          </h2>
-          <hr className="mb-5 h-1 w-full bg-primary scrollbar-none" />
-          <div className="flex w-full items-center justify-between gap-3 overflow-x-auto scrollbar-thin">
-            <GenreBooksShowcase heading={genres[genre].name} />
-          </div>
-        </div>
-
-        <div
-          className={cn(
-            { "invisible cursor-default": genre === count - 1 },
-            "hidden cursor-pointer lg:flex lg:items-center",
-          )}
-          onClick={nextGenre}
-        >
-          <ArrowRight />
-          <p>Next Genre</p>
-        </div>
+    <div className="w-full flex-col items-center" {...props}>
+      <div className="w-full overflow-x-auto">
+        <h2 className="text-center text-base font-semibold uppercase scrollbar-none md:text-lg lg:text-xl">
+          {genres[genre].name}
+        </h2>
+        <hr className="mb-5 h-1 w-full bg-primary scrollbar-none" />
+        <GenreBooksShowcase heading={genres[genre].name} />
       </div>
-      <div className={cn("mt-5 flex w-full items-center justify-center lg:hidden")}>
-        <div
+      <div className="mt-8 flex w-full items-center justify-center gap-2">
+        {genres.map((_, i) => (
+          <div
+            key={i}
+            className={cn("h-2 w-2 cursor-pointer rounded-full bg-secondary-300", { "bg-primary": i === genre })}
+            onClick={() => setGenre(i)}
+            title={_.name}
+          ></div>
+        ))}
+      </div>
+      <div className={cn("mt-5 flex w-full items-center justify-center")}>
+        <span
           onClick={prevGenre}
           className={cn({ "invisible cursor-default": genre === 0 }, "mr-9 flex cursor-pointer items-center")}
         >
-          <p>Prev. Genre</p>
-          <ArrowLeft />
-        </div>
-        <div
+          <ArrowLeftCircle />
+        </span>
+        <span
           onClick={nextGenre}
           className={cn({ "invisible cursor-default": genre === count - 1 }, "flex cursor-pointer items-center")}
         >
-          <ArrowRight />
-          <p>Next Genre</p>
-        </div>
+          <ArrowRightCircle />
+        </span>
       </div>
     </div>
   );

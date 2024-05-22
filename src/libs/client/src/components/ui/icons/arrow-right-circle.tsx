@@ -3,7 +3,7 @@ import { cn } from "@/client/utils";
 
 type ArrowRightProps = React.ComponentProps<"svg">;
 
-export default function ArrowRight({ className, onClick, ...props }: ArrowRightProps): React.ReactElement {
+export default function ArrowRightCircle({ className, onClick, ...props }: ArrowRightProps): React.ReactElement {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

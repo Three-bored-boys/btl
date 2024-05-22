@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    @apply bg-white text-primary font-clash;
+    @apply bg-white font-clash;
   }
 
   @font-face {

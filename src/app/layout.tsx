@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { GeistSans } from "geist/font/sans";
+import "@radix-ui/themes/styles.css";
 import { ReactElement } from "react";
 import Providers from "./providers";
 
@@ -15,7 +15,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>): ReactElement {
   return (
-    <html lang="en" className={GeistSans.variable}>
+    <html lang="en" suppressHydrationWarning={true}>
       <body suppressHydrationWarning={true}>
         <Providers>
           <main>{children}</main>

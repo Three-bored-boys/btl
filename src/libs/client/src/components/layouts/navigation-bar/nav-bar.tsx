@@ -9,6 +9,7 @@ import Hamburger from "@/client/components/ui/icons/hamburger";
 import Close from "@/client/components/ui/icons/close";
 import { usePathname } from "next/navigation";
 import Container from "../container";
+import { cn } from "../../../utils";
 
 const navLinkArr = [
   { name: "Home", path: "/" },
@@ -24,7 +25,7 @@ const navAuthLinkArr = [
 export type NavLinkArr = typeof navLinkArr;
 export type NavAuthLinkArr = typeof navAuthLinkArr;
 
-export default function NavBar(): React.ReactElement {
+export default function NavBar({ className, ...props }: React.ComponentProps<"nav">): React.ReactElement {
   const getRootPathname = (path: string): string => {
     return "/" + path.split("/")[1];
   };
@@ -40,7 +41,7 @@ export default function NavBar(): React.ReactElement {
   }, [pathname]);
 
   return (
-    <nav className="relative w-full shadow-lg">
+    <nav className={cn("relative w-full shadow-lg", className)} {...props}>
       <Container className="flex items-center justify-between py-2">
         <div>
           <Logo className="hidden md:block" onClick={() => setShowMobileMenu(false)} />
@@ -61,7 +62,7 @@ export default function NavBar(): React.ReactElement {
         <NavBarRight routesArr={navAuthLinkArr} />
       </Container>
       {showMobileMenu ? (
-        <NavMenu className="block md:hidden" onClick={() => setShowMobileMenu(false)}>
+        <NavMenu className={cn("block md:hidden")} onClick={() => setShowMobileMenu(false)}>
           <NavLinks device={"mobile"} routesArr={navLinkArr} rootPathname={rootPathname} />
         </NavMenu>
       ) : null}
