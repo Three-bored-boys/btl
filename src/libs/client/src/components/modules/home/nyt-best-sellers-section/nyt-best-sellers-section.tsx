@@ -21,7 +21,6 @@ export default function NYTBestSellersSection() {
 }
 
 async function GetBestSellersWrapper() {
-  console.log("We are in GetBestSellers");
   const bestSellers = await fetchData<BestSeller[]>(`${process.env.NEXT_PUBLIC_API_URL}/books/best-sellers`);
 
   return <NYTBestSellersSectionClient bestSellers={bestSellers} />;
