@@ -18,6 +18,7 @@ books.get("/best-sellers", async (c) => {
   }
 
   const responseData: GoodResponse<BestSeller[]> = { success: true, data: bestSellers };
+  c.header("Cache-Control", "max-age=259200, must-revalidate");
   return c.json(responseData);
 });
 
