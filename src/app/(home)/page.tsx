@@ -2,6 +2,7 @@ import GenresSection from "@/libs/client/src/components/modules/home/genres-sect
 import Footer from "@/libs/client/src/components/layouts/footer/footer";
 import NavBar from "@/libs/client/src/components/layouts/navigation-bar/nav-bar";
 import HeroSection from "@/libs/client/src/components/modules/home/hero-section/hero-section";
+import NYTBestSellersSection from "@/libs/client/src/components/modules/home/nyt-best-sellers-section/nyt-best-sellers-section";
 
 export default function Home() {
   return (
@@ -9,6 +10,7 @@ export default function Home() {
       <NavBar />
       <HeroSection />
       <GenresSection />
+      <NYTBestSellersSection />
       <Footer />
     </main>
   );
