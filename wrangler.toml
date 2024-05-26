@@ -1,0 +1,5 @@
+name = "btl-nextjs-api-v1"
+main = "./src/libs/server/src/hono/index.ts"
+compatibility_date = "2023-12-01"
+
+minify = true
