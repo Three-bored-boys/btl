@@ -19,10 +19,11 @@
       }
     ],
     "paths": {
+      "@/root/*": ["./*"],
       "@/*": ["./src/*"],
       "@/server/*": ["./src/libs/server/src/*"],
       "@/client/*": ["./src/libs/client/src/*"],
-      "@/public/*": ["./public/*"]
+      "@/public/*": ["./public/*"],
     }
   },
   "include": [
@@ -30,8 +31,9 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "src/app/api/[[...route]]",
-    "environment.d.ts"
+    "src/app/api/[[...route]]/route.ts",
+    "environment.d.ts",
+    "bindings.d.ts"
   ],
   "exclude": ["node_modules"]
 }
