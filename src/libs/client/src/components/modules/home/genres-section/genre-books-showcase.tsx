@@ -3,6 +3,7 @@ import BookCard from "../book-card";
 import { useQuery } from "@tanstack/react-query";
 import { fetchData } from "@/libs/client/src/hooks";
 import { Skeleton } from "@radix-ui/themes";
+import {API_URL} from "@/client/utils";
 
 type GenreBooksShowcaseProps = {
   heading: string;
@@ -12,7 +13,7 @@ export default function GenreBooksShowcase({ heading }: GenreBooksShowcaseProps)
   const { data, isLoading, error } = useQuery({
     queryKey: ["genres", heading],
     queryFn: async () => {
-      const data = await fetchData<Book[]>(`${process.env.NEXT_PUBLIC_API_URL}/books/genres/${heading}`);
+      const data = await fetchData<Book[]>(`${API_URL}/books/genres/${heading}`);
       return data;
     },
   });
