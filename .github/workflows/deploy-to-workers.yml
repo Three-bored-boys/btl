@@ -6,6 +6,8 @@ on:
       - "bindings.d.ts"
       - "src/libs/server/**"
       - ".github/workflows/deploy-to-workers.yml"
+    branches:
+      - "api-production"
 
 jobs:
   deploy:
