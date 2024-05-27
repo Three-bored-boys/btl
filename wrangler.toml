@@ -1,0 +1,7 @@
+name = "btl-nextjs-api-v1"
+main = "./src/libs/server/src/hono/index.ts"
+compatibility_date = "2023-12-01"
+
+account_id = "e6d04efe41370669c36d1da6f8c72c3b"
+
+minify = true

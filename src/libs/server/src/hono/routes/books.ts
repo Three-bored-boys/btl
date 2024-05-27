@@ -5,11 +5,12 @@ import { NYTimesService } from "../../services/ny-times.service";
 import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
 import type { BadResponse, GoodResponse, Genres, BestSeller, Book } from "../../types";
+import { Environment } from "@/root/bindings";
 
-const books = new Hono();
+const books = new Hono<Environment>();
 
 books.get("/best-sellers", async (c) => {
-  const nytService = new NYTimesService(process.env.NY_TIMES_BOOKS_API_KEY);
+  const nytService = new NYTimesService(c.env.NY_TIMES_BOOKS_API_KEY);
   const bestSellers = await nytService.getBestSellers();
 
   if (bestSellers.length === 0) {
@@ -18,6 +19,7 @@ books.get("/best-sellers", async (c) => {
   }
 
   const responseData: GoodResponse<BestSeller[]> = { success: true, data: bestSellers };
+  c.header("Cache-Control", "max-age=259200, must-revalidate, public");
   return c.json(responseData);
 });
 
@@ -47,7 +49,7 @@ books.get(
   async (c) => {
     const { genre } = c.req.valid("param");
 
-    const googleBooksService = new GoogleBooksService(process.env.GOOGLE_BOOKS_API_KEY);
+    const googleBooksService = new GoogleBooksService(c.env.GOOGLE_BOOKS_API_KEY);
     const books = await googleBooksService.getBooksByGenre(genre);
 
     const responseData: GoodResponse<Book[]> = {
@@ -84,7 +86,7 @@ books.get(
       return c.json(responseData, 400);
     }
 
-    const googleBooksService = new GoogleBooksService(process.env.GOOGLE_BOOKS_API_KEY);
+    const googleBooksService = new GoogleBooksService(c.env.GOOGLE_BOOKS_API_KEY);
     const book = await googleBooksService.getBookByISBN(isbn);
 
     if (!book) {
@@ -98,7 +100,7 @@ books.get(
 );
 
 books.get("/latest-books", async (c) => {
-  const googleBooksService = new GoogleBooksService(process.env.GOOGLE_BOOKS_API_KEY);
+  const googleBooksService = new GoogleBooksService(c.env.GOOGLE_BOOKS_API_KEY);
   const books = await googleBooksService.getLatestBooks();
 
   if (books.length === 0) {
