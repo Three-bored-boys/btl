@@ -44,3 +44,12 @@ next-env.d.ts
 
 # others
 todo.txt
+
+# hono and cloudflare workers
+dist
+.wrangler
+.dev.vars
+
+package-lock.json
+yarn.lock
+bun.lockb

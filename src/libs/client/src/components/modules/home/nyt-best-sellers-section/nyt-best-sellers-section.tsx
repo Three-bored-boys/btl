@@ -4,6 +4,7 @@ import type { BestSeller } from "@/libs/server/src/types";
 import { fetchData } from "@/libs/client/src/hooks";
 import NYTBestSellersSectionClient from "./nyt-best-sellers-section-client";
 import { Suspense } from "react";
+import { API_URL } from "@/client/utils";
 
 export default function NYTBestSellersSection() {
   return (
@@ -21,9 +22,7 @@ export default function NYTBestSellersSection() {
 }
 
 async function GetBestSellersWrapper() {
-  const bestSellers = await fetchData<BestSeller[]>(`${process.env.NEXT_PUBLIC_API_URL}/books/best-sellers`, {
-    cache: "default",
-  });
+  const bestSellers = await fetchData<BestSeller[]>(`${API_URL}/books/best-sellers`);
 
   return <NYTBestSellersSectionClient bestSellers={bestSellers} />;
 }
