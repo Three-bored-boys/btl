@@ -21,10 +21,11 @@ jobs:
     runs-on: ubuntu-latest
     name: Deploy Hono To Cloudflare Workers
     steps:
-      - uses: cloudflare/wrangler-action@v3
+      - uses: cloudflare/wrangler-action@v3.x.x
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          packageManager: pnpm
 
   Deploy-Preview:
     needs: [Setup-pnpm, Deploy-Hono]
