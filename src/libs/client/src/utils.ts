@@ -18,6 +18,3 @@ export const button = cva("h-auto rounded border-2 border-transparent px-6 py-1 
 });
 
 export type ButtonVariants = VariantProps<typeof button>;
-
-export const API_URL =
-  process.env.NODE_ENV === "development" ? process.env.NEXT_PUBLIC_API_URL_DEV : process.env.NEXT_PUBLIC_API_URL_PROD;
