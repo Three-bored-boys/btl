@@ -36,7 +36,7 @@ jobs:
         with:
           run_install: |
             - recursive: true
-              args: [--frozen-lockfile]
+              args: [--no-frozen-lockfile]
 
       - name: Install Vercel CLI
         run: pnpm install --global vercel@latest
