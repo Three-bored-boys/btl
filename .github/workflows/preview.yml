@@ -4,9 +4,9 @@ on:
       - "main"
 
 jobs:
-  Setup-pnpm:
+  Setup-pnpm-Deploy-Hono:
     runs-on: ubuntu-latest
-    name: Setup pnpm node modules and environment
+    name: Setup pnpm and deploy to Cloudflare Workers
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -16,19 +16,14 @@ jobs:
         with:
           version: 9
 
-  Deploy-Hono:
-    needs: Setup-pnpm
-    runs-on: ubuntu-latest
-    name: Deploy Hono To Cloudflare Workers
-    steps:
-      - uses: cloudflare/wrangler-action@v3
+      - name: Deploy Hono to Cloudflare Workers
+        uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          packageManager: pnpm
 
   Deploy-Preview:
-    needs: [Setup-pnpm, Deploy-Hono]
+    needs: Setup-pnpm-Deploy-Hono
     name: Vercel Preview Deployment
     env:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
