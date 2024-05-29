@@ -25,9 +25,9 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
-  Deploy-Preview:
+  Deploy-Prod:
     needs: Setup-pnpm-Deploy-Hono
-    name: Vercel Preview Deployment
+    name: Vercel Production Deployment
     env:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
