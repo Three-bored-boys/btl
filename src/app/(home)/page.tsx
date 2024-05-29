@@ -7,7 +7,6 @@ import NYTBestSellersSection from "@/libs/client/src/components/modules/home/nyt
 export const dynamic = "force-dynamic";
 
 export default function Home() {
-  console.log(5);
   return (
     <main className="relative">
       <NavBar />
