@@ -20,14 +20,14 @@ jobs:
         with:
           filters: |
             backend:
-                - "src/libs/server/**/*"
-                - ".dev.vars.example"
+                - "src/libs/server/**"
+                - "**/.dev.vars.example"
                 - "bindings.d.ts"
                 - "wrangler.toml"
             frontend:
                 - "src/app/**"
-                - "src/libs/client/**/*"
-                - ".env.example"
+                - "src/libs/client/**"
+                - "**/.env.example"
                 - "environment.d.ts"
                 - "next.config.mjs"
 
