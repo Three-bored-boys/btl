@@ -1,11 +1,9 @@
+name: Deploy Preview to Vercel
+
 on:
-  push:
-    paths:
-      - "**/**"
-      - "!wrangler.toml"
-      - "!.dev.vars.example"
-      - "!bindings.d.ts"
-      - "!src/libs/server/**"
+  workflow_run:
+    workflows: ["Deploy to Hono"]
+    types: completed
     branches-ignore:
       - "main"
 
