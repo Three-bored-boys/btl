@@ -5,6 +5,7 @@ on:
 
 jobs:
   check-files-changed:
+    name: Check files that were changed
     runs-on: ubuntu-latest
     outputs:
       backend: ${{steps.filter.outputs.backend}}
