@@ -4,7 +4,7 @@ import Container from "@/libs/client/src/components/layouts/container";
 export default function Library(): ReactElement {
   return (
     <main className="text-3xl">
-      <Container>Library Page</Container>
+      <Container>Library</Container>
     </main>
   );
 }
