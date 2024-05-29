@@ -1,0 +1,118 @@
+on:
+  push:
+    branches-ignore:
+      - "main"
+
+jobs:
+  check-files-changed:
+    runs-on: ubuntu-latest
+    outputs:
+      backend: ${{steps.filter.outputs.backend}}
+      frontend: ${{steps.filter.outputs.frontend}}
+    steps:
+      - name: Check files changed
+        uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            backend:
+                - "src/libs/server/**"
+                - ".dev.vars.example"
+                - "bindings.d.ts"
+                - "wrangler.toml"
+            frontend:
+                - "src/app/**"
+                - "src/libs/client/**"
+                - ".env.example"
+                - "environment.d.ts"
+                - "next.config.mjs"
+
+  deploy-backend-and-frontend:
+    needs: "check-files-changed"
+    name: Cloudflare Workers Hono Deployment and Vercel Preview Deployment
+    if: ${{needs.check-files-changed.outputs.backend == 'true' && needs.check-files-changed.outputs.frontend == 'true'}}
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: |
+            - recursive: true
+              args: [--no-frozen-lockfile]
+
+      - name: Deploy Hono to Cloudflare Workers
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      - name: Install Vercel CLI
+        run: pnpm install --global vercel@latest
+
+      - name: Pull Vercel Environment Information
+        run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Build Project Artifacts
+        run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Deploy Project Artifacts to Vercel
+        run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
+
+  deploy-backend-only:
+    needs: "check-files-changed"
+    name: Cloudflare Workers Hono Deployment only
+    if: ${{needs.check-files-changed.outputs.backend == 'true' && needs.check-files-changed.outputs.frontend == 'false'}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: |
+            - recursive: true
+              args: [--no-frozen-lockfile]
+
+      - name: Deploy Hono to Cloudflare Workers
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+  
+  deploy-frontend-only:
+    needs: "check-files-changed"
+    name: Vercel Preview Deployment only
+    if: ${{needs.check-files-changed.outputs.backend == 'false' && needs.check-files-changed.outputs.frontend == 'true'}}
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: |
+            - recursive: true
+              args: [--no-frozen-lockfile]
+
+      - name: Install Vercel CLI
+        run: pnpm install --global vercel@latest
+
+      - name: Pull Vercel Environment Information
+        run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Build Project Artifacts
+        run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Deploy Project Artifacts to Vercel
+        run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
