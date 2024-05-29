@@ -11,6 +11,9 @@ jobs:
       backend: ${{steps.filter.outputs.backend}}
       frontend: ${{steps.filter.outputs.frontend}}
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Check files changed
         uses: dorny/paths-filter@v3
         id: filter
@@ -86,7 +89,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-  
+
   deploy-frontend-only:
     needs: "check-files-changed"
     name: Vercel Preview Deployment only
