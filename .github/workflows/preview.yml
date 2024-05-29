@@ -30,6 +30,7 @@ jobs:
                 - "**/.env.example"
                 - "environment.d.ts"
                 - "next.config.mjs"
+          base: "${{ github.ref }}"
 
   deploy-backend-and-frontend:
     needs: "check-files-changed"
