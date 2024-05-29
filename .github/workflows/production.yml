@@ -1,5 +1,10 @@
 on:
   push:
+    paths:
+      - "wrangler.toml"
+      - ".dev.vars.example"
+      - "bindings.d.ts"
+      - "src/libs/server/**"
     branches:
       - "main"
 
