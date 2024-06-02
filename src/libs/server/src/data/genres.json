@@ -48,11 +48,11 @@
     "picture": "western.jpg"
   },
   {
-    "name": "Graphic Novel",
+    "name": "Graphic-Novel",
     "picture": "graphic_novel.jpg"
   },
   {
-    "name": "Young Adult",
+    "name": "Young-Adult",
     "picture": "young_adult.jpg"
   },
   {
@@ -68,11 +68,11 @@
     "picture": "art.jpg"
   },
   {
-    "name": "Science Fiction",
+    "name": "Science-Fiction",
     "picture": "science_fiction.jpg"
   },
   {
-    "name": "Historical Fiction",
+    "name": "Historical-Fiction",
     "picture": "historical_fiction.jpg"
   },
   {
