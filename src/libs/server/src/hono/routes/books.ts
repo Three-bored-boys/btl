@@ -6,22 +6,29 @@ import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
 import type { BadResponse, GoodResponse, Genres, BestSeller, Book } from "../../types";
 import { Environment } from "@/root/bindings";
+import { cache } from "hono/cache";
 
 const books = new Hono<Environment>();
 
-books.get("/best-sellers", async (c) => {
-  const nytService = new NYTimesService(c.env.NY_TIMES_BOOKS_API_KEY);
-  const bestSellers = await nytService.getBestSellers();
+books.get(
+  "/best-sellers",
+  cache({
+    cacheName: "best-sellers",
+    cacheControl: "max-age=259200, must-revalidate, public",
+  }),
+  async (c) => {
+    const nytService = new NYTimesService(c.env.NY_TIMES_BOOKS_API_KEY);
+    const bestSellers = await nytService.getBestSellers();
 
-  if (bestSellers.length === 0) {
-    const responseData: BadResponse = { success: false, error: "Trouble getting NYT Best Sellers List" };
-    return c.json(responseData, 400);
-  }
+    if (bestSellers.length === 0) {
+      const responseData: BadResponse = { success: false, error: "Trouble getting NYT Best Sellers List" };
+      return c.json(responseData, 400);
+    }
 
-  const responseData: GoodResponse<BestSeller[]> = { success: true, data: bestSellers };
-  c.header("Cache-Control", "max-age=259200, must-revalidate, public");
-  return c.json(responseData);
-});
+    const responseData: GoodResponse<BestSeller[]> = { success: true, data: bestSellers };
+    return c.json(responseData);
+  },
+);
 
 books.get("/genres", (c) => {
   const genres = genresList.filter((genObj) => genObj.name !== "Non-fiction");
