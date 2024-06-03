@@ -2,7 +2,7 @@ import SectionPreamble from "@/client/components/modules/home/section-preamble";
 import Container from "@/client/components/layouts/container";
 import type { Genres } from "@/libs/server/src/types";
 import { fetchData } from "@/libs/client/src/hooks";
-import GenresSectionClient from "./genres-section-client";
+import SectionBooksShowcase from "../section-books-showcase";
 
 export default function GenresSection() {
   return (
@@ -19,5 +19,6 @@ export default function GenresSection() {
 
 async function GetGenresWrapper() {
   const { genres, count } = await fetchData<Genres>(`${process.env.NEXT_PUBLIC_API_URL}/books/genres`);
-  return <GenresSectionClient genres={genres} count={count} />;
+
+  return <SectionBooksShowcase name="genres" data={{ genres, count }} />;
 }

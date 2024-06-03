@@ -2,10 +2,15 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React from "react";
-import { Theme,  } from "@radix-ui/themes";
+import { Theme } from "@radix-ui/themes";
 
 export default function Providers({ children }: { children: React.ReactNode }): React.ReactNode {
-  const [queryClient] = React.useState(() => new QueryClient());
+  const [queryClient] = React.useState(
+    () =>
+      new QueryClient({
+        defaultOptions: { queries: { refetchOnWindowFocus: false } },
+      }),
+  );
 
   return (
     <QueryClientProvider client={queryClient}>

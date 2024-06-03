@@ -4,11 +4,11 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchData } from "@/libs/client/src/hooks";
 import { Skeleton } from "@radix-ui/themes";
 
-type GenreBooksShowcaseProps = {
+type GenresSectionInnerBooksShowcaseProps = {
   heading: string;
 };
 
-export default function GenreBooksShowcase({ heading }: GenreBooksShowcaseProps) {
+export default function GenresSectionInnerBooksShowcase({ heading }: GenresSectionInnerBooksShowcaseProps) {
   const { data, isLoading, error } = useQuery({
     queryKey: ["genres", heading],
     queryFn: async () => {
