@@ -3,7 +3,7 @@
 import { cn } from "@/client/utils";
 import ArrowLeftCircle from "@/client/components/ui/icons/arrow-left-circle";
 import ArrowRightCircle from "@/client/components/ui/icons/arrow-right-circle";
-import GenreBooksShowcase from "./genres-section/genre-books-showcase";
+import GenresSectionInnerBooksShowcase from "./genres-section/genre-books-showcase";
 import type { Genres, BestSeller } from "@/libs/server/src/types";
 import { ComponentProps, useState } from "react";
 import BookCard from "./book-card";
@@ -45,7 +45,7 @@ export default function SectionBooksShowcase({ name, data, ...props }: SectionBo
         </h2>
         <hr className="mb-5 h-1 w-full bg-primary scrollbar-none" />
         {name === "genres" ? (
-          <GenreBooksShowcase heading={data.genres[index].name} />
+          <GenresSectionInnerBooksShowcase heading={data.genres[index].name} />
         ) : (
           <div className="flex w-full items-center justify-between gap-3 overflow-x-auto scrollbar-thin">
             {data[index].books.map((book, i) => (
