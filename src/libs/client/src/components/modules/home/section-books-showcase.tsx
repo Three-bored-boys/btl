@@ -3,7 +3,7 @@
 import { cn } from "@/client/utils";
 import ArrowLeftCircle from "@/client/components/ui/icons/arrow-left-circle";
 import ArrowRightCircle from "@/client/components/ui/icons/arrow-right-circle";
-import GenresSectionInnerBooksShowcase from "./genres-section/genre-books-showcase";
+import GenresSectionInnerBooksShowcase from "./genres-section/genres-section-inner-books-showcase";
 import type { Genres, BestSeller } from "@/libs/server/src/types";
 import { ComponentProps, useState } from "react";
 import BookCard from "./book-card";
