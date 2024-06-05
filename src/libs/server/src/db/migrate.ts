@@ -5,8 +5,8 @@ import { drizzle } from "drizzle-orm/postgres-js";
 
 config({ path: ".dev.vars" });
 
-// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-const databaseUrl = drizzle(postgres(`${process.env.DATABASE_URL}`, { max: 1 }));
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+const databaseUrl = drizzle(postgres(process.env.DATABASE_URL!, { max: 1 }));
 
 const main = async () => {
   try {
