@@ -20,7 +20,7 @@ export default function BookCard({ book, ...props }: BookCardTypes): React.React
           width={500}
           height={500}
         />
-        <h2 className="truncate font-semibold">{book.title}</h2>
+        <h4 className="truncate font-semibold">{book.title}</h4>
         <p className="truncate">{book.author}</p>
       </div>
     </Link>
