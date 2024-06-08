@@ -5,11 +5,9 @@ export const fetchData = async function <T>(url: string, options?: RequestInit) 
 
   if (!res.ok) {
     const errorObj = (await res.json()) as BadResponse;
-    console.log(errorObj);
     throw new Error(errorObj.error);
   }
 
   const { data } = (await res.json()) as GoodResponse<T>;
-  console.log(data);
   return data;
 };
