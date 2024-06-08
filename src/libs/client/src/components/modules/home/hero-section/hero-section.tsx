@@ -14,11 +14,9 @@ export default function HeroSection() {
               <br /> of reading
             </h1>
             <h4 className="font-light italic">
-              A platform to find books to read.
-              <br />
-              A platform to keep track of books you have read and want to read.
-              <br />
-              Create an account to begin and personalise your experience.
+              <p className="mb-2">Find books to read.</p>
+              <p className="mb-2">Keep track of the ones you have read and want to read.</p>
+              <p>Create an account to begin and personalise your experience.</p>
             </h4>
             <div>
               <LinkButton href={"/register"} background={"light"}>
