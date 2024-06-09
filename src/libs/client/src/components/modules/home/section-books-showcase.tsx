@@ -94,7 +94,7 @@ export default function SectionBooksShowcase({ name, data, ...props }: SectionBo
 
   return (
     <div className="w-full flex-col items-center" {...props}>
-      <div className="w-full overflow-x-auto">
+      <div className="w-full">
         <h3 className="text-center font-normal lowercase scrollbar-none">
           {name === "genres" ? data.genres[index].name : data[index].name}
         </h3>
