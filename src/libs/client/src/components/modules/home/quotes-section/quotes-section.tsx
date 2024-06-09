@@ -4,10 +4,21 @@ import { cn } from "@/client/utils";
 import ArrowLeftCircle from "@/client/components/ui/icons/arrow-left-circle";
 import ArrowRightCircle from "@/client/components/ui/icons/arrow-right-circle";
 import Container from "@/client/components/layouts/container";
-import { useState } from "react";
+import Quote from "./quote";
+import quotes from "./quotes.json";
+import { useEffect, useRef, useState } from "react";
 
 export default function QuotesSection() {
   const [index, setIndex] = useState<number>(0);
+
+  const translateXClassesArray = useRef<string[]>([]);
+
+  useEffect(() => {
+    translateXClassesArray.current = Array.from({ length: quotes.length }, (_, i) => i).map(
+      (_, i) => `translate-x-[-${String(i * 100)}%]`,
+    );
+    console.log(translateXClassesArray);
+  }, []);
 
   const nextQuote = function () {
     if (index < 2 && index >= 0) {
@@ -29,17 +40,10 @@ export default function QuotesSection() {
     <section>
       <Container>
         <div className="overflow-hidden whitespace-nowrap">
-          <div
-            className={cn(
-              "transition-transform duration-1000",
-              { "translate-x-[0%]": index === 0 },
-              { "translate-x-[-100%]": index === 1 },
-              { "translate-x-[-200%]": index === 2 },
-            )}
-          >
-            <span className="inline-block h-10 w-full bg-red-600"></span>
-            <span className="inline-block h-10 w-full bg-blue-600"></span>
-            <span className="inline-block h-10 w-full bg-green-600"></span>
+          <div className={cn("transition-transform duration-500", translateXClassesArray.current[index])}>
+            {quotes.map((obj, i) => {
+              return <Quote {...obj} key={i}></Quote>;
+            })}
           </div>
         </div>
         <div className={cn("mt-5 flex w-full items-center justify-center")}>
