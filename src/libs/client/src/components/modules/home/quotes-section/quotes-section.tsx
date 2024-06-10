@@ -11,14 +11,15 @@ import { useEffect, useRef, useState } from "react";
 export default function QuotesSection() {
   const [index, setIndex] = useState<number>(0);
 
-  const translateXClassesArray = useRef<string[]>([]);
+  const translateXClassesArray = useRef<Record<string, boolean>[]>([]);
 
   useEffect(() => {
-    translateXClassesArray.current = Array.from({ length: quotes.length }, (_, i) => i).map(
-      (_, i) => `translate-x-[-${String(i * 100)}%]`,
-    );
-    console.log(translateXClassesArray);
-  }, []);
+    translateXClassesArray.current = Array.from({ length: quotes.length }, (_, i) => i).map((_, i) => ({
+      [`translate-x-[-${String(i * 100)}%]`]: index === i,
+    }));
+
+    console.log(translateXClassesArray.current);
+  }, [index]);
 
   const nextQuote = function () {
     if (index < 2 && index >= 0) {
@@ -40,7 +41,7 @@ export default function QuotesSection() {
     <section>
       <Container>
         <div className="overflow-hidden whitespace-nowrap">
-          <div className={cn("transition-transform duration-500", translateXClassesArray.current[index])}>
+          <div className={cn("transition-transform duration-500", ...translateXClassesArray.current)}>
             {quotes.map((obj, i) => {
               return <Quote {...obj} key={i}></Quote>;
             })}
