@@ -6,34 +6,54 @@ import ArrowRightCircle from "@/client/components/ui/icons/arrow-right-circle";
 import Container from "@/client/components/layouts/container";
 import Quote from "./quote";
 import quotes from "./quotes.json";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 
 export default function QuotesSection() {
   const [index, setIndex] = useState<number>(0);
 
-  const translateXClassesArray = useRef<Record<string, boolean>[]>([]);
-
-  useEffect(() => {
-    translateXClassesArray.current = Array.from({ length: quotes.length }, (_, i) => i).map((_, i) => ({
+  const [translateXClassesArray, setTranslateXClassesArray] = useState(
+    Array.from({ length: quotes.length }, (_, i) => i).map((_, i) => ({
       [`translate-x-[-${String(i * 100)}%]`]: index === i,
-    }));
-
-    console.log(translateXClassesArray.current);
-  }, [index]);
+    })),
+  );
 
   const nextQuote = function () {
     if (index < 2 && index >= 0) {
-      setIndex((i) => i + 1);
+      const nextIndex = index + 1;
+      setIndex(nextIndex);
+
+      const newClassesArray = Array.from({ length: quotes.length }, (_, i) => i).map((_, i) => ({
+        [`translate-x-[-${String(i * 100)}%]`]: nextIndex === i,
+      }));
+      setTranslateXClassesArray(newClassesArray);
     } else {
-      setIndex(0);
+      const newIndex = 0;
+      setIndex(newIndex);
+
+      const newClassesArray = Array.from({ length: quotes.length }, (_, i) => i).map((_, i) => ({
+        [`translate-x-[-${String(i * 100)}%]`]: newIndex === i,
+      }));
+      setTranslateXClassesArray(newClassesArray);
     }
   };
 
   const prevQuote = function () {
     if (index <= 2 && index > 0) {
-      setIndex((i) => i - 1);
+      const prevIndex = index - 1;
+      setIndex(prevIndex);
+
+      const newClassesArray = Array.from({ length: quotes.length }, (_, i) => i).map((_, i) => ({
+        [`translate-x-[-${String(i * 100)}%]`]: prevIndex === i,
+      }));
+      setTranslateXClassesArray(newClassesArray);
     } else {
-      setIndex(2);
+      const newIndex = quotes.length - 1;
+      setIndex(newIndex);
+
+      const newClassesArray = Array.from({ length: quotes.length }, (_, i) => i).map((_, i) => ({
+        [`translate-x-[-${String(i * 100)}%]`]: newIndex === i,
+      }));
+      setTranslateXClassesArray(newClassesArray);
     }
   };
 
@@ -41,9 +61,9 @@ export default function QuotesSection() {
     <section>
       <Container>
         <div className="overflow-hidden whitespace-nowrap">
-          <div className={cn("transition-transform duration-500", ...translateXClassesArray.current)}>
+          <div className={cn("transition-transform duration-500", ...translateXClassesArray)}>
             {quotes.map((obj, i) => {
-              return <Quote {...obj} key={i}></Quote>;
+              return <Quote {...obj} key={i} />;
             })}
           </div>
         </div>
