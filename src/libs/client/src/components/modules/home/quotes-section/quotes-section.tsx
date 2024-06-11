@@ -26,6 +26,8 @@ export default function QuotesSection() {
         [`translate-x-[-${String(i * 100)}%]`]: nextIndex === i,
       }));
       setTranslateXClassesArray(newClassesArray);
+
+      console.log(newClassesArray, nextIndex);
     } else {
       const newIndex = 0;
       setIndex(newIndex);
@@ -34,6 +36,8 @@ export default function QuotesSection() {
         [`translate-x-[-${String(i * 100)}%]`]: newIndex === i,
       }));
       setTranslateXClassesArray(newClassesArray);
+
+      console.log(newClassesArray, newIndex);
     }
   };
 
@@ -46,6 +50,8 @@ export default function QuotesSection() {
         [`translate-x-[-${String(i * 100)}%]`]: prevIndex === i,
       }));
       setTranslateXClassesArray(newClassesArray);
+
+      console.log(newClassesArray, prevIndex);
     } else {
       const newIndex = quotes.length - 1;
       setIndex(newIndex);
@@ -54,6 +60,8 @@ export default function QuotesSection() {
         [`translate-x-[-${String(i * 100)}%]`]: newIndex === i,
       }));
       setTranslateXClassesArray(newClassesArray);
+
+      console.log(newClassesArray, newIndex);
     }
   };
 
