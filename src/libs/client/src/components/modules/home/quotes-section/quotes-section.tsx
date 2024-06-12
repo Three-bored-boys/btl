@@ -17,51 +17,34 @@ export default function QuotesSection() {
     })),
   );
 
+  const updateIndexAndTranslateXClassesArray = function (updatedIndex: number) {
+    setIndex(updatedIndex);
+
+    const newTranslateXClassesArray = Array.from({ length: quotes.length }, (_, i) => i).map((_, i) => ({
+      [`translate-x-[-${String(i * 100)}%]`]: updatedIndex === i,
+    }));
+    setTranslateXClassesArray(newTranslateXClassesArray);
+
+    console.log(newTranslateXClassesArray, updatedIndex);
+  };
+
   const nextQuote = function () {
     if (index < 2 && index >= 0) {
       const nextIndex = index + 1;
-      setIndex(nextIndex);
-
-      const newClassesArray = Array.from({ length: quotes.length }, (_, i) => i).map((_, i) => ({
-        [`translate-x-[-${String(i * 100)}%]`]: nextIndex === i,
-      }));
-      setTranslateXClassesArray(newClassesArray);
-
-      console.log(newClassesArray, nextIndex);
+      updateIndexAndTranslateXClassesArray(nextIndex);
     } else {
       const newIndex = 0;
-      setIndex(newIndex);
-
-      const newClassesArray = Array.from({ length: quotes.length }, (_, i) => i).map((_, i) => ({
-        [`translate-x-[-${String(i * 100)}%]`]: newIndex === i,
-      }));
-      setTranslateXClassesArray(newClassesArray);
-
-      console.log(newClassesArray, newIndex);
+      updateIndexAndTranslateXClassesArray(newIndex);
     }
   };
 
   const prevQuote = function () {
     if (index <= 2 && index > 0) {
       const prevIndex = index - 1;
-      setIndex(prevIndex);
-
-      const newClassesArray = Array.from({ length: quotes.length }, (_, i) => i).map((_, i) => ({
-        [`translate-x-[-${String(i * 100)}%]`]: prevIndex === i,
-      }));
-      setTranslateXClassesArray(newClassesArray);
-
-      console.log(newClassesArray, prevIndex);
+      updateIndexAndTranslateXClassesArray(prevIndex);
     } else {
       const newIndex = quotes.length - 1;
-      setIndex(newIndex);
-
-      const newClassesArray = Array.from({ length: quotes.length }, (_, i) => i).map((_, i) => ({
-        [`translate-x-[-${String(i * 100)}%]`]: newIndex === i,
-      }));
-      setTranslateXClassesArray(newClassesArray);
-
-      console.log(newClassesArray, newIndex);
+      updateIndexAndTranslateXClassesArray(newIndex);
     }
   };
 
