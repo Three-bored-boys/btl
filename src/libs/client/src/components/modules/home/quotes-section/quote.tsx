@@ -6,8 +6,10 @@ type QuoteProps = { author: string; quote: string } & ComponentProps<"div">;
 export default function Quote({ author, quote, className, ...props }: QuoteProps) {
   return (
     <div className={cn("inline-block w-full", className)} {...props}>
-      {author}
-      {quote}
+      <div>
+        <q className="inline-block">{quote}</q>
+      </div>
+      <div>{author}</div>
     </div>
   );
 }
