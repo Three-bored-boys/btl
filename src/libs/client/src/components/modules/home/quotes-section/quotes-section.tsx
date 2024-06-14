@@ -58,6 +58,15 @@ export default function QuotesSection() {
             })}
           </div>
         </div>
+        <div className="mt-8 flex w-full items-center justify-center gap-2">
+          {quotes.map((_, i) => (
+            <div
+              key={i}
+              className={cn("h-2 w-2 cursor-pointer rounded-full bg-secondary-300", { "bg-primary": i === index })}
+              onClick={() => updateIndexAndTranslateXClassesArray(i)}
+            ></div>
+          ))}
+        </div>
         <div className={cn("mt-5 flex w-full items-center justify-center")}>
           <span className={cn("mr-9 flex cursor-pointer items-center")} onClick={prevQuote}>
             <ArrowLeftCircle />
