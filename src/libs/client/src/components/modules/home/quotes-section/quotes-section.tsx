@@ -24,8 +24,6 @@ export default function QuotesSection() {
       [`translate-x-[-${String(i * 100)}%]`]: updatedIndex === i,
     }));
     setTranslateXClassesArray(newTranslateXClassesArray);
-
-    console.log(newTranslateXClassesArray, updatedIndex);
   };
 
   const nextQuote = function () {
