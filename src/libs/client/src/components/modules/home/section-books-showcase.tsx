@@ -3,30 +3,25 @@
 import { cn } from "@/client/utils";
 import ArrowLeftCircle from "@/client/components/ui/icons/arrow-left-circle";
 import ArrowRightCircle from "@/client/components/ui/icons/arrow-right-circle";
-import type { BestSeller, Book } from "@/libs/server/src/types";
 import { ComponentProps, useCallback, useEffect, useState } from "react";
-import BookCard from "./book-card";
 import useEmblaCarousel from "embla-carousel-react";
 
 type SectionBooksShowcaseProps = (
   | {
       name: "genres";
-      data: {
-        genre: string;
-        books: Book[];
-      }[];
+
       count: number;
       sessionStorageKey: "genres-index";
     }
-  | { name: "best-sellers"; data: BestSeller[]; count: number; sessionStorageKey: "best-sellers-index" }
+  | { name: "best-sellers"; count: number; sessionStorageKey: "best-sellers-index" }
 ) &
   ComponentProps<"div">;
 
 export default function SectionBooksShowcase({
   name,
-  data,
   count,
   sessionStorageKey,
+  children,
   ...props
 }: SectionBooksShowcaseProps) {
   const [index, setIndex] = useState<number>(0);
@@ -68,7 +63,7 @@ export default function SectionBooksShowcase({
       const startIndex = Number(window.sessionStorage.getItem(sessionStorageKey));
       getIndexFromSessionStorage(startIndex);
     }
-  }, [name, data, getIndexFromSessionStorage, sessionStorageKey]);
+  }, [name, getIndexFromSessionStorage, sessionStorageKey]);
 
   const scrollPrev = useCallback(() => {
     if (emblaApi) {
@@ -107,35 +102,7 @@ export default function SectionBooksShowcase({
   return (
     <div className="w-full flex-col items-center" {...props}>
       <div className="overflow-hidden" ref={emblaRef}>
-        <div className={cn("flex")}>
-          {name === "genres"
-            ? data.map((val, i) => {
-                return (
-                  <div className="flex-[0_0_100%]" key={i}>
-                    <h3 className="text-center font-normal lowercase scrollbar-none">{val.genre}</h3>
-                    <hr className="mb-5 h-1 w-full bg-primary scrollbar-none" />
-                    <div className="flex w-full items-center justify-between gap-3 overflow-x-auto scrollbar-thin">
-                      {val.books.map((book, i) => (
-                        <BookCard key={i} book={book} />
-                      ))}
-                    </div>
-                  </div>
-                );
-              })
-            : data.map((val, i) => {
-                return (
-                  <div className="flex-[0_0_100%]" key={i}>
-                    <h3 className="text-center font-normal lowercase scrollbar-none">{val.name}</h3>
-                    <hr className="mb-5 h-1 w-full bg-primary scrollbar-none" />
-                    <div className="flex w-full items-center justify-between gap-3 overflow-x-auto scrollbar-thin">
-                      {val.books.map((book, i) => (
-                        <BookCard key={i} book={book} />
-                      ))}
-                    </div>
-                  </div>
-                );
-              })}
-        </div>
+        <div className={cn("flex")}>{children}</div>
       </div>
       <div className="mt-8 flex w-full items-center justify-center gap-2">
         {Array.from({ length: count }, (_, i) => i).map((_, i) => (
