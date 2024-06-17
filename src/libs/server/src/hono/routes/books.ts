@@ -1,4 +1,4 @@
-import { Hono } from "hono";
+import { Context, Hono } from "hono";
 import genresList from "../../data/genres.json";
 import { GoogleBooksService } from "../../services/google.service";
 import { NYTimesService } from "../../services/ny-times.service";
@@ -53,6 +53,31 @@ books.get(
       }
     },
   ),
+  cache({
+    cacheName: (
+      c: Context<
+        Environment,
+        "/genres/:genre",
+        {
+          in: {
+            param: {
+              genre: string | undefined;
+            };
+          };
+          out: {
+            param: {
+              genre: string;
+            };
+          };
+        }
+      >,
+    ) => {
+      const { genre } = c.req.valid("param");
+      const uniqueCacheName = genre.split(" ").join("-");
+      return `genres-${uniqueCacheName}`;
+    },
+    cacheControl: "max-age=172800, must-revalidate, public",
+  }),
   async (c) => {
     const { genre } = c.req.valid("param");
 
@@ -86,8 +111,32 @@ books.get(
       }
     },
   ),
+  cache({
+    cacheName: (
+      c: Context<
+        Environment,
+        "/:isbn",
+        {
+          in: {
+            param: {
+              isbn: string | undefined;
+            };
+          };
+          out: {
+            param: {
+              isbn: string;
+            };
+          };
+        }
+      >,
+    ) => {
+      const { isbn } = c.req.valid("param");
+      return isbn;
+    },
+    cacheControl: "max-age=172800, must-revalidate, public",
+  }),
   async (c) => {
-    const isbn = c.req.param("isbn");
+    const { isbn } = c.req.valid("param");
     if (!isbn) {
       const responseData: BadResponse = { success: false, error: "ISBN is required" };
       return c.json(responseData, 400);
@@ -106,17 +155,24 @@ books.get(
   },
 );
 
-books.get("/latest-books", async (c) => {
-  const googleBooksService = new GoogleBooksService(c.env.GOOGLE_BOOKS_API_KEY);
-  const books = await googleBooksService.getLatestBooks();
+books.get(
+  "/latest-books",
+  cache({
+    cacheName: "latest-books",
+    cacheControl: "max-age=172800, must-revalidate, public",
+  }),
+  async (c) => {
+    const googleBooksService = new GoogleBooksService(c.env.GOOGLE_BOOKS_API_KEY);
+    const books = await googleBooksService.getLatestBooks();
 
-  if (books.length === 0) {
-    const responseData: BadResponse = { success: false, error: "Trouble getting books" };
-    return c.json(responseData, 400);
-  }
+    if (books.length === 0) {
+      const responseData: BadResponse = { success: false, error: "Trouble getting books" };
+      return c.json(responseData, 400);
+    }
 
-  const responseData: GoodResponse<Book[]> = { success: true, data: books };
-  return c.json(responseData);
-});
+    const responseData: GoodResponse<Book[]> = { success: true, data: books };
+    return c.json(responseData);
+  },
+);
 
 export default books;
