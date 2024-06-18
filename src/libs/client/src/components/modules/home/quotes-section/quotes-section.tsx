@@ -8,7 +8,6 @@ import Quote from "./quote";
 import quotes from "./quotes.json";
 import { useCallback, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
-// import Autoplay from "embla-carousel-autoplay";
 
 export default function QuotesSection() {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false, duration: 30, startIndex: 0 });
