@@ -4,6 +4,8 @@ import type { BestSeller } from "@/libs/server/src/types";
 import { fetchData } from "@/libs/client/src/hooks";
 import { Suspense } from "react";
 import SectionBooksShowcase from "../section-books-showcase";
+import LoadingSkeleton from "../loading-skeleton";
+import BookCard from "../book-card";
 
 export default function NYTBestSellersSection() {
   return (
@@ -12,7 +14,7 @@ export default function NYTBestSellersSection() {
         <SectionPreamble title="NYT Best Sellers">
           Explore the latest books on the NYT Best Sellers List
         </SectionPreamble>
-        <Suspense fallback={<h1>Loading.....</h1>}>
+        <Suspense fallback={<LoadingSkeleton />}>
           <GetBestSellersWrapper />
         </Suspense>
       </Container>
@@ -21,7 +23,23 @@ export default function NYTBestSellersSection() {
 }
 
 async function GetBestSellersWrapper() {
-  const bestSellers = await fetchData<BestSeller[]>(`${process.env.NEXT_PUBLIC_API_URL}/books/best-sellers`);
+  const data = await fetchData<BestSeller[]>(`${process.env.NEXT_PUBLIC_API_URL}/books/best-sellers`);
 
-  return <SectionBooksShowcase name="best-sellers" data={bestSellers} />;
+  return (
+    <SectionBooksShowcase name="best-sellers" count={data.length} sessionStorageKey="best-sellers-index">
+      {data.map((val, i) => {
+        return (
+          <div className="flex-[0_0_100%]" key={i}>
+            <h3 className="text-center font-normal lowercase scrollbar-none">{val.name}</h3>
+            <hr className="mb-5 h-1 w-full bg-primary scrollbar-none" />
+            <div className="flex w-full items-center justify-between gap-3 overflow-x-auto scrollbar-thin">
+              {val.books.map((book, i) => (
+                <BookCard key={i} book={book} />
+              ))}
+            </div>
+          </div>
+        );
+      })}
+    </SectionBooksShowcase>
+  );
 }

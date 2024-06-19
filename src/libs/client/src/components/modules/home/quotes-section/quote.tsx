@@ -5,10 +5,10 @@ type QuoteProps = { author: string; quote: string } & ComponentProps<"div">;
 
 export default function Quote({ author, quote, className, ...props }: QuoteProps) {
   return (
-    <div className={cn("inline-block w-full", className)} {...props}>
-      <div className="mb-5 text-wrap text-center font-medium">
-        <q className="inline-block w-full text-base italic xs:text-lg sm:text-xl md:text-2xl lg:text-3xl">{quote}</q>
-      </div>
+    <div className={cn("min-w-0 flex-[0_0_100%]", className)} {...props}>
+      <q className="mb-5 inline-block w-full text-wrap text-center text-base font-medium italic xs:text-lg sm:text-xl md:text-2xl lg:text-3xl">
+        {quote}
+      </q>
       <div className="text-center text-sm font-normal sm:text-base md:text-lg lg:text-xl">- {author}</div>
     </div>
   );

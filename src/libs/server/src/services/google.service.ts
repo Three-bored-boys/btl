@@ -8,6 +8,7 @@ export class GoogleBooksService {
   private async fetchBooks(url: string): Promise<Book[]> {
     try {
       const response = await fetch(url);
+      console.log(response.ok, response.status, response.statusText);
       if (!response.ok) {
         throw new Error(response.statusText);
       }
