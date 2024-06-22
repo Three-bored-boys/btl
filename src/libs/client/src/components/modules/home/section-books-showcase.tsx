@@ -67,7 +67,6 @@ export default function SectionBooksShowcase({
 
   const scrollPrev = useCallback(() => {
     if (emblaApi) {
-      console.log(index);
       if (index > 0 && index < count) {
         emblaApi.scrollPrev();
         const newIndex = index - 1;
@@ -84,7 +83,6 @@ export default function SectionBooksShowcase({
 
   const scrollNext = useCallback(() => {
     if (emblaApi) {
-      console.log(index);
       if (index < count - 1 && index >= 0) {
         emblaApi.scrollNext();
         const newIndex = index + 1;

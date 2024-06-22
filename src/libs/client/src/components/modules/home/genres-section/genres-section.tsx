@@ -30,7 +30,6 @@ async function GetGenresWrapper() {
   );
 
   const allGenresBooksArray = await Promise.all(getGenresBooksPromisesArray);
-  console.log(allGenresBooksArray);
 
   const data = allGenresBooksArray.map((val, i) => {
     return { genre: genres[i].name, books: val };
