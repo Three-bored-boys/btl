@@ -1,10 +1,13 @@
 import { ReactElement } from "react";
-import Container from "@/libs/client/src/components/layouts/container";
+import Link from "next/link";
 
 export default function LoginPage(): ReactElement {
   return (
     <main className="text-3xl">
-      <Container>Log In</Container>
+      Log In
+      <Link href={"/register"} className="ml-5">
+        Register
+      </Link>
     </main>
   );
 }
