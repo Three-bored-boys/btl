@@ -5,6 +5,8 @@ import authLayoutImage2 from "@/public/assets/images/authPage/authLayout2.jpg";
 import authLayoutImage3 from "@/public/assets/images/authPage/authLayout3.jpg";
 import authLayoutImage4 from "@/public/assets/images/authPage/authLayout4.jpg";
 import authLayoutImage5 from "@/public/assets/images/authPage/authLayout5.jpg";
+import Logo from "../../libs/client/src/components/ui/logo";
+import { cn } from "../../libs/client/src/utils";
 
 export default function AuthLayout({
   children,
@@ -24,7 +26,8 @@ export default function AuthLayout({
 
   return (
     <main className="grid w-full grid-cols-2 grid-rows-[100vh]">
-      <div>
+      <div className="relative overflow-hidden">
+        <Logo className={cn("absolute left-5 top-5 text-5xl", { "text-white": authLayoutImageIndex === 0 })}></Logo>
         <Image
           src={layoutBackground}
           alt="Image about books"
@@ -33,7 +36,7 @@ export default function AuthLayout({
           className="h-full w-full object-cover"
         ></Image>
       </div>
-      <div>{children}</div>
+      <div className="flex items-center justify-center px-40">{children}</div>
     </main>
   );
 }
