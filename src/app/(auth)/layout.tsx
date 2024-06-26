@@ -36,7 +36,7 @@ export default function AuthLayout({
           className="h-full w-full object-cover"
         ></Image>
       </div>
-      <div className="flex items-center justify-center px-40">{children}</div>
+      <div className="overflow-y-auto px-40 py-20">{children}</div>
     </main>
   );
 }
