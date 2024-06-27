@@ -61,6 +61,9 @@ jobs:
       - name: Database Schema Generation and Migration
         run: pnpm run db:generate && pnpm run db:migrate
 
+      - name: Edit wrangler.toml file
+        run: echo 'name = "btl-nextjs-api-preview"' >> wrangler.toml
+
       - name: Deploy Hono to Cloudflare Workers
         uses: cloudflare/wrangler-action@v3
         with:
@@ -97,6 +100,9 @@ jobs:
           run_install: |
             - recursive: true
               args: [--no-frozen-lockfile]
+
+      - name: Edit wrangler.toml file
+        run: echo 'name = "btl-nextjs-api-preview"' >> wrangler.toml
 
       - name: Deploy Hono to Cloudflare Workers
         uses: cloudflare/wrangler-action@v3
@@ -141,6 +147,9 @@ jobs:
       - name: Database Schema Generation and Migration
         run: pnpm run db:generate && pnpm run db:migrate
 
+      - name: Edit wrangler.toml file
+        run: echo 'name = "btl-nextjs-api-preview"' >> wrangler.toml
+
       - name: Deploy Hono to Cloudflare Workers
         uses: cloudflare/wrangler-action@v3
         with:
@@ -162,6 +171,9 @@ jobs:
           run_install: |
             - recursive: true
               args: [--no-frozen-lockfile]
+
+      - name: Edit wrangler.toml file
+        run: echo 'name = "btl-nextjs-api-preview"' >> wrangler.toml
 
       - name: Deploy Hono to Cloudflare Workers
         uses: cloudflare/wrangler-action@v3
