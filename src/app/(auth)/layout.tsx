@@ -38,6 +38,7 @@ export default function AuthLayout({
           width={1000}
           height={1000}
           className="h-full w-full object-cover"
+          placeholder="blur"
         ></Image>
       </div>
       <div className="overflow-y-auto px-40 py-20">{children}</div>
