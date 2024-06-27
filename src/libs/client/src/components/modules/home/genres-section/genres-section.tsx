@@ -39,7 +39,7 @@ async function GetGenresWrapper() {
     <SectionBooksShowcase name="genres" count={count} sessionStorageKey="genres-index">
       {data.map((val, i) => {
         return (
-          <div className="flex-[0_0_100%]" key={i}>
+          <div className="w-full flex-[0_0_100%]" key={i}>
             <h3 className="text-center font-normal lowercase scrollbar-none">{val.genre}</h3>
             <hr className="mb-5 h-1 w-full bg-primary scrollbar-none" />
             <div className="flex w-full items-center justify-between gap-3 overflow-x-auto scrollbar-thin">

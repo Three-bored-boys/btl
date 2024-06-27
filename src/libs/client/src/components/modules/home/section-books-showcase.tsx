@@ -25,7 +25,7 @@ export default function SectionBooksShowcase({
   ...props
 }: SectionBooksShowcaseProps) {
   const [index, setIndex] = useState<number>(0);
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false, duration: 30, startIndex: 0 });
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false, duration: 30, startIndex: 0, watchDrag: false });
 
   const getIndexFromSessionStorage = useCallback(
     (sessionStorageIndex: number) => {
