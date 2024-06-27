@@ -1,13 +1,12 @@
 import { ReactElement } from "react";
+import LogInForm from "@/client/components/modules/auth/log-in/log-in-form";
 import Link from "next/link";
 
 export default function LoginPage(): ReactElement {
   return (
-    <main className="text-3xl">
-      Log In
-      <Link href={"/register"} className="ml-5">
-        Register
-      </Link>
-    </main>
+    <>
+      <LogInForm />
+      <Link href={"/register"}>Go to Register page</Link>
+    </>
   );
 }
