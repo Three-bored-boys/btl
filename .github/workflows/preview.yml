@@ -209,6 +209,15 @@ jobs:
       - name: Database Schema Generation and Migration
         run: pnpm run db:generate && pnpm run db:migrate
 
+      - name: Edit wrangler.toml file
+        run: echo 'name = "btl-nextjs-api-preview"' >> wrangler.toml
+
+      - name: Deploy Hono to Cloudflare Workers
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
       - name: Install Vercel CLI
         run: pnpm install --global vercel@latest
 
