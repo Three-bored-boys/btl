@@ -1,9 +1,7 @@
-// import { pgTable, serial, text, doublePrecision, boolean } from "drizzle-orm/pg-core";
+import { pgTable, serial, text, varchar } from "drizzle-orm/pg-core";
 
-// export const products = pgTable("products", {
-//   id: serial("id").primaryKey(),
-//   name: text("name"),
-//   description: text("description"),
-//   price: doublePrecision("price"),
-//   inStock: boolean("inStock"),
-// });
+export const users = pgTable("users", {
+  id: serial("id").primaryKey(),
+  fullName: text("full_name"),
+  phone: varchar("phone", { length: 256 }),
+});
