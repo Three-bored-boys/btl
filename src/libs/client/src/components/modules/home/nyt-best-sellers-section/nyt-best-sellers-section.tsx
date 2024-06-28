@@ -23,7 +23,7 @@ export default function NYTBestSellersSection() {
 }
 
 async function GetBestSellersWrapper() {
-  const data = await fetchData<BestSeller[]>(`${process.env.NEXT_PUBLIC_API_URL}/books/best-sellers`);
+  const data = await fetchData<BestSeller[]>(`${process.env.API_URL}/books/best-sellers`);
 
   return (
     <SectionBooksShowcase name="best-sellers" count={data.length} sessionStorageKey="best-sellers-index">

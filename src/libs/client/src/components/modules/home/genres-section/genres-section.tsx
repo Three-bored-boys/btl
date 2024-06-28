@@ -23,10 +23,10 @@ export default function GenresSection() {
 }
 
 async function GetGenresWrapper() {
-  const { genres, count } = await fetchData<Genres>(`${process.env.NEXT_PUBLIC_API_URL}/books/genres`);
+  const { genres, count } = await fetchData<Genres>(`${process.env.API_URL}/books/genres`);
 
   const getGenresBooksPromisesArray: Promise<Book[]>[] = genres.map((val, i) =>
-    fetchData<Book[]>(`${process.env.NEXT_PUBLIC_API_URL}/books/genres/${val.name}`),
+    fetchData<Book[]>(`${process.env.API_URL}/books/genres/${val.name}`),
   );
 
   const allGenresBooksArray = await Promise.all(getGenresBooksPromisesArray);
