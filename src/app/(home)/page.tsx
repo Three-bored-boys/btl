@@ -8,6 +8,7 @@ import QuotesSection from "@/libs/client/src/components/modules/home/quotes-sect
 export const revalidate = 0;
 
 export default function Home() {
+  console.log("We are Home");
   return (
     <main className="relative">
       <NavBar />
