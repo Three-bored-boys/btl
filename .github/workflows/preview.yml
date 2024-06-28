@@ -10,6 +10,7 @@ jobs:
     outputs:
       backend: ${{steps.filter.outputs.backend}}
       frontend: ${{steps.filter.outputs.frontend}}
+      database: ${{steps.filter.outputs.database}}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -26,12 +27,16 @@ jobs:
                 - "src/app/**"
                 - "src/libs/client/**"
                 - "next.config.mjs"
+            database:
+                - "src/libs/server/src/db/schema.ts"
+                - "drizzle.config.ts"
+                - "drizzle/*"
           base: "${{ github.ref }}"
 
-  deploy-backend-and-frontend:
+  database-backend-frontend:
     needs: "check-files-changed"
-    name: Cloudflare Workers Hono Deployment and Vercel Preview Deployment
-    if: ${{needs.check-files-changed.outputs.backend == 'true' && needs.check-files-changed.outputs.frontend == 'true'}}
+    name: Generation and Migration to Preview Database -> Cloudflare Workers Hono Preview Deployment -> Vercel Preview Deployment
+    if: ${{needs.check-files-changed.outputs.backend == 'true' && needs.check-files-changed.outputs.frontend == 'true' && needs.check-files-changed.outputs.database == 'true'}}
     env:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
@@ -46,6 +51,18 @@ jobs:
           run_install: |
             - recursive: true
               args: [--no-frozen-lockfile]
+
+      - name: Make .dev.vars file for database migration
+        uses: SpicyPizza/create-envfile@v2.0
+        with:
+          envkey_DATABASE_URL: ${{secrets.DATABASE_URL_PREVIEW}}
+          file_name: .dev.vars
+
+      - name: Database Schema Generation and Migration
+        run: pnpm run db:generate && pnpm run db:migrate
+
+      - name: Edit wrangler.toml file
+        run: echo 'name = "btl-nextjs-api-preview"' >> wrangler.toml
 
       - name: Deploy Hono to Cloudflare Workers
         uses: cloudflare/wrangler-action@v3
@@ -65,10 +82,13 @@ jobs:
       - name: Deploy Project Artifacts to Vercel
         run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
 
-  deploy-backend-only:
+  backend-frontend:
     needs: "check-files-changed"
-    name: Cloudflare Workers Hono Deployment only
-    if: ${{needs.check-files-changed.outputs.backend == 'true' && needs.check-files-changed.outputs.frontend == 'false'}}
+    name: Cloudflare Workers Hono Preview Deployment -> Vercel Preview Deployment
+    if: ${{needs.check-files-changed.outputs.backend == 'true' && needs.check-files-changed.outputs.frontend == 'true' && needs.check-files-changed.outputs.database == 'false'}}
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -81,16 +101,130 @@ jobs:
             - recursive: true
               args: [--no-frozen-lockfile]
 
+      - name: Edit wrangler.toml file
+        run: echo 'name = "btl-nextjs-api-preview"' >> wrangler.toml
+
       - name: Deploy Hono to Cloudflare Workers
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
-  deploy-frontend-only:
+      - name: Install Vercel CLI
+        run: pnpm install --global vercel@latest
+
+      - name: Pull Vercel Environment Information
+        run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Build Project Artifacts
+        run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Deploy Project Artifacts to Vercel
+        run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
+
+  database-backend:
     needs: "check-files-changed"
-    name: Vercel Preview Deployment only
-    if: ${{needs.check-files-changed.outputs.backend == 'false' && needs.check-files-changed.outputs.frontend == 'true'}}
+    name: Generation and Migration to Preview Database -> Cloudflare Workers Hono Preview Deployment
+    if: ${{needs.check-files-changed.outputs.backend == 'true' && needs.check-files-changed.outputs.frontend == 'false' && needs.check-files-changed.outputs.database == 'true'}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: |
+            - recursive: true
+              args: [--no-frozen-lockfile]
+
+      - name: Make .dev.vars file for database migration
+        uses: SpicyPizza/create-envfile@v2.0
+        with:
+          envkey_DATABASE_URL: ${{secrets.DATABASE_URL_PREVIEW}}
+          file_name: .dev.vars
+
+      - name: Database Schema Generation and Migration
+        run: pnpm run db:generate && pnpm run db:migrate
+
+      - name: Edit wrangler.toml file
+        run: echo 'name = "btl-nextjs-api-preview"' >> wrangler.toml
+
+      - name: Deploy Hono to Cloudflare Workers
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+  backend:
+    needs: "check-files-changed"
+    name: Cloudflare Workers Hono Preview Deployment
+    if: ${{needs.check-files-changed.outputs.backend == 'true' && needs.check-files-changed.outputs.frontend == 'false' && needs.check-files-changed.outputs.database == 'false'}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: |
+            - recursive: true
+              args: [--no-frozen-lockfile]
+
+      - name: Edit wrangler.toml file
+        run: echo 'name = "btl-nextjs-api-preview"' >> wrangler.toml
+
+      - name: Deploy Hono to Cloudflare Workers
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+  database-frontend:
+    needs: "check-files-changed"
+    name: Generation and Migration to Preview Database -> Vercel Preview Deployment
+    if: ${{needs.check-files-changed.outputs.backend == 'false' && needs.check-files-changed.outputs.frontend == 'true' && needs.check-files-changed.outputs.database == 'true'}}
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: |
+            - recursive: true
+              args: [--no-frozen-lockfile]
+
+      - name: Make .dev.vars file for database migration
+        uses: SpicyPizza/create-envfile@v2.0
+        with:
+          envkey_DATABASE_URL: ${{secrets.DATABASE_URL_PREVIEW}}
+          file_name: .dev.vars
+
+      - name: Database Schema Generation and Migration
+        run: pnpm run db:generate && pnpm run db:migrate
+
+      - name: Install Vercel CLI
+        run: pnpm install --global vercel@latest
+
+      - name: Pull Vercel Environment Information
+        run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Build Project Artifacts
+        run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Deploy Project Artifacts to Vercel
+        run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
+
+  frontend:
+    needs: "check-files-changed"
+    name: Vercel Preview Deployment
+    if: ${{needs.check-files-changed.outputs.backend == 'false' && needs.check-files-changed.outputs.frontend == 'true' && needs.check-files-changed.outputs.database == 'false'}}
     env:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
@@ -117,3 +251,28 @@ jobs:
 
       - name: Deploy Project Artifacts to Vercel
         run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
+
+  database:
+    needs: "check-files-changed"
+    name: Generation and Migration to Preview Database
+    if: ${{needs.check-files-changed.outputs.backend == 'false' && needs.check-files-changed.outputs.frontend == 'false' && needs.check-files-changed.outputs.database == 'true'}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: |
+            - recursive: true
+              args: [--no-frozen-lockfile]
+
+      - name: Make .dev.vars file for database migration
+        uses: SpicyPizza/create-envfile@v2.0
+        with:
+          envkey_DATABASE_URL: ${{secrets.DATABASE_URL_PREVIEW}}
+          file_name: .dev.vars
+
+      - name: Database Schema Generation and Migration
+        run: pnpm run db:generate && pnpm run db:migrate

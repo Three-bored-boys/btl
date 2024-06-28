@@ -72,9 +72,8 @@ books.get(
         }
       >,
     ) => {
-      const { genre } = c.req.valid("param");
-      const uniqueCacheName = genre.split(" ").join("-");
-      return `genres-${uniqueCacheName}`;
+      const { genre } = c.req.param();
+      return `genres ${genre}`;
     },
     cacheControl: "max-age=172800, must-revalidate, public",
   }),
@@ -130,7 +129,7 @@ books.get(
         }
       >,
     ) => {
-      const { isbn } = c.req.valid("param");
+      const { isbn } = c.req.param();
       return isbn;
     },
     cacheControl: "max-age=172800, must-revalidate, public",
