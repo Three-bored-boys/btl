@@ -33,9 +33,9 @@ jobs:
                 - "drizzle/*"
           base: "${{ github.ref }}"
 
-  generate-migrate-database-deploy-backend-and-frontend:
+  database-backend-frontend:
     needs: "check-files-changed"
-    name: Database Generation, Migration, Cloudflare Workers Hono Deployment and Vercel Preview Deployment
+    name: Generation and Migration to Preview Database -> Cloudflare Workers Hono Preview Deployment -> Vercel Preview Deployment
     if: ${{needs.check-files-changed.outputs.backend == 'true' && needs.check-files-changed.outputs.frontend == 'true' && needs.check-files-changed.outputs.database == 'true'}}
     env:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
@@ -55,7 +55,7 @@ jobs:
       - name: Make .dev.vars file for database migration
         uses: SpicyPizza/create-envfile@v2.0
         with:
-          envkey_DATABASE_URL: ${{secrets.DATABASE_URL_PROD}}
+          envkey_DATABASE_URL: ${{secrets.DATABASE_URL_PREVIEW}}
           file_name: .dev.vars
 
       - name: Database Schema Generation and Migration
@@ -82,9 +82,9 @@ jobs:
       - name: Deploy Project Artifacts to Vercel
         run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
 
-  deploy-backend-and-frontend:
+  backend-frontend:
     needs: "check-files-changed"
-    name: Cloudflare Workers Hono Deployment and Vercel Preview Deployment
+    name: Cloudflare Workers Hono Preview Deployment -> Vercel Preview Deployment
     if: ${{needs.check-files-changed.outputs.backend == 'true' && needs.check-files-changed.outputs.frontend == 'true' && needs.check-files-changed.outputs.database == 'false'}}
     env:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
@@ -122,9 +122,9 @@ jobs:
       - name: Deploy Project Artifacts to Vercel
         run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
 
-  generate-migrate-database-deploy-backend-only:
+  database-backend:
     needs: "check-files-changed"
-    name: Database Generation, Migration and Cloudflare Workers Hono Deployment only
+    name: Generation and Migration to Preview Database -> Cloudflare Workers Hono Preview Deployment
     if: ${{needs.check-files-changed.outputs.backend == 'true' && needs.check-files-changed.outputs.frontend == 'false' && needs.check-files-changed.outputs.database == 'true'}}
     runs-on: ubuntu-latest
     steps:
@@ -141,7 +141,7 @@ jobs:
       - name: Make .dev.vars file for database migration
         uses: SpicyPizza/create-envfile@v2.0
         with:
-          envkey_DATABASE_URL: ${{secrets.DATABASE_URL_PROD}}
+          envkey_DATABASE_URL: ${{secrets.DATABASE_URL_PREVIEW}}
           file_name: .dev.vars
 
       - name: Database Schema Generation and Migration
@@ -156,9 +156,9 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
-  deploy-backend-only:
+  backend:
     needs: "check-files-changed"
-    name: Cloudflare Workers Hono Deployment only
+    name: Cloudflare Workers Hono Preview Deployment
     if: ${{needs.check-files-changed.outputs.backend == 'true' && needs.check-files-changed.outputs.frontend == 'false' && needs.check-files-changed.outputs.database == 'false'}}
     runs-on: ubuntu-latest
     steps:
@@ -181,9 +181,9 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
-  generate-migrate-database-deploy-frontend-only:
+  database-frontend:
     needs: "check-files-changed"
-    name: Database Generation, Migration and Vercel Preview Deployment only
+    name: Generation and Migration to Preview Database -> Vercel Preview Deployment
     if: ${{needs.check-files-changed.outputs.backend == 'false' && needs.check-files-changed.outputs.frontend == 'true' && needs.check-files-changed.outputs.database == 'true'}}
     env:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
@@ -203,20 +203,11 @@ jobs:
       - name: Make .dev.vars file for database migration
         uses: SpicyPizza/create-envfile@v2.0
         with:
-          envkey_DATABASE_URL: ${{secrets.DATABASE_URL_PROD}}
+          envkey_DATABASE_URL: ${{secrets.DATABASE_URL_PREVIEW}}
           file_name: .dev.vars
 
       - name: Database Schema Generation and Migration
         run: pnpm run db:generate && pnpm run db:migrate
-
-      - name: Edit wrangler.toml file
-        run: echo 'name = "btl-nextjs-api-preview"' >> wrangler.toml
-
-      - name: Deploy Hono to Cloudflare Workers
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
       - name: Install Vercel CLI
         run: pnpm install --global vercel@latest
@@ -230,9 +221,9 @@ jobs:
       - name: Deploy Project Artifacts to Vercel
         run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
 
-  deploy-frontend-only:
+  frontend:
     needs: "check-files-changed"
-    name: Vercel Preview Deployment only
+    name: Vercel Preview Deployment
     if: ${{needs.check-files-changed.outputs.backend == 'false' && needs.check-files-changed.outputs.frontend == 'true' && needs.check-files-changed.outputs.database == 'false'}}
     env:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
@@ -260,3 +251,28 @@ jobs:
 
       - name: Deploy Project Artifacts to Vercel
         run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
+
+  database:
+    needs: "check-files-changed"
+    name: Generation and Migration to Preview Database
+    if: ${{needs.check-files-changed.outputs.backend == 'false' && needs.check-files-changed.outputs.frontend == 'false' && needs.check-files-changed.outputs.database == 'true'}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: |
+            - recursive: true
+              args: [--no-frozen-lockfile]
+
+      - name: Make .dev.vars file for database migration
+        uses: SpicyPizza/create-envfile@v2.0
+        with:
+          envkey_DATABASE_URL: ${{secrets.DATABASE_URL_PREVIEW}}
+          file_name: .dev.vars
+
+      - name: Database Schema Generation and Migration
+        run: pnpm run db:generate && pnpm run db:migrate
