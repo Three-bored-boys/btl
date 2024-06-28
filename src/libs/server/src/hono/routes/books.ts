@@ -80,7 +80,6 @@ books.get(
   }),
   async (c) => {
     const { genre } = c.req.valid("param");
-    console.log(genre);
 
     const googleBooksService = new GoogleBooksService(c.env.GOOGLE_BOOKS_API_KEY);
     const books = await googleBooksService.getBooksByGenre(genre);
