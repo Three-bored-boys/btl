@@ -9,7 +9,7 @@ app.use(logger());
 app.use("*", cors());
 
 app.get("/", (c) => {
-  console.log("testing github actions");
+  console.log("testing github actions again...");
   return c.text("Welcome to the BTL API! 🚀");
 });
 
