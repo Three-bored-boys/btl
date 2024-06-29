@@ -173,7 +173,7 @@ jobs:
               args: [--no-frozen-lockfile]
 
       - name: Edit wrangler.toml file
-        run: echo 'name = "btl-nextjs-api-preview"' >> wrangler.toml
+        run: echo 'name = "btl-nextjs-api-preview-${{github.ref_name}}"' >> wrangler.toml
 
       - name: Deploy Hono to Cloudflare Workers
         uses: cloudflare/wrangler-action@v3
