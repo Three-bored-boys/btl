@@ -67,4 +67,20 @@
     font-style: normal;
     font-display: swap;
   }
+
+  .bg-auth-image-1 {
+    background-image: url("../../public/assets/images/authPage/authLayout1.jpg");
+  }
+  .bg-auth-image-2 {
+    background-image: url("../../public/assets/images/authPage/authLayout2.jpg");
+  }
+  .bg-auth-image-3 {
+    background-image: url("../../public/assets/images/authPage/authLayout3.jpg");
+  }
+  .bg-auth-image-4 {
+    background-image: url("../../public/assets/images/authPage/authLayout4.jpg");
+  }
+  .bg-auth-image-5 {
+    background-image: url("../../public/assets/images/authPage/authLayout5.jpg");
+  }
 }
