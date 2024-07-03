@@ -6,6 +6,7 @@ import { Suspense } from "react";
 import SectionBooksShowcase from "../section-books-showcase";
 import LoadingSkeleton from "../loading-skeleton";
 import BookCard from "../book-card";
+import { ErrorBoundary } from "react-error-boundary";
 
 export default function NYTBestSellersSection() {
   return (
@@ -14,9 +15,11 @@ export default function NYTBestSellersSection() {
         <SectionPreamble title="NYT Best Sellers">
           Explore the latest books on the NYT Best Sellers List
         </SectionPreamble>
-        <Suspense fallback={<LoadingSkeleton />}>
-          <GetBestSellersWrapper />
-        </Suspense>
+        <ErrorBoundary fallback={<div>Something went wrong</div>}>
+          <Suspense fallback={<LoadingSkeleton />}>
+            <GetBestSellersWrapper />
+          </Suspense>
+        </ErrorBoundary>
       </Container>
     </section>
   );
