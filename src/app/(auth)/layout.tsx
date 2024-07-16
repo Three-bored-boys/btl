@@ -23,9 +23,7 @@ export default function AuthLayout({
   return (
     <main className="grid w-full grid-cols-2 grid-rows-[100vh]">
       <div className={cn("relative bg-cover bg-center", bgImageClassName)}>
-        <Logo
-          className={cn("absolute left-5 top-5 text-5xl", { "text-white": authLayoutImageIndex.current === 0 })}
-        ></Logo>
+        <Logo className={cn("absolute left-5 top-5 text-5xl", { "text-white": authLayoutImageIndex.current === 0 })} />
       </div>
       <div className="overflow-y-auto px-40 py-20">{children}</div>
     </main>

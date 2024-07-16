@@ -6,6 +6,8 @@ import SectionBooksShowcase from "../section-books-showcase";
 import { Suspense } from "react";
 import LoadingSkeleton from "../loading-skeleton";
 import BookCard from "../book-card";
+import { ErrorBoundary } from "react-error-boundary";
+import ErrorBoundaryRender from "../error-boundary-render";
 
 export default function GenresSection() {
   return (
@@ -14,9 +16,11 @@ export default function GenresSection() {
         <SectionPreamble title="Oldies but Goldies">
           Explore some more older books below according to a select list of popular genres
         </SectionPreamble>
-        <Suspense fallback={<LoadingSkeleton />}>
-          <GetGenresWrapper />
-        </Suspense>
+        <ErrorBoundary fallbackRender={ErrorBoundaryRender}>
+          <Suspense fallback={<LoadingSkeleton />}>
+            <GetGenresWrapper />
+          </Suspense>
+        </ErrorBoundary>
       </Container>
     </section>
   );
