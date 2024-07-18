@@ -1,16 +1,9 @@
-import Container from "@/libs/client/src/components/layouts/container";
-import { ReactElement } from "react";
+import BookInformation from "@/root/src/libs/client/src/components/modules/book-page/book-information";
+import { fetchData } from "@/root/src/libs/client/src/hooks";
+import type { Book } from "@/root/src/libs/server/src/types";
 
-export default function Book({
-  params: { isbn },
-  searchParams,
-}: {
-  params: { isbn: string };
-  searchParams: Record<string, string | string[] | undefined>;
-}): ReactElement {
-  return (
-    <main className="text-3xl">
-      <Container>Book Page: {isbn}</Container>
-    </main>
-  );
+export default async function Book({ params: { isbn } }: { params: { isbn: string } }) {
+  const bookObject = await fetchData<Book>(`${process.env.API_URL}/books/${isbn}`);
+
+  return <BookInformation book={bookObject} />;
 }
