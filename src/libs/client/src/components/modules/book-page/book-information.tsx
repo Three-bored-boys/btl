@@ -2,8 +2,7 @@ import Container from "@/libs/client/src/components/layouts/container";
 import type { Book } from "@/root/src/libs/server/src/types";
 import { ComponentProps } from "react";
 import Image from "next/image";
-
-const genericBookImage = "/assets/images/generic-book.png";
+import genericBookImage from "@/public/assets/images/generic-book.png";
 
 type BookInformationProps = { book: Book } & ComponentProps<"div">;
 
@@ -17,8 +16,8 @@ export default function BookInformation({ book, ...props }: BookInformationProps
               src={book.image ? book.image : genericBookImage}
               alt={`${book.title} by ${book.author}`}
               className="mx-auto h-full w-full object-cover"
-              width={1000}
-              height={1000}
+              width={500}
+              height={500}
             />
           </div>
           <div className="truncate text-pretty">
