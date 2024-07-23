@@ -9,16 +9,16 @@ type BookInformationProps = { book: Book } & ComponentProps<"div">;
 
 export default function BookInformation({ book, ...props }: BookInformationProps) {
   return (
-    <div {...props} className="mt-3">
+    <div className="mt-5" {...props}>
       <Container>
-        <div className="grid w-full grid-cols-[10rem_1fr] gap-4">
-          <div className="w-32 min-w-28 sm:w-40 sm:min-w-36" {...props}>
+        <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-[11rem_1fr] md:grid-cols-[12rem_1fr] lg:grid-cols-[14.5rem_1fr] xl:grid-cols-[16rem_1fr] 2xl:grid-cols-[18rem_1fr]">
+          <div className="mx-auto aspect-[10/16] w-2/4 border-[1px] border-gray-950 sm:w-full">
             <Image
               src={book.image ? book.image : genericBookImage}
               alt={`${book.title} by ${book.author}`}
-              className="mx-auto h-44 w-full rounded-lg object-cover sm:h-60"
-              width={500}
-              height={500}
+              className="mx-auto h-full w-full object-cover"
+              width={1000}
+              height={1000}
             />
           </div>
           <div className="truncate text-pretty">
