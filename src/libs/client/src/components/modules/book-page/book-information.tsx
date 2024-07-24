@@ -21,9 +21,8 @@ export default function BookInformation({ book, ...props }: BookInformationProps
             />
           </div>
           <div className="truncate text-pretty">
-            Book Page: {book.isbn13} <br />
-            `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;` <br />
-            {JSON.stringify(book)}
+            <h2 className="font-semibold">{book.title}</h2>
+            <h3>{book.author}</h3>
           </div>
         </div>
       </Container>
