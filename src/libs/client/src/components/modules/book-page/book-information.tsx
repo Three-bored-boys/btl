@@ -23,6 +23,7 @@ export default function BookInformation({ book, ...props }: BookInformationProps
           <div className="truncate text-pretty">
             <h2 className="font-semibold">{book.title}</h2>
             <h3>{book.author}</h3>
+            <p>{book.description}</p>
           </div>
         </div>
       </Container>
