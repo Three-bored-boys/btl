@@ -3,6 +3,7 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 import books from "@/libs/server/src/hono/routes/books";
+import auth from "@/libs/server/src/hono/routes/auth";
 
 const app = new Hono<Environment>();
 app.use(logger());
@@ -13,5 +14,6 @@ app.get("/", (c) => {
 });
 
 app.route("/books", books);
+app.route("/auth", auth);
 
 export default app;
