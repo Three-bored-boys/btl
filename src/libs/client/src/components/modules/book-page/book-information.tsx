@@ -10,7 +10,7 @@ export default function BookInformation({ book, ...props }: BookInformationProps
   return (
     <div className="mt-5" {...props}>
       <Container>
-        <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-[11rem_1fr] md:grid-cols-[12rem_1fr] lg:grid-cols-[14.5rem_1fr] xl:grid-cols-[16rem_1fr] 2xl:grid-cols-[18rem_1fr]">
+        <div className="grid w-full grid-cols-1 gap-28 sm:grid-cols-[11rem_1fr] md:grid-cols-[12rem_1fr] lg:grid-cols-[14.5rem_1fr] xl:grid-cols-[16rem_1fr] 2xl:grid-cols-[18rem_1fr]">
           <div className="mx-auto aspect-[10/16] w-2/4 border-[1px] border-gray-950 sm:w-full">
             <Image
               src={book.image ? book.image : genericBookImage}
@@ -21,8 +21,13 @@ export default function BookInformation({ book, ...props }: BookInformationProps
             />
           </div>
           <div className="truncate text-pretty">
-            <h2 className="font-semibold">{book.title}</h2>
-            <h3>{book.author}</h3>
+            {book.categories?.map((category, i) => (
+              <div key={i} className="mb-3 inline-block rounded-xl bg-secondary-100 px-3 py-0.5">
+                {category}
+              </div>
+            ))}
+            <h2 className="mb-4 font-semibold ">{book.title}</h2>
+            <h3 className="mb-4 italic ">{book.author}</h3>
             <p>{book.description}</p>
           </div>
         </div>
