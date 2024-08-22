@@ -26,7 +26,7 @@ export default function BookInformation({ book, ...props }: BookInformationProps
                 {category}
               </div>
             ))}
-            <h2 className="mb-4 font-semibold ">{book.title}</h2>
+            <h2 className="mb-3 font-semibold ">{book.title}</h2>
             <h3 className="mb-4 italic ">{book.author}</h3>
             <p>{book.description}</p>
           </div>
