@@ -29,7 +29,8 @@ export default function BookPage({ book, ...props }: BookPageProps) {
             ))}
             <h2 className="mb-3 font-semibold ">{book.title}</h2>
             <h3 className="mb-4 italic ">{book.author}</h3>
-            <p>{book.description}</p>
+            {/* <p>{book.description}</p> */}
+            <BookInformation book={book} />
           </div>
         </div>
       </Container>
