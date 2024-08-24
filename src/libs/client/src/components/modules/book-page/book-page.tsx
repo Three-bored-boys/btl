@@ -6,7 +6,7 @@ import genericBookImage from "@/public/assets/images/generic-book.png";
 
 type BookInformationProps = { book: Book } & ComponentProps<"div">;
 
-export default function BookInformation({ book, ...props }: BookInformationProps) {
+export default function BookPage({ book, ...props }: BookInformationProps) {
   return (
     <div className="mt-5" {...props}>
       <Container>
