@@ -3,10 +3,11 @@ import type { Book } from "@/root/src/libs/server/src/types";
 import { ComponentProps } from "react";
 import Image from "next/image";
 import genericBookImage from "@/public/assets/images/generic-book.png";
+import BookInformation from "./book-information";
 
-type BookInformationProps = { book: Book } & ComponentProps<"div">;
+type BookPageProps = { book: Book } & ComponentProps<"div">;
 
-export default function BookPage({ book, ...props }: BookInformationProps) {
+export default function BookPage({ book, ...props }: BookPageProps) {
   return (
     <div className="mt-5" {...props}>
       <Container>
