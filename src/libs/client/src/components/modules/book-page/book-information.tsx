@@ -11,13 +11,24 @@ export default function BookInformation({ book, ...props }: BookInformationProps
 
   return (
     <div className="mt-5" {...props}>
-      <p className={cn("", { "line-clamp-3": !isExpanded, "h-auto": isExpanded })}>{book.description}</p>
-      <span
-        className={cn("border-b-2 border-b-primary p-0", { "inline-block": !isExpanded })}
-        onClick={() => setIsExpanded(true)}
-      >
-        Show more
-      </span>
+      <div className={cn("mb-2", { "line-clamp-2": !isExpanded, "h-auto": isExpanded })}>
+        <p>{book.description}</p>
+        <div className={cn("w-full grid-cols-2", { "hidden": !isExpanded, "grid": isExpanded })}>
+          <p>hello</p>
+          <p>i am</p>
+          <p>the </p>
+          <p>boy</p>
+          <p>boy</p>
+          <p>boy</p>
+          <p>boy</p>
+          <p>boy</p>
+        </div>
+      </div>
+      {!isExpanded ? (
+        <span className={cn("border-b-[1px] border-b-primary")} onClick={() => setIsExpanded(true)}>
+          Show more
+        </span>
+      ) : null}
     </div>
   );
 }
