@@ -10,18 +10,16 @@ export default function BookInformation({ book, ...props }: BookInformationProps
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
-    <div className="mt-5" {...props}>
-      <div className={cn("mb-2", { "line-clamp-2": !isExpanded, "h-auto": isExpanded })}>
+    <div className="mt-5 w-full" {...props}>
+      <div className={cn("mb-2 w-full", { "line-clamp-2": !isExpanded, "h-auto": isExpanded })}>
         <p>{book.description}</p>
-        <div className={cn("w-full grid-cols-2", { "hidden": !isExpanded, "grid": isExpanded })}>
-          <p>hello</p>
-          <p>i am</p>
-          <p>the </p>
-          <p>boy</p>
-          <p>boy</p>
-          <p>boy</p>
-          <p>boy</p>
-          <p>boy</p>
+        <div className={cn("mt-5 grid-cols-[150px_1fr] gap-2", { "hidden": !isExpanded, "grid": isExpanded })}>
+          <div>ISBN</div>
+          <div>{book.isbn10}</div>
+          <div>ISBN 13</div>
+          <div>{book.isbn13}</div>
+          <div>Publisher</div>
+          <div>{book.publisher}</div>
         </div>
       </div>
       {!isExpanded ? (
