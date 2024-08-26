@@ -25,7 +25,12 @@ export default function BookInformation({ book, ...props }: BookInformationProps
         </div>
       </div>
       {!isExpanded ? (
-        <span className={cn("border-b-[1px] border-b-primary")} onClick={() => setIsExpanded(true)}>
+        <span
+          className={cn(
+            "cursor-pointer border-b-[1px] border-b-secondary-300 text-secondary-300 transition-colors hover:border-b-primary hover:text-primary",
+          )}
+          onClick={() => setIsExpanded(true)}
+        >
           Show more
         </span>
       ) : null}
