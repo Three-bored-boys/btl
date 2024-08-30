@@ -4,6 +4,7 @@ import { ComponentProps } from "react";
 import Image from "next/image";
 import genericBookImage from "@/public/assets/images/generic-book.png";
 import BookInformation from "./book-information";
+import AddToLibrary from "./add-to-library";
 
 type BookPageProps = { book: Book } & ComponentProps<"div">;
 
@@ -32,6 +33,7 @@ export default function BookPage({ book, ...props }: BookPageProps) {
             <h2 className="mb-3 text-center font-semibold sm:text-left">{book.title}</h2>
             <h3 className="mb-4 text-center italic sm:text-left">{book.author}</h3>
             <BookInformation book={book} />
+            <AddToLibrary />
           </div>
         </div>
       </Container>
