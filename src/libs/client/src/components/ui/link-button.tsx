@@ -8,15 +8,12 @@ export default function LinkButton({
   className,
   children,
   background,
+  textSize,
   href,
   ...props
 }: LinkButtonProps): React.ReactElement {
   return (
-    <Link
-      href={href}
-      className={cn(button({ background }), className)}
-      {...props}
-    >
+    <Link href={href} className={cn(button({ background, textSize }), className)} {...props}>
       {children}
     </Link>
   );

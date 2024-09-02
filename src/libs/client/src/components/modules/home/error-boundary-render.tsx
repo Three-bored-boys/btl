@@ -12,7 +12,7 @@ export default function ErrorBoundaryRender({
   return (
     <div className="w-full">
       <p>Something went wrong: {error.message}</p>
-      <Button background={"light"} onClick={resetErrorBoundary}>
+      <Button background={"light"} onClick={resetErrorBoundary} textSize={"big"}>
         Try again
       </Button>
     </div>

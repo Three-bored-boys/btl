@@ -9,7 +9,7 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
       <Container>
         <h2>Something went wrong!</h2>
         <p>{error.message}</p>
-        <Button background={"dark"} onClick={() => reset()}>
+        <Button background={"dark"} onClick={() => reset()} textSize={"big"}>
           Try again
         </Button>
       </Container>

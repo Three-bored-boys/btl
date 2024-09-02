@@ -31,7 +31,7 @@ export default function RegisterForm() {
       <Label htmlFor="password">Password:</Label>
       <Input id="password" type="password" className="mb-3" />
 
-      <Button background={"light"} type="submit" disabled={false}>
+      <Button background={"light"} type="submit" disabled={false} textSize={"big"}>
         Register
       </Button>
     </form>
