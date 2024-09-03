@@ -16,7 +16,7 @@ const bookLocations = [
   { name: "Did Not Finish", value: "did-not-finish", icon: <Trash /> },
 ] as const;
 
-export default function AddToLibrary() {
+export default function BookLocationRadioGroup() {
   const [location, setLocation] = useState<string | null>(null);
   return (
     <div className="grid grid-cols-[1fr_20rem] gap-4">
