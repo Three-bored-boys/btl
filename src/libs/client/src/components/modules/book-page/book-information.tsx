@@ -22,7 +22,7 @@ export default function BookInformation({ book, ...props }: BookInformationProps
           <div>{book.publisher}</div>
         </div>
       </div>
-      {!isExpanded ? (
+      {!isExpanded && (
         <span
           className={cn(
             "cursor-pointer border-b-[1px] border-b-secondary-300 text-secondary-300 transition-colors hover:border-b-primary hover:text-primary",
@@ -31,7 +31,7 @@ export default function BookInformation({ book, ...props }: BookInformationProps
         >
           Show more
         </span>
-      ) : null}
+      )}
     </div>
   );
 }
