@@ -21,7 +21,7 @@ export default function BookLocationRadioGroup() {
   return (
     <div className="grid grid-cols-[1fr_20rem] gap-4">
       <div>
-        <RadioCards.Root size={"1"} color="bronze">
+        <RadioCards.Root size={"1"} color="bronze" columns={{ initial: "1", sm: "2" }}>
           {bookLocations.map((obj, i) => (
             <RadioCards.Item
               value={obj.value}
