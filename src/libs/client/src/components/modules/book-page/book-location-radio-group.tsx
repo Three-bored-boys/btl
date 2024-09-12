@@ -18,10 +18,11 @@ const bookLocations = [
 
 export default function BookLocationRadioGroup() {
   const [location, setLocation] = useState<string | null>(null);
+
   return (
-    <div className="grid grid-cols-[1fr_20rem] gap-4">
+    <div className="pt-3">
       <div>
-        <RadioCards.Root size={"1"} color="bronze" columns={{ initial: "1", sm: "2" }}>
+        <RadioCards.Root size={"1"} color="bronze" columns={{ initial: "1", xs: "2", lg: "4" }}>
           {bookLocations.map((obj, i) => (
             <RadioCards.Item
               value={obj.value}
@@ -37,10 +38,10 @@ export default function BookLocationRadioGroup() {
           ))}
         </RadioCards.Root>
       </div>
-      <div className="flex items-center justify-start">
+      <div className="flex items-center justify-start pt-6">
         {location && (
-          <Button background={"dark"} className="text-[10px]" textSize={"small"} onClick={() => setLocation(null)}>
-            Remove from Library
+          <Button background={"dark"} className="text-sm" onClick={() => setLocation(null)}>
+            Clear
           </Button>
         )}
       </div>
