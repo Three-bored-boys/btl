@@ -1,9 +1,7 @@
 import React from "react";
 import { cn } from "@/client/utils";
 
-type CloseProps = React.ComponentProps<"svg">;
-
-export default function Close({ className, onClick, ...props }: CloseProps): React.ReactElement {
+export default function Close({ className, onClick, ...props }: React.ComponentProps<"svg">) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

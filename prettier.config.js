@@ -8,7 +8,7 @@ const config = {
   bracketSameLine: false,
   jsxSingleQuote: false,
   printWidth: 120,
-  quoteProps: "as-needed",
+  quoteProps: "preserve",
   semi: true,
   singleQuote: false,
   tabWidth: 2,

@@ -9,13 +9,13 @@ export const revalidate = 0;
 
 export default function Home() {
   return (
-    <main className="relative">
+    <div className="relative">
       <NavBar />
       <HeroSection />
       <QuotesSection />
       <GenresSection />
       <NYTBestSellersSection />
       <Footer />
-    </main>
+    </div>
   );
 }

@@ -19,7 +19,7 @@ export default function HeroSection() {
               <p>Create an account to begin and personalise your experience.</p>
             </h4>
             <div>
-              <LinkButton href={"/register"} background={"light"}>
+              <LinkButton href={"/register"} background={"light"} textSize={"big"}>
                 Start your journey
               </LinkButton>
             </div>
