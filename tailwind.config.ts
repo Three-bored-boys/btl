@@ -20,6 +20,8 @@ const config: Config = {
       },
       screens: {
         xs: "420px",
+        "radix-xs": "520px",
+        "radix-xl": "1640px",
       },
       colors: {
         primary: {
