@@ -10,6 +10,7 @@ import Close from "@/client/components/ui/icons/close";
 import { usePathname } from "next/navigation";
 import Container from "../container";
 import { cn } from "../../../utils";
+import MagnifyingGlass from "@/client/components/ui/icons/magnifying-glass";
 
 const navLinkArr = [
   { name: "Home", path: "/" },
@@ -42,30 +43,41 @@ export default function NavBar({ className, ...props }: React.ComponentProps<"na
 
   return (
     <nav className={cn("relative w-full shadow-lg", className)} {...props}>
-      <Container className="flex items-center justify-between py-2">
-        <div>
-          <Logo className="hidden md:block" onClick={() => setShowMobileMenu(false)} />
-          {showMobileMenu ? (
-            <Close className="block md:hidden" onClick={() => setShowMobileMenu(false)} />
-          ) : (
-            <Hamburger className="block md:hidden" onClick={() => setShowMobileMenu(true)} />
-          )}
-        </div>
+      <Container>
+        <div className="grid grid-cols-[auto_1fr_auto] gap-x-6 py-1 radix-xs:gap-x-16 md:grid-cols-[auto_1fr_1fr_auto] md:gap-x-6">
+          <div>
+            <Logo className="hidden md:block" onClick={() => setShowMobileMenu(false)} />
+            {showMobileMenu ? (
+              <Close className="block md:hidden" onClick={() => setShowMobileMenu(false)} />
+            ) : (
+              <Hamburger className="block md:hidden" onClick={() => setShowMobileMenu(true)} />
+            )}
+          </div>
 
-        <div>
-          <Logo className="block text-2xl md:hidden" onClick={() => setShowMobileMenu(false)} />
-          <div className="hidden md:block">
-            <NavLinks device={"no-mobile"} routesArr={navLinkArr} rootPathname={rootPathname} />
+          <div className="flex items-center justify-start gap-1">
+            <MagnifyingGlass />
+            <input
+              type="search"
+              className="w-full rounded-lg border-2 px-1 text-base outline-none sm:w-4/5 md:w-full lg:text-lg"
+              placeholder="Enter a book or string..."
+            ></input>
+          </div>
+
+          <div className="hidden md:flex md:items-center">
+            <NavLinks device={"no-mobile"} routesArr={navLinkArr} rootPathname={rootPathname} className="w-full" />
+          </div>
+
+          <div>
+            <NavBarRight routesArr={navAuthLinkArr} />
           </div>
         </div>
-
-        <NavBarRight routesArr={navAuthLinkArr} />
       </Container>
-      {showMobileMenu ? (
+      {showMobileMenu && (
         <NavMenu className={cn("block md:hidden")} onClick={() => setShowMobileMenu(false)}>
           <NavLinks device={"mobile"} routesArr={navLinkArr} rootPathname={rootPathname} />
+          <Logo className="mt-5 block text-xl" onClick={() => setShowMobileMenu(false)} />
         </NavMenu>
-      ) : null}
+      )}
     </nav>
   );
 }
