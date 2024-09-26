@@ -60,7 +60,7 @@ export default function NavBar({ className, ...props }: React.ComponentProps<"na
               type="search"
               className="w-full rounded-lg border-2 px-1 text-base outline-none sm:w-4/5 md:w-full lg:text-lg"
               placeholder="Enter a book or string..."
-            ></input>
+            />
           </div>
 
           <div className="hidden md:flex md:items-center">
