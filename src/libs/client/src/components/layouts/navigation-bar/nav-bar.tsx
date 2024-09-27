@@ -44,7 +44,7 @@ export default function NavBar({ className, ...props }: React.ComponentProps<"na
   return (
     <nav className={cn("relative w-full shadow-lg", className)} {...props}>
       <Container>
-        <div className="grid grid-cols-[auto_1fr_auto] gap-x-6 py-1 radix-xs:gap-x-16 md:grid-cols-[auto_1fr_1fr_auto] md:gap-x-6">
+        <div className="grid grid-cols-[auto_1fr_auto] gap-x-6 py-1 radix-xs:gap-x-10 md:grid-cols-[auto_1fr_auto_auto] md:gap-x-6">
           <div>
             <Logo className="hidden md:block" onClick={() => setShowMobileMenu(false)} />
             {showMobileMenu ? (
@@ -58,7 +58,7 @@ export default function NavBar({ className, ...props }: React.ComponentProps<"na
             <MagnifyingGlass />
             <input
               type="search"
-              className="w-full rounded-lg border-2 px-1 text-base outline-none sm:w-4/5 md:w-full lg:text-lg"
+              className="w-full rounded-lg border-2 px-1 text-base outline-none sm:w-full md:w-full lg:text-lg"
               placeholder="Enter a book or string..."
             />
           </div>
@@ -67,7 +67,7 @@ export default function NavBar({ className, ...props }: React.ComponentProps<"na
             <NavLinks device={"no-mobile"} routesArr={navLinkArr} rootPathname={rootPathname} className="w-full" />
           </div>
 
-          <div>
+          <div className="flex items-center">
             <NavBarRight routesArr={navAuthLinkArr} />
           </div>
         </div>
