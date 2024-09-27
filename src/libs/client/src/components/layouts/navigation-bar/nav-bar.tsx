@@ -44,7 +44,7 @@ export default function NavBar({ className, ...props }: React.ComponentProps<"na
   return (
     <nav className={cn("relative w-full shadow-lg", className)} {...props}>
       <Container>
-        <div className="grid grid-cols-[auto_1fr_auto] gap-x-6 py-1 radix-xs:gap-x-10 md:grid-cols-[auto_1fr_auto_auto] md:gap-x-6">
+        <div className="grid grid-cols-[auto_1fr_auto] gap-x-2 py-1 xs:gap-x-4 radix-xs:gap-x-10 md:grid-cols-[auto_1fr_auto_auto] md:gap-x-6">
           <div>
             <Logo className="hidden md:block" onClick={() => setShowMobileMenu(false)} />
             {showMobileMenu ? (
