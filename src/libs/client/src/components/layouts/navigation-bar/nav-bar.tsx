@@ -10,7 +10,7 @@ import Close from "@/client/components/ui/icons/close";
 import { usePathname } from "next/navigation";
 import Container from "../container";
 import { cn } from "../../../utils";
-import MagnifyingGlass from "@/client/components/ui/icons/magnifying-glass";
+import BookSearch from "./book-search";
 
 const navLinkArr = [
   { name: "Home", path: "/" },
@@ -54,13 +54,8 @@ export default function NavBar({ className, ...props }: React.ComponentProps<"na
             )}
           </div>
 
-          <div className="flex items-center justify-start gap-1">
-            <MagnifyingGlass />
-            <input
-              type="search"
-              className="w-full rounded-lg border-2 px-1 text-base outline-none sm:w-full md:w-full lg:text-lg"
-              placeholder="Enter a book or string..."
-            />
+          <div className="flex items-center">
+            <BookSearch className="w-full" />
           </div>
 
           <div className="hidden md:flex md:items-center">
