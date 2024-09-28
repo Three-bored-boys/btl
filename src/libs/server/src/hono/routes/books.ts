@@ -93,7 +93,7 @@ books.get(
 );
 
 books.get(
-  "/:isbn",
+  "/isbn/:isbn",
   zValidator(
     "param",
     z.object({
@@ -114,7 +114,7 @@ books.get(
     cacheName: (
       c: Context<
         Environment,
-        "/:isbn",
+        "/isbn/:isbn",
         {
           in: {
             param: {
