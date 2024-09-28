@@ -10,7 +10,7 @@ import Close from "@/client/components/ui/icons/close";
 import { usePathname } from "next/navigation";
 import Container from "../container";
 import { cn } from "../../../utils";
-import BookSearch from "./book-search";
+import BookSearch from "./book-search/book-search";
 
 const navLinkArr = [
   { name: "Home", path: "/" },
