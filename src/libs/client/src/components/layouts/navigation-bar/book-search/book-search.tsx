@@ -2,18 +2,33 @@
 
 import React, { ComponentProps, useState } from "react";
 import MagnifyingGlass from "../../../ui/icons/magnifying-glass";
-import { cn } from "../../../../utils";
+import { cn } from "@/client/utils";
 
 export default function BookSearch({ className }: ComponentProps<"div">) {
   const [searchInput, setSearchInput] = useState<string>("");
-  const [isInputFocus, setIsInputFocus] = useState<boolean>(false);
+  const [searchResultsVisible, setSearchResultsVisible] = useState<boolean>(false);
+
+  const showSearchResults = function (
+    input: string,
+    e: React.FocusEvent<HTMLInputElement> | React.ChangeEvent<HTMLInputElement>,
+  ) {
+    if (e.type === "blur") {
+      setSearchResultsVisible(false);
+      return;
+    }
+    if (input.length === 0 && (e.type === "focus" || e.type === "change")) {
+      setSearchResultsVisible(false);
+      return;
+    }
+    setSearchResultsVisible(true);
+    return;
+  };
 
   return (
     <div className={cn("relative", className)}>
       <div
         className={cn(
-          "flex w-full items-center justify-start gap-1 rounded-lg border-2 border-transparent px-1 text-base hover:bg-primary-50 lg:text-lg",
-          { "border-primary": isInputFocus },
+          "flex w-full items-center justify-start gap-1 rounded-lg border-2 border-transparent px-1 text-base has-[:focus]:border-primary hover:bg-primary-50 lg:text-lg",
         )}
       >
         <MagnifyingGlass />
@@ -23,20 +38,18 @@ export default function BookSearch({ className }: ComponentProps<"div">) {
           placeholder="Enter a book or string..."
           onChange={(e) => {
             setSearchInput(e.target.value);
-            console.log(e.target.value);
+            showSearchResults(e.target.value, e);
+            console.log(e);
           }}
-          onFocus={() => setIsInputFocus(true)}
-          onBlur={() => setIsInputFocus(false)}
+          onFocus={(e) => showSearchResults(searchInput, e)}
+          onBlur={(e) => showSearchResults(searchInput, e)}
         />
       </div>
-      <div
-        className={cn("absolute left-0 top-full mt-2 w-full bg-slate-300", {
-          "hidden": !isInputFocus,
-          "block": isInputFocus,
-        })}
-      >
-        {searchInput === "" ? <div>Input a search item...</div> : <div>You have input something `{searchInput}`</div>}
-      </div>
+      {searchResultsVisible ? (
+        <div className={cn("absolute left-0 top-full mt-2 block w-full bg-secondary-50 p-1")}>
+          {searchInput !== "" && <div>You have input something {searchInput}</div>}
+        </div>
+      ) : null}
     </div>
   );
 }
