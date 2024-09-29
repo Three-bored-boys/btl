@@ -81,7 +81,7 @@ books.get(
     const { genre } = c.req.valid("param");
 
     const googleBooksService = new GoogleBooksService(c.env.GOOGLE_BOOKS_API_KEY);
-    const books = await googleBooksService.getBooksByGenre(genre);
+    const books = await googleBooksService.getBooksByGenre(genre, 6);
 
     const responseData: GoodResponse<Book[]> = {
       success: true,
