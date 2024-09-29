@@ -144,12 +144,7 @@ books.get(
     const googleBooksService = new GoogleBooksService(c.env.GOOGLE_BOOKS_API_KEY);
     const book = await googleBooksService.getBookByISBN(isbn);
 
-    if (!book) {
-      const responseData: GoodResponse<string> = { success: true, data: "Book Not Found" };
-      return c.json(responseData);
-    }
-
-    const responseData: GoodResponse<Book> = { success: true, data: book };
+    const responseData: GoodResponse<Book[]> = { success: true, data: book };
     return c.json(responseData);
   },
 );
