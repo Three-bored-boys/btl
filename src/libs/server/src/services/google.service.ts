@@ -15,7 +15,7 @@ export class GoogleBooksService {
       const data = (await response.json()) as GoogleBooksResponse;
       return data.items.map((item) => this.mapBook(item));
     } catch (error) {
-      console.error("Error fetching books:", JSON.stringify(error, null, 2));
+      console.error("Problem getting books:", JSON.stringify(error, null, 2));
       return [];
     }
   }
