@@ -39,7 +39,6 @@ export default function BookSearch({ className }: ComponentProps<"div">) {
           onChange={(e) => {
             setSearchInput(e.target.value);
             showSearchResults(e.target.value, e);
-            console.log(e);
           }}
           onFocus={(e) => showSearchResults(searchInput, e)}
           onBlur={(e) => showSearchResults(searchInput, e)}
