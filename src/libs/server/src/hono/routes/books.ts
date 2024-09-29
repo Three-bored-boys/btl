@@ -169,4 +169,29 @@ books.get(
   },
 );
 
+books.get("/search/:input", async (c) => {
+  const input = c.req.param("input");
+  const googleBooksService = new GoogleBooksService(c.env.GOOGLE_BOOKS_API_KEY);
+
+  const settledBooksPromises = await Promise.allSettled([
+    googleBooksService.getBooksByTitle(input, 3),
+    googleBooksService.getBooksByAuthor(input, 3),
+    googleBooksService.getBooksByPublisher(input, 3),
+    googleBooksService.getBooksByGenre(input, 3),
+    googleBooksService.getBookByISBN(input),
+  ]);
+
+  const isFulfilled = <T>(p: PromiseSettledResult<T>): p is PromiseFulfilledResult<T> => p.status === "fulfilled";
+
+  const allBooksResults = settledBooksPromises
+    .filter(isFulfilled)
+    .map((res) => res.value)
+    .flat();
+
+  console.log(allBooksResults);
+
+  const responseData: GoodResponse<Book[]> = { success: true, data: allBooksResults };
+  return c.json(responseData);
+});
+
 export default books;
