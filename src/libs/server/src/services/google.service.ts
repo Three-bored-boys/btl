@@ -50,7 +50,8 @@ export class GoogleBooksService {
   async getLatestBooks(): Promise<Book[]> {
     // use most common letter in the English language as a search term to satisfy the API
     const url = `https://www.googleapis.com/books/v1/volumes?q=e&key=${this.apiKey}&maxResults=5&startIndex=0&orderBy=newest`;
-    return this.fetchBooks(url);
+    const books = await this.fetchBooks(url);
+    return books;
   }
 
   async getBookByISBN(isbn: string): Promise<Book | null> {
