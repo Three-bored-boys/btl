@@ -37,7 +37,7 @@ export default function BookSearch({ className }: ComponentProps<"div">) {
   };
 
   const handleSearchInput = function () {
-    if (timeoutFunction.current === null) {
+    if (!timeoutFunction.current) {
       updateSearchInputState();
     } else {
       clearTimeout(timeoutFunction.current);
@@ -64,9 +64,16 @@ export default function BookSearch({ className }: ComponentProps<"div">) {
             showSearchResults(e.target.value, e);
             handleSearchInput();
           }}
-          onFocus={(e) => showSearchResults(searchInput, e)}
-          onBlur={(e) => showSearchResults(searchInput, e)}
-          onKeyDown={(e) => setTimeout(() => console.log(e.key), 5000)}
+          onFocus={(e) => {
+            showSearchResults(e.target.value, e);
+          }}
+          onBlur={(e) => {
+            showSearchResults(e.target.value, e);
+            if (timeoutFunction.current) {
+              clearTimeout(timeoutFunction.current);
+              timeoutFunction.current = null;
+            }
+          }}
           ref={searchInputElement}
         />
       </div>
