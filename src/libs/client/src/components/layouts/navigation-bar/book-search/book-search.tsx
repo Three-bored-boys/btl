@@ -12,8 +12,12 @@ export default function BookSearch({ className }: ComponentProps<"div">) {
     input: string,
     e: React.FocusEvent<HTMLInputElement> | React.ChangeEvent<HTMLInputElement>,
   ) {
-    if (e.type === "blur") {
+    if (e.type === "blur" && input.length === 0) {
       setSearchResultsVisible(false);
+      return;
+    }
+    if (e.type === "blur" && input.length !== 0) {
+      setSearchResultsVisible(true);
       return;
     }
     if (input.length === 0 && (e.type === "focus" || e.type === "change")) {
