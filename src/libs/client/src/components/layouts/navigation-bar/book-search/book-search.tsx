@@ -1,12 +1,14 @@
 "use client";
 
-import React, { ComponentProps, useState } from "react";
+import React, { ComponentProps, useRef, useState } from "react";
 import MagnifyingGlass from "../../../ui/icons/magnifying-glass";
 import { cn } from "@/client/utils";
 
 export default function BookSearch({ className }: ComponentProps<"div">) {
   const [searchInput, setSearchInput] = useState<string>("");
   const [searchResultsVisible, setSearchResultsVisible] = useState<boolean>(false);
+  const timeoutFunction = useRef<NodeJS.Timeout | null>(null);
+  const searchInputElement = useRef<HTMLInputElement | null>(null);
 
   const showSearchResults = function (
     input: string,
@@ -28,6 +30,24 @@ export default function BookSearch({ className }: ComponentProps<"div">) {
     return;
   };
 
+  const updateSearchInputState = function () {
+    if (searchInputElement.current !== null) {
+      setSearchInput(searchInputElement.current.value);
+    }
+  };
+
+  const handleSearchInput = function () {
+    if (timeoutFunction.current === null) {
+      updateSearchInputState();
+    } else {
+      clearTimeout(timeoutFunction.current);
+    }
+
+    timeoutFunction.current = setTimeout(() => {
+      updateSearchInputState();
+    }, 1000);
+  };
+
   return (
     <div className={cn("relative", className)}>
       <div
@@ -41,11 +61,13 @@ export default function BookSearch({ className }: ComponentProps<"div">) {
           className="w-full bg-inherit outline-0"
           placeholder="Enter a book or string..."
           onChange={(e) => {
-            setSearchInput(e.target.value);
             showSearchResults(e.target.value, e);
+            handleSearchInput();
           }}
           onFocus={(e) => showSearchResults(searchInput, e)}
           onBlur={(e) => showSearchResults(searchInput, e)}
+          onKeyDown={(e) => setTimeout(() => console.log(e.key), 5000)}
+          ref={searchInputElement}
         />
       </div>
       {searchResultsVisible ? (
