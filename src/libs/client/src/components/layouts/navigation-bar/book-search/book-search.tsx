@@ -61,14 +61,14 @@ export default function BookSearch({ className }: ComponentProps<"div">) {
 
   const handleOnFocus = function (e: React.FocusEvent<HTMLInputElement>) {
     showSearchResults(e.target.value, e);
-  };
-
-  const handleOnBlur = function (e: React.FocusEvent<HTMLInputElement>) {
-    showSearchResults(e.target.value, e);
     if (timeoutFunction.current) {
       clearTimeout(timeoutFunction.current);
       timeoutFunction.current = null;
     }
+  };
+
+  const handleOnBlur = function (e: React.FocusEvent<HTMLInputElement>) {
+    showSearchResults(e.target.value, e);
   };
 
   return (
