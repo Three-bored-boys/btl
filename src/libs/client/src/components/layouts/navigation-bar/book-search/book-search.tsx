@@ -36,11 +36,12 @@ export default function BookSearch({ className }: ComponentProps<"div">) {
     }
   };
 
-  const handleSearchInput = function () {
+  const handleSearchInputDebounce = function () {
     if (!timeoutFunction.current) {
       updateSearchInputState();
     } else {
       clearTimeout(timeoutFunction.current);
+      timeoutFunction.current = null;
     }
 
     timeoutFunction.current = setTimeout(() => {
@@ -61,8 +62,13 @@ export default function BookSearch({ className }: ComponentProps<"div">) {
           className="w-full bg-inherit outline-0"
           placeholder="Enter a book or string..."
           onChange={(e) => {
-            showSearchResults(e.target.value, e);
-            handleSearchInput();
+            if (e.target.value === "") {
+              timeoutFunction.current = null;
+              showSearchResults(e.target.value, e);
+            } else {
+              showSearchResults(e.target.value, e);
+              handleSearchInputDebounce();
+            }
           }}
           onFocus={(e) => {
             showSearchResults(e.target.value, e);
