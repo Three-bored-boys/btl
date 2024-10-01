@@ -49,6 +49,28 @@ export default function BookSearch({ className }: ComponentProps<"div">) {
     }, 1000);
   };
 
+  const handleOnChange = function (e: React.ChangeEvent<HTMLInputElement>) {
+    if (e.target.value === "") {
+      timeoutFunction.current = null;
+      showSearchResults(e.target.value, e);
+    } else {
+      showSearchResults(e.target.value, e);
+      handleSearchInputDebounce();
+    }
+  };
+
+  const handleOnFocus = function (e: React.FocusEvent<HTMLInputElement>) {
+    showSearchResults(e.target.value, e);
+  };
+
+  const handleOnBlur = function (e: React.FocusEvent<HTMLInputElement>) {
+    showSearchResults(e.target.value, e);
+    if (timeoutFunction.current) {
+      clearTimeout(timeoutFunction.current);
+      timeoutFunction.current = null;
+    }
+  };
+
   return (
     <div className={cn("relative", className)}>
       <div
@@ -61,25 +83,9 @@ export default function BookSearch({ className }: ComponentProps<"div">) {
           type="search"
           className="w-full bg-inherit outline-0"
           placeholder="Enter a book or string..."
-          onChange={(e) => {
-            if (e.target.value === "") {
-              timeoutFunction.current = null;
-              showSearchResults(e.target.value, e);
-            } else {
-              showSearchResults(e.target.value, e);
-              handleSearchInputDebounce();
-            }
-          }}
-          onFocus={(e) => {
-            showSearchResults(e.target.value, e);
-          }}
-          onBlur={(e) => {
-            showSearchResults(e.target.value, e);
-            if (timeoutFunction.current) {
-              clearTimeout(timeoutFunction.current);
-              timeoutFunction.current = null;
-            }
-          }}
+          onChange={handleOnChange}
+          onFocus={handleOnFocus}
+          onBlur={handleOnBlur}
           ref={searchInputElement}
         />
       </div>
