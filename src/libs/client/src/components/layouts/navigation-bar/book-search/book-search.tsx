@@ -10,6 +10,8 @@ export default function BookSearch({ className }: ComponentProps<"div">) {
   const timeoutFunction = useRef<NodeJS.Timeout | null>(null);
   const searchInputElement = useRef<HTMLInputElement | null>(null);
 
+  const delayInSeconds = 5;
+
   const showSearchResults = function (
     input: string,
     e: React.FocusEvent<HTMLInputElement> | React.ChangeEvent<HTMLInputElement>,
@@ -46,7 +48,7 @@ export default function BookSearch({ className }: ComponentProps<"div">) {
 
     timeoutFunction.current = setTimeout(() => {
       updateSearchInputState();
-    }, 1000);
+    }, delayInSeconds * 1000);
   };
 
   const handleOnChange = function (e: React.ChangeEvent<HTMLInputElement>) {
