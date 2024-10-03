@@ -2,6 +2,7 @@
 
 import React, { ComponentProps, useRef, useState } from "react";
 import MagnifyingGlass from "../../../ui/icons/magnifying-glass";
+import QuickSearchResults from "./quick-search-results";
 import { cn } from "@/client/utils";
 
 export default function BookSearch({ className }: ComponentProps<"div">) {
@@ -93,7 +94,7 @@ export default function BookSearch({ className }: ComponentProps<"div">) {
       </div>
       {searchResultsVisible ? (
         <div className={cn("absolute left-0 top-full mt-2 block w-full bg-secondary-50 p-1")}>
-          {searchInput !== "" && <div>You have input something {searchInput}</div>}
+          {searchInput !== "" ? <QuickSearchResults search={searchInput} /> : null}
         </div>
       ) : null}
     </div>
