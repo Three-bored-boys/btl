@@ -15,7 +15,7 @@ export default function BookPage({ book, ...props }: BookPageProps) {
         <div className="grid w-full grid-cols-1 gap-4 px-6 sm:grid-cols-[11rem_1fr] sm:gap-7 sm:px-3 md:grid-cols-[12rem_1fr] md:gap-10 lg:grid-cols-[14.5rem_1fr] lg:gap-16 xl:grid-cols-[16rem_1fr] xl:gap-20 2xl:grid-cols-[18rem_1fr] 2xl:gap-28">
           <div className="mx-auto aspect-[10/16] w-2/4 border-[1px] border-gray-950 sm:w-full">
             <Image
-              src={book.image ? book.image : genericBookImage}
+              src={book.image ?? genericBookImage}
               alt={`${book.title} by ${book.author}`}
               className="mx-auto h-full w-full object-cover"
               width={500}
