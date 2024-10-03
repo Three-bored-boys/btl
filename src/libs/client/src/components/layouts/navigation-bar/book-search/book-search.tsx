@@ -54,6 +54,9 @@ export default function BookSearch({ className }: ComponentProps<"div">) {
 
   const handleOnChange = function (e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.value === "") {
+      if (timeoutFunction.current !== null) {
+        clearTimeout(timeoutFunction.current);
+      }
       timeoutFunction.current = null;
       showSearchResults(e.target.value, e);
     } else {
