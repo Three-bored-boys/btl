@@ -1,6 +1,7 @@
 import { twMerge } from "tailwind-merge";
 import { clsx, ClassValue } from "clsx";
 import { cva, VariantProps } from "class-variance-authority";
+import type { GoodResponse, BadResponse } from "@/libs/server/src/types";
 
 export function cn(...inputs: ClassValue[]): string {
   return twMerge(clsx(inputs));
@@ -22,3 +23,15 @@ export const button = cva("h-auto rounded-3xl border-2 border-transparent px-6 p
 });
 
 export type ButtonVariants = VariantProps<typeof button>;
+
+export const fetchData = async function <T>(url: string, options?: RequestInit) {
+  const res = await fetch(url, options);
+
+  if (!res.ok) {
+    const errorObj = (await res.json()) as BadResponse;
+    throw new Error(errorObj.error);
+  }
+
+  const { data } = (await res.json()) as GoodResponse<T>;
+  return data;
+};
