@@ -39,16 +39,14 @@ export default function BookSearch({ className }: ComponentProps<"div">) {
     }
   };
 
-  const handleSearchInputDebounce = function () {
-    if (!timeoutFunction.current) {
-      updateSearchInputState();
-    } else {
+  const handleSearchInputDebounce = function (e: React.ChangeEvent<HTMLInputElement>) {
+    if (timeoutFunction.current) {
       clearTimeout(timeoutFunction.current);
-      timeoutFunction.current = null;
     }
 
     timeoutFunction.current = setTimeout(() => {
       updateSearchInputState();
+      showSearchResults(e.target.value, e);
     }, delayInSeconds * 1000);
   };
 
@@ -60,8 +58,8 @@ export default function BookSearch({ className }: ComponentProps<"div">) {
       timeoutFunction.current = null;
       showSearchResults(e.target.value, e);
     } else {
-      showSearchResults(e.target.value, e);
-      handleSearchInputDebounce();
+      // showSearchResults(e.target.value, e);
+      handleSearchInputDebounce(e);
     }
   };
 
