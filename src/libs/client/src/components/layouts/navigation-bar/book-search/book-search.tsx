@@ -14,6 +14,7 @@ const QuickSearchResultsWrapper = function ({ className, children }: ComponentPr
 export default function BookSearch({ className }: ComponentProps<"div">) {
   const [searchInput, setSearchInput] = useState<string>("");
   const [searchResultsVisible, setSearchResultsVisible] = useState<boolean>(false);
+  const [isTimeOutFuncQueued, setIsTimeOutFuncQueued] = useState<boolean>(false);
   const timeoutFunction = useRef<NodeJS.Timeout | null>(null);
   const searchInputElement = useRef<HTMLInputElement | null>(null);
 
@@ -53,7 +54,10 @@ export default function BookSearch({ className }: ComponentProps<"div">) {
     timeoutFunction.current = setTimeout(() => {
       updateSearchInputState();
       showSearchResults(e.target.value, e);
+      setIsTimeOutFuncQueued(false);
     }, delayInSeconds * 1000);
+
+    setIsTimeOutFuncQueued(true);
   };
 
   const handleOnChange = function (e: React.ChangeEvent<HTMLInputElement>) {
@@ -63,6 +67,7 @@ export default function BookSearch({ className }: ComponentProps<"div">) {
       }
       timeoutFunction.current = null;
       showSearchResults(e.target.value, e);
+      setIsTimeOutFuncQueued(false);
     } else {
       handleSearchInputDebounce(e);
     }
@@ -98,11 +103,18 @@ export default function BookSearch({ className }: ComponentProps<"div">) {
           ref={searchInputElement}
         />
       </div>
-      {searchResultsVisible ? (
-        <div className={cn("absolute left-0 top-full mt-2 block w-full bg-secondary-50 p-1")}>
-          {searchInput !== "" ? <QuickSearchResults search={searchInput} /> : null}
-        </div>
-      ) : null}
+      {isTimeOutFuncQueued ? (
+        <QuickSearchResultsWrapper>Queued...</QuickSearchResultsWrapper>
+      ) : (
+        <QuickSearchResultsWrapper
+          className={cn({
+            "block": searchResultsVisible,
+            "hidden": !searchResultsVisible,
+          })}
+        >
+          {searchInput !== "" && <QuickSearchResults search={searchInput} />}
+        </QuickSearchResultsWrapper>
+      )}
     </div>
   );
 }
