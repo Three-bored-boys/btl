@@ -5,6 +5,12 @@ import MagnifyingGlass from "../../../ui/icons/magnifying-glass";
 import QuickSearchResults from "./quick-search-results";
 import { cn } from "@/client/utils";
 
+const QuickSearchResultsWrapper = function ({ className, children }: ComponentProps<"div">) {
+  return (
+    <div className={cn("absolute left-0 top-full z-20 mt-2 w-full bg-secondary-50 p-1", className)}>{children}</div>
+  );
+};
+
 export default function BookSearch({ className }: ComponentProps<"div">) {
   const [searchInput, setSearchInput] = useState<string>("");
   const [searchResultsVisible, setSearchResultsVisible] = useState<boolean>(false);
