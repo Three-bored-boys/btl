@@ -58,7 +58,6 @@ export default function BookSearch({ className }: ComponentProps<"div">) {
       timeoutFunction.current = null;
       showSearchResults(e.target.value, e);
     } else {
-      // showSearchResults(e.target.value, e);
       handleSearchInputDebounce(e);
     }
   };
