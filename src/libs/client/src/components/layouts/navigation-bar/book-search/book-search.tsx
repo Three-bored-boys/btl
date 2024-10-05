@@ -103,8 +103,10 @@ export default function BookSearch({ className }: ComponentProps<"div">) {
           ref={searchInputElement}
         />
       </div>
-      {isTimeOutFuncQueued ? (
-        <QuickSearchResultsWrapper>Queued...</QuickSearchResultsWrapper>
+      {isTimeOutFuncQueued && searchInput !== "" ? (
+        <QuickSearchResultsWrapper>
+          <QuickSearchResults search={searchInput} />
+        </QuickSearchResultsWrapper>
       ) : (
         <QuickSearchResultsWrapper
           className={cn({
