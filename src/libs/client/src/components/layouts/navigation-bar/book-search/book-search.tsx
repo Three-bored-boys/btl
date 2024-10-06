@@ -2,6 +2,7 @@
 
 import React, { ComponentProps, useRef, useState } from "react";
 import MagnifyingGlass from "../../../ui/icons/magnifying-glass";
+import ArrowPath from "../../../ui/icons/arrow-path";
 import QuickSearchResults from "./quick-search-results";
 import { cn } from "@/client/utils";
 
@@ -92,7 +93,7 @@ export default function BookSearch({ className }: ComponentProps<"div">) {
           "flex w-full items-center justify-start gap-1 rounded-lg border-2 border-transparent px-1 text-base has-[:focus]:border-primary hover:bg-primary-50 lg:text-lg",
         )}
       >
-        <MagnifyingGlass />
+        {isTimeOutFuncQueued ? <ArrowPath className="animate-spin-slow" /> : <MagnifyingGlass />}
         <input
           type="search"
           className="w-full bg-inherit outline-0"
