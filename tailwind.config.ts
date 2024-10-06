@@ -34,6 +34,9 @@ const config: Config = {
         },
         "primary-selected": indigo[400],
       },
+      animation: {
+        "spin-slow": "spin 3s linear infinite",
+      },
     },
   },
   plugins: [require("tailwind-scrollbar")],
