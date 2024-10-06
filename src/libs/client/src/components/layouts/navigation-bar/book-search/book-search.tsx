@@ -104,20 +104,14 @@ export default function BookSearch({ className }: ComponentProps<"div">) {
           ref={searchInputElement}
         />
       </div>
-      {isTimeOutFuncQueued && searchInput !== "" ? (
-        <QuickSearchResultsWrapper>
-          <QuickSearchResults search={searchInput} />
-        </QuickSearchResultsWrapper>
-      ) : (
-        <QuickSearchResultsWrapper
-          className={cn({
-            "block": searchResultsVisible,
-            "hidden": !searchResultsVisible,
-          })}
-        >
-          {searchInput !== "" && <QuickSearchResults search={searchInput} />}
-        </QuickSearchResultsWrapper>
-      )}
+      <QuickSearchResultsWrapper
+        className={cn({
+          "block": searchResultsVisible,
+          "hidden": !searchResultsVisible,
+        })}
+      >
+        <QuickSearchResults search={searchInput} />
+      </QuickSearchResultsWrapper>
     </div>
   );
 }
