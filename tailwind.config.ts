@@ -20,6 +20,8 @@ const config: Config = {
       },
       screens: {
         xs: "420px",
+        "radix-xs": "520px",
+        "radix-xl": "1640px",
       },
       colors: {
         primary: {
@@ -31,6 +33,9 @@ const config: Config = {
           DEFAULT: orange[500],
         },
         "primary-selected": indigo[400],
+      },
+      animation: {
+        "spin-slow": "spin 3s linear infinite",
       },
     },
   },

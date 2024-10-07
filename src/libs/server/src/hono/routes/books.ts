@@ -81,7 +81,7 @@ books.get(
     const { genre } = c.req.valid("param");
 
     const googleBooksService = new GoogleBooksService(c.env.GOOGLE_BOOKS_API_KEY);
-    const books = await googleBooksService.getBooksByGenre(genre);
+    const books = await googleBooksService.getBooksByGenre(genre, 6);
 
     const responseData: GoodResponse<Book[]> = {
       success: true,
@@ -93,7 +93,7 @@ books.get(
 );
 
 books.get(
-  "/:isbn",
+  "/isbn/:isbn",
   zValidator(
     "param",
     z.object({
@@ -114,7 +114,7 @@ books.get(
     cacheName: (
       c: Context<
         Environment,
-        "/:isbn",
+        "/isbn/:isbn",
         {
           in: {
             param: {
@@ -144,12 +144,7 @@ books.get(
     const googleBooksService = new GoogleBooksService(c.env.GOOGLE_BOOKS_API_KEY);
     const book = await googleBooksService.getBookByISBN(isbn);
 
-    if (!book) {
-      const responseData: GoodResponse<string> = { success: true, data: "Book Not Found" };
-      return c.json(responseData);
-    }
-
-    const responseData: GoodResponse<Book> = { success: true, data: book };
+    const responseData: GoodResponse<Book[]> = { success: true, data: book };
     return c.json(responseData);
   },
 );
@@ -173,5 +168,30 @@ books.get(
     return c.json(responseData);
   },
 );
+
+books.get("/quick-search/:input", async (c) => {
+  const input = c.req.param("input");
+  const googleBooksService = new GoogleBooksService(c.env.GOOGLE_BOOKS_API_KEY);
+
+  const settledBooksPromises = await Promise.allSettled([
+    googleBooksService.getBooksByTitle(input, 2),
+    googleBooksService.getBooksByAuthor(input, 2),
+    googleBooksService.getBooksByPublisher(input, 2),
+    googleBooksService.getBooksByGenre(input, 2),
+    googleBooksService.getBookByISBN(input),
+  ]);
+
+  const isFulfilled = <T>(p: PromiseSettledResult<T>): p is PromiseFulfilledResult<T> => p.status === "fulfilled";
+
+  const allBooksResults = settledBooksPromises
+    .filter(isFulfilled)
+    .map((res) => res.value)
+    .flat();
+
+  console.log(allBooksResults);
+
+  const responseData: GoodResponse<Book[]> = { success: true, data: allBooksResults };
+  return c.json(responseData);
+});
 
 export default books;

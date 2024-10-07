@@ -15,7 +15,7 @@ export class GoogleBooksService {
       const data = (await response.json()) as GoogleBooksResponse;
       return data.items.map((item) => this.mapBook(item));
     } catch (error) {
-      console.error("Error fetching books:", JSON.stringify(error, null, 2));
+      console.error("Problem getting books:", JSON.stringify(error, null, 2));
       return [];
     }
   }
@@ -42,20 +42,40 @@ export class GoogleBooksService {
     return identifier?.identifier ?? "";
   }
 
-  async getBooksByGenre(genre: string): Promise<Book[]> {
-    const url = `https://www.googleapis.com/books/v1/volumes?q=subject:${genre}&key=${this.apiKey}&maxResults=6&startIndex=0`;
-    return this.fetchBooks(url);
-  }
-
   async getLatestBooks(): Promise<Book[]> {
     // use most common letter in the English language as a search term to satisfy the API
     const url = `https://www.googleapis.com/books/v1/volumes?q=e&key=${this.apiKey}&maxResults=5&startIndex=0&orderBy=newest`;
-    return this.fetchBooks(url);
+    const books = await this.fetchBooks(url);
+    return books;
   }
 
-  async getBookByISBN(isbn: string): Promise<Book | null> {
+  async getBookByISBN(isbn: string): Promise<Book[]> {
     const url = `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}&key=${this.apiKey}`;
     const books = await this.fetchBooks(url);
-    return books.length > 0 ? books[0] : null;
+    return books.length > 0 ? books : [];
+  }
+
+  async getBooksByTitle(title: string, maxResults = 40): Promise<Book[]> {
+    const url = `https://www.googleapis.com/books/v1/volumes?q=intitle:${title}&maxResults=${maxResults.toString()}&orderBy=newest&startIndex=0&key=${this.apiKey}`;
+    const books = await this.fetchBooks(url);
+    return books;
+  }
+
+  async getBooksByAuthor(author: string, maxResults = 40): Promise<Book[]> {
+    const url = `https://www.googleapis.com/books/v1/volumes?q=inauthor:${author}&maxResults=${maxResults.toString()}&orderBy=newest&startIndex=0&key=${this.apiKey}`;
+    const books = await this.fetchBooks(url);
+    return books;
+  }
+
+  async getBooksByGenre(genre: string, maxResults = 40): Promise<Book[]> {
+    const url = `https://www.googleapis.com/books/v1/volumes?q=subject:${genre}&maxResults=${maxResults.toString()}&orderBy=newest&startIndex=0&key=${this.apiKey}`;
+    const books = await this.fetchBooks(url);
+    return books;
+  }
+
+  async getBooksByPublisher(publisher: string, maxResults = 40): Promise<Book[]> {
+    const url = `https://www.googleapis.com/books/v1/volumes?q=inpublisher:${publisher}&maxResults=${maxResults.toString()}&orderBy=newest&startIndex=0&key=${this.apiKey}`;
+    const books = await this.fetchBooks(url);
+    return books;
   }
 }

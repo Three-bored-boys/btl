@@ -10,6 +10,7 @@ import Close from "@/client/components/ui/icons/close";
 import { usePathname } from "next/navigation";
 import Container from "../container";
 import { cn } from "../../../utils";
+import BookSearch from "./book-search/book-search";
 
 const navLinkArr = [
   { name: "Home", path: "/" },
@@ -42,30 +43,36 @@ export default function NavBar({ className, ...props }: React.ComponentProps<"na
 
   return (
     <nav className={cn("relative w-full shadow-lg", className)} {...props}>
-      <Container className="flex items-center justify-between py-2">
-        <div>
-          <Logo className="hidden md:block" onClick={() => setShowMobileMenu(false)} />
-          {showMobileMenu ? (
-            <Close className="block md:hidden" onClick={() => setShowMobileMenu(false)} />
-          ) : (
-            <Hamburger className="block md:hidden" onClick={() => setShowMobileMenu(true)} />
-          )}
-        </div>
+      <Container>
+        <div className="grid grid-cols-[auto_1fr_auto] gap-x-2 py-1 xs:gap-x-4 radix-xs:gap-x-10 md:grid-cols-[auto_1fr_auto_auto] md:gap-x-1">
+          <div>
+            <Logo className="hidden md:block" onClick={() => setShowMobileMenu(false)} />
+            {showMobileMenu ? (
+              <Close className="block md:hidden" onClick={() => setShowMobileMenu(false)} />
+            ) : (
+              <Hamburger className="block md:hidden" onClick={() => setShowMobileMenu(true)} />
+            )}
+          </div>
 
-        <div>
-          <Logo className="block text-2xl md:hidden" onClick={() => setShowMobileMenu(false)} />
-          <div className="hidden md:block">
-            <NavLinks device={"no-mobile"} routesArr={navLinkArr} rootPathname={rootPathname} />
+          <div className="flex items-center">
+            <BookSearch className="w-full" />
+          </div>
+
+          <div className="hidden md:flex md:items-center">
+            <NavLinks device={"no-mobile"} routesArr={navLinkArr} rootPathname={rootPathname} className="w-full" />
+          </div>
+
+          <div className="flex items-center">
+            <NavBarRight routesArr={navAuthLinkArr} />
           </div>
         </div>
-
-        <NavBarRight routesArr={navAuthLinkArr} />
       </Container>
-      {showMobileMenu ? (
+      {showMobileMenu && (
         <NavMenu className={cn("block md:hidden")} onClick={() => setShowMobileMenu(false)}>
           <NavLinks device={"mobile"} routesArr={navLinkArr} rootPathname={rootPathname} />
+          <Logo className="mt-5 block text-xl" onClick={() => setShowMobileMenu(false)} />
         </NavMenu>
-      ) : null}
+      )}
     </nav>
   );
 }

@@ -1,13 +1,13 @@
 import BookPage from "@/root/src/libs/client/src/components/modules/book-page/book-page";
-import { fetchData } from "@/root/src/libs/client/src/hooks";
+import { fetchData } from "@/root/src/libs/client/src/utils";
 import type { Book } from "@/root/src/libs/server/src/types";
 
 export default async function Book({ params: { isbn } }: { params: { isbn: string } }) {
-  const bookObject = await fetchData<Book | string>(`${process.env.API_URL}/books/${isbn}`);
+  const bookObject = await fetchData<Book[]>(`${process.env.API_URL}/books/isbn/${isbn}`);
 
-  if (typeof bookObject === "string") {
-    return <div>{bookObject}</div>;
+  if (bookObject.length === 0) {
+    return <div>No book Found</div>;
   }
 
-  return <BookPage book={bookObject} />;
+  return <BookPage book={bookObject[0]} />;
 }
