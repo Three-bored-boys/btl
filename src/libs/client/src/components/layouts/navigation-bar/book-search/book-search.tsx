@@ -101,6 +101,9 @@ export default function BookSearch({ className }: ComponentProps<"div">) {
           onChange={handleOnChange}
           onFocus={handleOnFocus}
           onBlur={handleOnBlur}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") console.log(searchInputElement.current?.value);
+          }}
           ref={searchInputElement}
         />
       </div>
