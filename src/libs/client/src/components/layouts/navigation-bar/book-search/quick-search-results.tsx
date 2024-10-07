@@ -6,7 +6,6 @@ import Image from "next/image";
 import Link from "next/link";
 // import LoadingSkeleton from "./loading-skeleton";
 // import useQuickSearchResults from "./useQuickSearchResults";
-// import type { Book } from "@/root/src/libs/server/src/types";
 import genericBookImage from "@/public/assets/images/generic-book.png";
 
 export default function QuickSearchResults({ search }: { search: string }) {
@@ -39,10 +38,10 @@ export default function QuickSearchResults({ search }: { search: string }) {
   ));
 
   /* return (
-    <>
+    <div className="w-full">
       {data?.map((book, i) => (
         <Link
-          className="grid w-full grid-cols-[40px_1fr] grid-rows-[auto] gap-1 xs:grid-cols-[45px_1fr] max-lg:md:grid-cols-[40px_1fr]"
+          className="grid w-full grid-cols-[40px_1fr] grid-rows-[auto] gap-1 rounded-xl py-2 hover:bg-secondary-100 xs:grid-cols-[45px_1fr] max-lg:md:grid-cols-[40px_1fr]"
           href={`/book/${book.isbn13}`}
           key={i}
         >
@@ -50,17 +49,17 @@ export default function QuickSearchResults({ search }: { search: string }) {
             <Image
               width={500}
               height={500}
-              src={book.image}
+              src={book.image ?? genericBookImage}
               alt={`${book.title} by ${book.author}`}
               className="mx-auto h-full w-full rounded-lg object-cover"
             />
           </div>
           <div className="truncate text-sm">
             <p className="mb-1 truncate font-medium leading-4">{book.title}</p>
-            <p className="truncate font-extralight leading-4">{book.author}</p>
+            <p className="truncate font-light leading-4">{book.author}</p>
           </div>
         </Link>
       ))}
-    </>
+    </div>
   ); */
 }
