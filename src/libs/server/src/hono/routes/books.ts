@@ -169,7 +169,7 @@ books.get(
   },
 );
 
-books.get("/search/:input", async (c) => {
+books.get("/quick-search/:input", async (c) => {
   const input = c.req.param("input");
   const googleBooksService = new GoogleBooksService(c.env.GOOGLE_BOOKS_API_KEY);
 
