@@ -32,7 +32,7 @@ export default function QuickSearchResults({ search }: { search: string }) {
       </div>
       <div className="truncate text-sm">
         <p className="mb-1 truncate font-medium leading-4">{book.title}</p>
-        <p className="truncate font-extralight leading-4">{book.author}</p>
+        <p className="truncate font-light leading-4">{book.author}</p>
       </div>
     </Link>
   ));
