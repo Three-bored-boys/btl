@@ -7,6 +7,7 @@ import Link from "next/link";
 // import LoadingSkeleton from "./loading-skeleton";
 // import useQuickSearchResults from "./useQuickSearchResults";
 // import type { Book } from "@/root/src/libs/server/src/types";
+import genericBookImage from "@/public/assets/images/generic-book.png";
 
 export default function QuickSearchResults({ search }: { search: string }) {
   // const { isFetching, error, data } = useQuickSearchResults({ search });
@@ -25,7 +26,7 @@ export default function QuickSearchResults({ search }: { search: string }) {
         <Image
           width={500}
           height={500}
-          src={book.image}
+          src={book.image ?? genericBookImage}
           alt={`${book.title} by ${book.author}`}
           className="mx-auto h-full w-full rounded-lg object-cover"
         />
