@@ -17,7 +17,7 @@ export default function QuickSearchResults({ search }: { search: string }) {
 
   return Array.from({ length: 3 }, (_, i) => i).map((_, i) => (
     <Link
-      className="mb-3 grid w-full grid-cols-[40px_1fr] grid-rows-[auto] gap-1 xs:grid-cols-[45px_1fr] max-lg:md:grid-cols-[40px_1fr]"
+      className="grid w-full grid-cols-[40px_1fr] grid-rows-[auto] gap-1 rounded-xl py-2 hover:bg-secondary-100 xs:grid-cols-[45px_1fr] max-lg:md:grid-cols-[40px_1fr]"
       href={`/book/${book.isbn13}`}
       key={i}
     >
