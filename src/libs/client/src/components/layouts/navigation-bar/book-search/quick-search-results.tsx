@@ -1,21 +1,21 @@
 "use client";
 
 import React from "react";
-import { book } from "./data";
+// import { book } from "./data";
 import Image from "next/image";
 import Link from "next/link";
-// import LoadingSkeleton from "./loading-skeleton";
-// import useQuickSearchResults from "./useQuickSearchResults";
+import LoadingSkeleton from "./loading-skeleton";
+import useQuickSearchResults from "./useQuickSearchResults";
 import genericBookImage from "@/public/assets/images/generic-book.png";
 
 export default function QuickSearchResults({ search }: { search: string }) {
-  // const { isFetching, error, data } = useQuickSearchResults({ search });
+  const { isFetching, error, data } = useQuickSearchResults({ search });
 
-  // if (isFetching) return <LoadingSkeleton />;
+  if (isFetching) return <LoadingSkeleton />;
 
-  // if (error) return <div>Error!!!</div>;
+  if (error) return <div>Error: {error.message}</div>;
 
-  return Array.from({ length: 3 }, (_, i) => i).map((_, i) => (
+  /* return Array.from({ length: 3 }, (_, i) => i).map((_, i) => (
     <Link
       className="grid w-full grid-cols-[40px_1fr] grid-rows-[auto] gap-1 rounded-xl py-2 hover:bg-secondary-100 xs:grid-cols-[45px_1fr] max-lg:md:grid-cols-[40px_1fr]"
       href={`/book/${book.isbn13}`}
@@ -35,9 +35,9 @@ export default function QuickSearchResults({ search }: { search: string }) {
         <p className="truncate font-light leading-4">{book.author}</p>
       </div>
     </Link>
-  ));
+  )); */
 
-  /* return (
+  return (
     <div className="w-full">
       {data?.map((book, i) => (
         <Link
@@ -61,5 +61,5 @@ export default function QuickSearchResults({ search }: { search: string }) {
         </Link>
       ))}
     </div>
-  ); */
+  );
 }
