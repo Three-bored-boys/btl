@@ -174,10 +174,10 @@ books.get("/search/:input", async (c) => {
   const googleBooksService = new GoogleBooksService(c.env.GOOGLE_BOOKS_API_KEY);
 
   const settledBooksPromises = await Promise.allSettled([
-    googleBooksService.getBooksByTitle(input, 3),
-    googleBooksService.getBooksByAuthor(input, 3),
-    googleBooksService.getBooksByPublisher(input, 3),
-    googleBooksService.getBooksByGenre(input, 3),
+    googleBooksService.getBooksByTitle(input, 2),
+    googleBooksService.getBooksByAuthor(input, 2),
+    googleBooksService.getBooksByPublisher(input, 2),
+    googleBooksService.getBooksByGenre(input, 2),
     googleBooksService.getBookByISBN(input),
   ]);
 
