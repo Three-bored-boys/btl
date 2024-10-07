@@ -56,25 +56,25 @@ export class GoogleBooksService {
   }
 
   async getBooksByTitle(title: string, maxResults = 40): Promise<Book[]> {
-    const url = `https://www.googleapis.com/books/v1/volumes?q=intitle:${title}&maxResults=${maxResults.toString()}&startIndex=0&key=${this.apiKey}`;
+    const url = `https://www.googleapis.com/books/v1/volumes?q=intitle:${title}&maxResults=${maxResults.toString()}&orderBy=newest&startIndex=0&key=${this.apiKey}`;
     const books = await this.fetchBooks(url);
     return books;
   }
 
   async getBooksByAuthor(author: string, maxResults = 40): Promise<Book[]> {
-    const url = `https://www.googleapis.com/books/v1/volumes?q=inauthor:${author}&maxResults=${maxResults.toString()}&startIndex=0&key=${this.apiKey}`;
+    const url = `https://www.googleapis.com/books/v1/volumes?q=inauthor:${author}&maxResults=${maxResults.toString()}&orderBy=newest&startIndex=0&key=${this.apiKey}`;
     const books = await this.fetchBooks(url);
     return books;
   }
 
   async getBooksByGenre(genre: string, maxResults = 40): Promise<Book[]> {
-    const url = `https://www.googleapis.com/books/v1/volumes?q=subject:${genre}&maxResults=${maxResults.toString()}&startIndex=0&key=${this.apiKey}`;
+    const url = `https://www.googleapis.com/books/v1/volumes?q=subject:${genre}&maxResults=${maxResults.toString()}&orderBy=newest&startIndex=0&key=${this.apiKey}`;
     const books = await this.fetchBooks(url);
     return books;
   }
 
   async getBooksByPublisher(publisher: string, maxResults = 40): Promise<Book[]> {
-    const url = `https://www.googleapis.com/books/v1/volumes?q=inpublisher:${publisher}&maxResults=${maxResults.toString()}&startIndex=0&key=${this.apiKey}`;
+    const url = `https://www.googleapis.com/books/v1/volumes?q=inpublisher:${publisher}&maxResults=${maxResults.toString()}&orderBy=newest&startIndex=0&key=${this.apiKey}`;
     const books = await this.fetchBooks(url);
     return books;
   }
