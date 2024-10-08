@@ -49,7 +49,7 @@ export default function QuickSearchResults({ search }: { search: string }) {
             <Image
               width={500}
               height={500}
-              src={book.image ?? genericBookImage}
+              src={book.image || genericBookImage}
               alt={`${book.title} by ${book.author}`}
               className="mx-auto h-full w-full rounded-lg object-cover"
             />
