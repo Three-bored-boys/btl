@@ -44,6 +44,11 @@ export default function BookSearch({ className }: ComponentProps<"div">) {
   const handleOnFocus = function (e: React.FocusEvent<HTMLInputElement>) {
     if (searchInput === "") return;
 
+    if (e.target.value === "") {
+      setSearchResultsVisible(false);
+      return;
+    }
+
     setSearchResultsVisible(true);
   };
 
