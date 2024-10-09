@@ -73,7 +73,7 @@ export default function BookSearch({ className }: ComponentProps<"div">) {
       </div>
       {searchResultsVisible && (
         <QuickSearchResultsWrapper>
-          <QuickSearchResults search={searchInput} />
+          <QuickSearchResults search={searchInput} setSearchResultsVisible={setSearchResultsVisible} />
         </QuickSearchResultsWrapper>
       )}
     </div>

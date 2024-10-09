@@ -7,7 +7,13 @@ import Link from "next/link";
 import useQuickSearchResults from "./useQuickSearchResults";
 import genericBookImage from "@/public/assets/images/generic-book.png";
 
-export default function QuickSearchResults({ search }: { search: string }) {
+export default function QuickSearchResults({
+  search,
+  setSearchResultsVisible,
+}: {
+  search: string;
+  setSearchResultsVisible: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
   const { error, data } = useQuickSearchResults({ search });
 
   if (error) return <div>Error: {error.message}</div>;
@@ -45,6 +51,9 @@ export default function QuickSearchResults({ search }: { search: string }) {
           className="grid w-full grid-cols-[40px_1fr] grid-rows-[auto] gap-1 rounded-xl py-2 hover:bg-secondary-100 xs:grid-cols-[45px_1fr] max-lg:md:grid-cols-[40px_1fr]"
           href={`/book/${book.isbn13}`}
           key={i}
+          onClick={() => {
+            setSearchResultsVisible(false);
+          }}
         >
           <div className="aspect-square">
             <Image
