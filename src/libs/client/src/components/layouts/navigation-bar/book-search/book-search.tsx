@@ -48,7 +48,7 @@ export default function BookSearch({ className }: ComponentProps<"div">) {
         <MagnifyingGlass />
         <input
           type="search"
-          className="w-full bg-inherit outline-0"
+          className="w-full bg-inherit outline-none focus:outline-none"
           placeholder="Enter a book or string..."
           onChange={handleOnChange}
           onKeyDown={handleOnEnterPress}
