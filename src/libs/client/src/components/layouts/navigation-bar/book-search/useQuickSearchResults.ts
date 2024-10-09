@@ -1,6 +1,6 @@
 import { fetchData } from "@/client/utils";
 import { Book } from "@/root/src/libs/server/src/types";
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
 const getQuickSearchResultsBooks = async function (searchString: string) {
   const results = await fetchData<Book[]>(`${process.env.NEXT_PUBLIC_API_URL}/books/quick-search/${searchString}`);
@@ -8,7 +8,7 @@ const getQuickSearchResultsBooks = async function (searchString: string) {
 };
 
 const useQuickSearchResults = function ({ search }: { search: string }) {
-  const query = useQuery({
+  const query = useSuspenseQuery({
     queryKey: ["quick-search-results", search],
     queryFn: async () => await getQuickSearchResultsBooks(search),
   });
