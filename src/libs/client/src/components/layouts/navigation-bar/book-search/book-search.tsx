@@ -35,21 +35,7 @@ export default function BookSearch({ className }: ComponentProps<"div">) {
     if (e.target.value !== "") return;
 
     setSearchResultsVisible(false);
-  };
-
-  const handleOnBlur = function (e: React.FocusEvent<HTMLInputElement>) {
-    setSearchResultsVisible(false);
-  };
-
-  const handleOnFocus = function (e: React.FocusEvent<HTMLInputElement>) {
-    if (searchInput === "") return;
-
-    if (e.target.value === "") {
-      setSearchResultsVisible(false);
-      return;
-    }
-
-    setSearchResultsVisible(true);
+    setSearchInput("");
   };
 
   return (
@@ -65,8 +51,6 @@ export default function BookSearch({ className }: ComponentProps<"div">) {
           className="w-full bg-inherit outline-0"
           placeholder="Enter a book or string..."
           onChange={handleOnChange}
-          onFocus={handleOnFocus}
-          onBlur={handleOnBlur}
           onKeyDown={handleOnEnterPress}
           ref={searchInputElement}
         />
