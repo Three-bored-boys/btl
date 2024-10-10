@@ -183,10 +183,14 @@ books.get("/quick-search/:input", async (c) => {
 
   const isFulfilled = <T>(p: PromiseSettledResult<T>): p is PromiseFulfilledResult<T> => p.status === "fulfilled";
 
-  const allBooksResults = settledBooksPromises
-    .filter(isFulfilled)
-    .map((res) => res.value)
-    .flat();
+  const allBooksResults = Array.from(
+    new Set(
+      settledBooksPromises
+        .filter(isFulfilled)
+        .map((res) => res.value)
+        .flat(),
+    ),
+  );
 
   console.log(allBooksResults);
 
