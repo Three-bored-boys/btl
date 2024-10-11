@@ -44,7 +44,13 @@ export default function NavBar({ className, ...props }: React.ComponentProps<"na
   return (
     <nav className={cn("relative w-full shadow-lg", className)} {...props}>
       <Container>
-        <div className="grid grid-cols-[auto_1fr_auto] gap-x-2 py-1 xs:gap-x-4 radix-xs:gap-x-10 md:grid-cols-[auto_1fr_auto_auto] md:gap-x-1">
+        <div
+          className={cn("", {
+            "grid grid-cols-[auto_1fr_auto] gap-x-2 py-1 xs:gap-x-4 radix-xs:gap-x-10 md:grid-cols-[auto_1fr_auto_auto] md:gap-x-1":
+              rootPathname !== "/search",
+            "flex items-center justify-between": rootPathname === "/search",
+          })}
+        >
           <div>
             <Logo className="hidden md:block" onClick={() => setShowMobileMenu(false)} />
             {showMobileMenu ? (
@@ -54,8 +60,8 @@ export default function NavBar({ className, ...props }: React.ComponentProps<"na
             )}
           </div>
 
-          <div className="flex items-center">
-            <BookSearch className="w-full" />
+          <div className={cn("flex items-center")}>
+            {rootPathname !== "/search" ? <BookSearch className="w-full" /> : <Logo className="block md:hidden" />}
           </div>
 
           <div className="hidden md:flex md:items-center">
@@ -70,7 +76,9 @@ export default function NavBar({ className, ...props }: React.ComponentProps<"na
       {showMobileMenu && (
         <NavMenu className={cn("block md:hidden")} onClick={() => setShowMobileMenu(false)}>
           <NavLinks device={"mobile"} routesArr={navLinkArr} rootPathname={rootPathname} />
-          <Logo className="mt-5 block text-xl" onClick={() => setShowMobileMenu(false)} />
+          {rootPathname !== "/search" && (
+            <Logo className="mt-5 block text-xl" onClick={() => setShowMobileMenu(false)} />
+          )}
         </NavMenu>
       )}
     </nav>
