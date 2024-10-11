@@ -18,9 +18,8 @@ export default function BookSearch({ className }: ComponentProps<"div">) {
   const [searchResultsVisible, setSearchResultsVisible] = useState<boolean>(false);
   const searchInputElement = useRef<HTMLInputElement | null>(null);
 
-  const handleOnSubmit = function (e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    console.log(e);
+  const handleOnEnterPress = function (e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key !== "Enter") return;
 
     if (searchInputElement.current) {
       if (searchInputElement.current.value === "") {
@@ -41,11 +40,10 @@ export default function BookSearch({ className }: ComponentProps<"div">) {
 
   return (
     <div className={cn("relative", className)}>
-      <form
+      <div
         className={cn(
           "flex w-full items-center justify-start gap-1 rounded-lg border-2 border-transparent px-1 text-base has-[:focus]:border-primary hover:bg-primary-50 lg:text-lg",
         )}
-        onSubmit={handleOnSubmit}
       >
         <MagnifyingGlass />
         <input
@@ -53,9 +51,10 @@ export default function BookSearch({ className }: ComponentProps<"div">) {
           className="w-full bg-inherit outline-none focus:outline-none"
           placeholder="Enter a book or string..."
           onChange={handleOnChange}
+          onKeyDown={handleOnEnterPress}
           ref={searchInputElement}
         />
-      </form>
+      </div>
       {searchResultsVisible && (
         <QuickSearchResultsWrapper>
           <QuickSearchResults search={searchInput} setSearchResultsVisible={setSearchResultsVisible} />
