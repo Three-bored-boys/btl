@@ -3,16 +3,10 @@ import MagnifyingGlass from "@/client/components/ui/icons/magnifying-glass";
 import { cn } from "@/client/utils";
 
 type ClassNames = { classNameDiv?: string; classNameInput?: string };
+type Props = ComponentProps<"input"> & ClassNames;
 
-const SearchBar = forwardRef(function SearchBar({
-  ref,
-  onChange,
-  onKeyDown,
-  placeholder,
-  classNameDiv,
-  classNameInput,
-  ...props
-}: ComponentProps<"input"> & ClassNames) {
+const SearchBar = forwardRef<HTMLInputElement, Props>(function SearchBar(props, ref) {
+  const { classNameDiv, classNameInput, placeholder, onChange, onKeyDown } = props;
   return (
     <div
       className={cn(
