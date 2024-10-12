@@ -40,7 +40,7 @@ export default function QuickSearchResults({
     </Link>
   )); */
 
-  if (data.length == 0) {
+  if (data.length === 0) {
     return <div>No books found from search :(</div>;
   }
 
