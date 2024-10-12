@@ -13,7 +13,7 @@ const QuickSearchResultsWrapper = function ({ className, children }: ComponentPr
   );
 };
 
-export default function BookSearch({ className }: ComponentProps<"div">) {
+export default function QuickSearch({ className }: ComponentProps<"div">) {
   const [searchInput, setSearchInput] = useState<string>("");
   const [searchResultsVisible, setSearchResultsVisible] = useState<boolean>(false);
   const searchInputElement = useRef<HTMLInputElement | null>(null);
