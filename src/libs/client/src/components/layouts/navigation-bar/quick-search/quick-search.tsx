@@ -1,8 +1,8 @@
 "use client";
 
-import React, { ComponentProps, useRef, useState } from "react";
+import React, { ComponentProps, useRef, useState, useEffect } from "react";
 import QuickSearchResults from "./quick-search-results";
-import SearchBar from "@/client/components/modules/search-bar/search-bar";
+import SearchBarRef from "@/root/src/libs/client/src/components/modules/search-bar/search-bar-ref";
 import { cn } from "@/client/utils";
 
 const QuickSearchResultsWrapper = function ({ className, children }: ComponentProps<"div">) {
@@ -18,6 +18,13 @@ export default function QuickSearch({ className }: ComponentProps<"div">) {
   const [searchResultsVisible, setSearchResultsVisible] = useState<boolean>(false);
   const searchInputElement = useRef<HTMLInputElement | null>(null);
 
+  useEffect(() => {
+    const searchValue = window.localStorage.getItem("search");
+    if (searchValue !== null && searchInputElement.current !== null) {
+      searchInputElement.current.value = searchValue;
+    }
+  }, []);
+
   const handleOnEnterPress = function (e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key !== "Enter") return;
 
@@ -32,6 +39,8 @@ export default function QuickSearch({ className }: ComponentProps<"div">) {
   };
 
   const handleOnChange = function (e: React.ChangeEvent<HTMLInputElement>) {
+    if (window) window.localStorage.setItem("search", e.target.value);
+
     if (e.target.value !== "") return;
 
     setSearchResultsVisible(false);
@@ -40,7 +49,7 @@ export default function QuickSearch({ className }: ComponentProps<"div">) {
 
   return (
     <div className={cn("relative", className)}>
-      <SearchBar
+      <SearchBarRef
         ref={searchInputElement}
         onChange={handleOnChange}
         onKeyDown={handleOnEnterPress}
