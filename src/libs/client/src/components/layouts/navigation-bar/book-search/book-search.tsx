@@ -1,8 +1,8 @@
 "use client";
 
 import React, { ComponentProps, useRef, useState } from "react";
-import MagnifyingGlass from "../../../ui/icons/magnifying-glass";
 import QuickSearchResults from "./quick-search-results";
+import SearchBar from "@/client/components/modules/search-bar/search-bar";
 import { cn } from "@/client/utils";
 
 const QuickSearchResultsWrapper = function ({ className, children }: ComponentProps<"div">) {
@@ -40,21 +40,12 @@ export default function BookSearch({ className }: ComponentProps<"div">) {
 
   return (
     <div className={cn("relative", className)}>
-      <div
-        className={cn(
-          "flex w-full items-center justify-start gap-1 rounded-lg border-2 border-transparent px-1 text-base has-[:focus]:border-primary hover:bg-primary-50 lg:text-lg",
-        )}
-      >
-        <MagnifyingGlass />
-        <input
-          type="search"
-          className="w-full bg-inherit outline-none focus:outline-none"
-          placeholder="Enter a book or string..."
-          onChange={handleOnChange}
-          onKeyDown={handleOnEnterPress}
-          ref={searchInputElement}
-        />
-      </div>
+      <SearchBar
+        ref={searchInputElement}
+        onChange={handleOnChange}
+        onKeyDown={handleOnEnterPress}
+        placeholder="Enter a book or string..."
+      />
       {searchResultsVisible && (
         <QuickSearchResultsWrapper>
           <QuickSearchResults search={searchInput} setSearchResultsVisible={setSearchResultsVisible} />
