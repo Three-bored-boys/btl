@@ -46,7 +46,7 @@ export default function QuickSearchResults({
 
   return (
     <div
-      className="w-full"
+      className="h-full max-h-[95vh] overflow-y-auto"
       onClick={() => {
         setSearchResultsVisible(false);
       }}
