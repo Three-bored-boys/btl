@@ -8,10 +8,10 @@ export default function MainLayout({
   children: React.ReactNode;
 }>): ReactElement {
   return (
-    <>
+    <div className="relative">
       <NavBar />
       {children}
       <Footer />
-    </>
+    </div>
   );
 }

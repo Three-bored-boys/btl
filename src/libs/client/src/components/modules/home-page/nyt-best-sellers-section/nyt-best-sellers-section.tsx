@@ -1,4 +1,4 @@
-import SectionPreamble from "@/client/components/modules/home/section-preamble";
+import SectionPreamble from "@/client/components/modules/home-page/section-preamble";
 import Container from "@/client/components/layouts/container";
 import type { BestSeller } from "@/libs/server/src/types";
 import { fetchData } from "@/libs/client/src/utils";

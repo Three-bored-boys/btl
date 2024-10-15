@@ -1,8 +1,8 @@
 "use client";
 
-import React, { ComponentProps, useRef, useState } from "react";
-import MagnifyingGlass from "../../../ui/icons/magnifying-glass";
+import React, { ComponentProps, useRef, useState, useEffect } from "react";
 import QuickSearchResults from "./quick-search-results";
+import SearchBarRef from "@/root/src/libs/client/src/components/modules/search-bar/search-bar-ref";
 import { cn } from "@/client/utils";
 
 const QuickSearchResultsWrapper = function ({ className, children }: ComponentProps<"div">) {
@@ -13,10 +13,17 @@ const QuickSearchResultsWrapper = function ({ className, children }: ComponentPr
   );
 };
 
-export default function BookSearch({ className }: ComponentProps<"div">) {
+export default function QuickSearch({ className }: ComponentProps<"div">) {
   const [searchInput, setSearchInput] = useState<string>("");
   const [searchResultsVisible, setSearchResultsVisible] = useState<boolean>(false);
   const searchInputElement = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    const searchValue = window.localStorage.getItem("search");
+    if (searchValue !== null && searchInputElement.current !== null) {
+      searchInputElement.current.value = searchValue;
+    }
+  }, []);
 
   const handleOnEnterPress = function (e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key !== "Enter") return;
@@ -32,6 +39,8 @@ export default function BookSearch({ className }: ComponentProps<"div">) {
   };
 
   const handleOnChange = function (e: React.ChangeEvent<HTMLInputElement>) {
+    if (window) window.localStorage.setItem("search", e.target.value);
+
     if (e.target.value !== "") return;
 
     setSearchResultsVisible(false);
@@ -40,21 +49,12 @@ export default function BookSearch({ className }: ComponentProps<"div">) {
 
   return (
     <div className={cn("relative", className)}>
-      <div
-        className={cn(
-          "flex w-full items-center justify-start gap-1 rounded-lg border-2 border-transparent px-1 text-base has-[:focus]:border-primary hover:bg-primary-50 lg:text-lg",
-        )}
-      >
-        <MagnifyingGlass />
-        <input
-          type="search"
-          className="w-full bg-inherit outline-none focus:outline-none"
-          placeholder="Enter a book or string..."
-          onChange={handleOnChange}
-          onKeyDown={handleOnEnterPress}
-          ref={searchInputElement}
-        />
-      </div>
+      <SearchBarRef
+        ref={searchInputElement}
+        onChange={handleOnChange}
+        onKeyDown={handleOnEnterPress}
+        placeholder="Enter book title, author or ISBN..."
+      />
       {searchResultsVisible && (
         <QuickSearchResultsWrapper>
           <QuickSearchResults search={searchInput} setSearchResultsVisible={setSearchResultsVisible} />

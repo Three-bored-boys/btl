@@ -78,4 +78,19 @@ export class GoogleBooksService {
     const books = await this.fetchBooks(url);
     return books;
   }
+
+  async getBooksByAllParameters(
+    search = "",
+    title = "",
+    author = "",
+    genre = "",
+    publisher = "",
+    isbn = "",
+    maxResults = 40,
+  ): Promise<Book[]> {
+    const url = `https://www.googleapis.com/books/v1/volumes?q=${search}+intitle:${title}+inauthor:${author}+subject:${genre}+inpublisher:${publisher}+isbn:${isbn}&maxResults=${maxResults.toString()}&orderBy=newest&startIndex=0&key=${this.apiKey}`;
+    console.log(url);
+    const books = await this.fetchBooks(url);
+    return books;
+  }
 }

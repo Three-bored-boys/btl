@@ -40,13 +40,13 @@ export default function QuickSearchResults({
     </Link>
   )); */
 
-  if (data.length == 0) {
+  if (data.length === 0) {
     return <div>No books found from search :(</div>;
   }
 
   return (
     <div
-      className="w-full"
+      className="h-full max-h-[95vh] overflow-y-auto"
       onClick={() => {
         setSearchResultsVisible(false);
       }}
@@ -72,6 +72,7 @@ export default function QuickSearchResults({
           </div>
         </Link>
       ))}
+      <Link href={`/search?q=${search}`}>View all results</Link>
     </div>
   );
 }
