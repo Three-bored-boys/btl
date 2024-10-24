@@ -2,7 +2,7 @@ export type GoogleBooksResponse = {
   kind: string;
   totalItems: number;
   items: Item[];
-}
+};
 
 type Item = {
   kind: string;
@@ -12,7 +12,7 @@ type Item = {
   volumeInfo: VolumeInfo;
   saleInfo: SaleInfo;
   accessInfo: AccessInfo;
-}
+};
 
 type VolumeInfo = {
   title: string;
@@ -36,27 +36,27 @@ type VolumeInfo = {
   canonicalVolumeLink: string;
   averageRating?: number;
   ratingsCount?: number;
-}
+};
 
 type IndustryIdentifier = {
   type: string;
   identifier: string;
-}
+};
 
 type ReadingModes = {
   text: boolean;
   image: boolean;
-}
+};
 
 type PanelizationSummary = {
   containsEpubBubbles: boolean;
   containsImageBubbles: boolean;
-}
+};
 
 type ImageLinks = {
   smallThumbnail: string;
   thumbnail: string;
-}
+};
 
 type SaleInfo = {
   country: string;
@@ -65,17 +65,17 @@ type SaleInfo = {
   listPrice?: ListPrice;
   retailPrice?: RetailPrice;
   buyLink?: string;
-}
+};
 
 type ListPrice = {
   amount: number;
   currencyCode: string;
-}
+};
 
 type RetailPrice = {
   amount: number;
   currencyCode: string;
-}
+};
 
 type AccessInfo = {
   country: string;
@@ -88,13 +88,13 @@ type AccessInfo = {
   webReaderLink: string;
   accessViewStatus: string;
   quoteSharingAllowed: boolean;
-}
+};
 
 type Epub = {
   isAvailable: boolean;
   acsTokenLink?: string;
-}
+};
 
 type Pdf = {
   isAvailable: boolean;
-}
+};

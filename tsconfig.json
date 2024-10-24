@@ -23,7 +23,7 @@
       "@/*": ["./src/*"],
       "@/server/*": ["./src/libs/server/src/*"],
       "@/client/*": ["./src/libs/client/src/*"],
-      "@/public/*": ["./public/*"],
+      "@/public/*": ["./public/*"]
     }
   },
   "include": [

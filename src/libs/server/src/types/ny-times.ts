@@ -3,13 +3,13 @@ export type NYTimesBestSellersResponse = {
   copyright: string;
   num_results: number;
   results: Results;
-}
+};
 
 type Results = {
   bestsellers_date: string;
   published_date: string;
   lists: List[];
-}
+};
 
 type List = {
   list_id: number;
@@ -18,7 +18,7 @@ type List = {
   updated: string;
   list_image: string;
   books: BookResponse[];
-}
+};
 
 type BookResponse = {
   age_group: string;
@@ -46,9 +46,9 @@ type BookResponse = {
   updated_date: string;
   weeks_on_list: number;
   buy_links: BuyLink[];
-}
+};
 
 export type BuyLink = {
   name: string;
   url: string;
-}
+};
