@@ -4,11 +4,11 @@ import { cn } from "@/client/utils";
 import { NavLinkArr } from "./nav-bar";
 import { cva, VariantProps } from "class-variance-authority";
 
-const navLinks = cva("flex", {
+const navLinks = cva(["flex"], {
   variants: {
     device: {
-      mobile: "flex-col items-start justify-start gap-y-3",
-      "no-mobile": "gap-x-0 items-center justify-around",
+      mobile: ["flex-col", "items-start", "justify-start", "gap-y-3"],
+      "no-mobile": ["gap-x-0", "items-center", "justify-around"],
     },
   },
 });
