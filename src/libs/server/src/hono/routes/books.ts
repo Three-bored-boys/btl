@@ -173,65 +173,8 @@ books.get("/quick-search/:input", async (c) => {
   const input = c.req.param("input");
   const googleBooksService = new GoogleBooksService(c.env.GOOGLE_BOOKS_API_KEY);
 
-  const settledBooksPromises = await Promise.allSettled([
-    googleBooksService.getBooksByTitle(input, 4),
-    googleBooksService.getBooksByAuthor(input, 4),
-    googleBooksService.getBookByISBN(input),
-  ]);
+  const allBooksResults = await googleBooksService.getBooksByAllParameters({ search: input }, 8);
 
-  const isFulfilled = <T>(p: PromiseSettledResult<T>): p is PromiseFulfilledResult<T> => p.status === "fulfilled";
-
-  const allBooksResults = Array.from(
-    new Set(
-      settledBooksPromises
-        .filter(isFulfilled)
-        .map((res) => res.value)
-        .flat(),
-    ),
-  );
-
-  /*
-  const getBooksByTitle = googleBooksService.getBooksByAllParameters(
-    undefined,
-    input,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    4,
-  );
-  const getBooksByAuthor = googleBooksService.getBooksByAllParameters(
-    undefined,
-    undefined,
-    input,
-    undefined,
-    undefined,
-    undefined,
-    4,
-  );
-  const getBookByISBN = googleBooksService.getBooksByAllParameters(
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    input,
-    4,
-  );
-
-  const settledBooksPromises = await Promise.allSettled([getBooksByTitle, getBooksByAuthor, getBookByISBN]);
-
-  const isFulfilled = <T>(p: PromiseSettledResult<T>): p is PromiseFulfilledResult<T> => p.status === "fulfilled";
-
-  const allBooksResults = Array.from(
-    new Set(
-      settledBooksPromises
-        .filter(isFulfilled)
-        .map((res) => res.value)
-        .flat(),
-    ),
-  );
-*/
   console.log(allBooksResults);
 
   const responseData: GoodResponse<Book[]> = { success: true, data: allBooksResults };
