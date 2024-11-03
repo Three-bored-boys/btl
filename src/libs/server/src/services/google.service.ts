@@ -56,15 +56,24 @@ export class GoogleBooksService {
   }
 
   async getBooksByAllParameters(
-    search = "",
-    title = "",
-    author = "",
-    genre = "",
-    publisher = "",
-    isbn = "",
+    {
+      search,
+      title,
+      author,
+      genre,
+      publisher,
+      isbn,
+    }: { search?: string; title?: string; author?: string; genre?: string; publisher?: string; isbn?: string },
     maxResults = 40,
   ): Promise<Book[]> {
-    const url = `https://www.googleapis.com/books/v1/volumes?q=${search}+intitle:${title}+inauthor:${author}+subject:${genre}+inpublisher:${publisher}+isbn:${isbn}&maxResults=${maxResults.toString()}&orderBy=newest&startIndex=0&key=${this.apiKey}`;
+    const searchUrl = search ?? "";
+    const titleUrl = title !== undefined ? `+intitle:${title}` : "";
+    const authorUrl = author !== undefined ? `+inauthor:${author}` : "";
+    const genreUrl = genre !== undefined ? `+subject:${genre}` : "";
+    const publisherUrl = publisher !== undefined ? `+inpublisher:${publisher}` : "";
+    const isbnUrl = isbn !== undefined ? `+isbn:${isbn}` : "";
+
+    const url = `https://www.googleapis.com/books/v1/volumes?q=${searchUrl + titleUrl + authorUrl + genreUrl + publisherUrl + isbnUrl}&maxResults=${maxResults.toString()}&orderBy=relevance&startIndex=0&key=${this.apiKey}`;
     console.log(url);
     const books = await this.fetchBooks(url);
     return books;
