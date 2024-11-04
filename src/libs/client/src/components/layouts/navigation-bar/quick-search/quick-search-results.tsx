@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 // import { book } from "./data";
 import Image from "next/image";
