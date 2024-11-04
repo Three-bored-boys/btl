@@ -10,7 +10,7 @@ import Close from "@/client/components/ui/icons/close";
 import { usePathname } from "next/navigation";
 import Container from "../container";
 import { cn } from "../../../utils";
-import BookSearch from "./quick-search/quick-search";
+import QuickSearch from "./quick-search/quick-search";
 
 const navLinkArr = [
   { name: "Home", path: "/" },
@@ -61,7 +61,7 @@ export default function NavBar({ className, ...props }: React.ComponentProps<"na
           </div>
 
           <div className={cn("flex items-center")}>
-            {rootPathname !== "/search" ? <BookSearch className="w-full" /> : <Logo className="block md:hidden" />}
+            {rootPathname !== "/search" ? <QuickSearch className="w-full" /> : <Logo className="block md:hidden" />}
           </div>
 
           <div className="hidden md:flex md:items-center">

@@ -2,7 +2,7 @@
 
 import React, { ComponentProps, useRef, useState, useEffect } from "react";
 import QuickSearchResults from "./quick-search-results";
-import SearchBarRef from "@/root/src/libs/client/src/components/modules/search-bar/search-bar-ref";
+import SearchInputRef from "@/root/src/libs/client/src/components/modules/search-input/search-input-ref";
 import { cn } from "@/client/utils";
 
 const QuickSearchResultsWrapper = function ({ className, children }: ComponentProps<"div">) {
@@ -49,7 +49,7 @@ export default function QuickSearch({ className }: ComponentProps<"div">) {
 
   return (
     <div className={cn("relative", className)}>
-      <SearchBarRef
+      <SearchInputRef
         ref={searchInputElement}
         onChange={handleOnChange}
         onKeyDown={handleOnEnterPress}
