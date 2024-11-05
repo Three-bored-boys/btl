@@ -1,4 +1,4 @@
-import type { Book, GoogleBooksResponse } from "../types";
+import type { Book, GoogleBooksResponse, SearchObjectType } from "../types";
 
 type Item = GoogleBooksResponse["items"][number];
 
@@ -56,14 +56,7 @@ export class GoogleBooksService {
   }
 
   async getBooksByAllParameters(
-    {
-      search,
-      title,
-      author,
-      genre,
-      publisher,
-      isbn,
-    }: { search?: string; title?: string; author?: string; genre?: string; publisher?: string; isbn?: string },
+    { search, title, author, genre, publisher, isbn }: SearchObjectType,
     maxResults = 40,
   ): Promise<Book[]> {
     const searchUrl = search ?? "";
