@@ -3,7 +3,7 @@
 import React, { ComponentProps, useRef, useState, useEffect } from "react";
 import QuickSearchResults from "./quick-search-results";
 import SearchInputRef from "@/root/src/libs/client/src/components/modules/search-input/search-input-ref";
-import { cn } from "@/client/utils";
+import { cn, getSearchObjectFromLocalStorage, setSearchObjectToLocalStorage } from "@/client/utils";
 import type { SearchObjectType } from "@/server/types";
 
 const QuickSearchResultsWrapper = function ({ className, children }: ComponentProps<"div">) {
@@ -21,7 +21,7 @@ export default function QuickSearch({ className }: ComponentProps<"div">) {
   const searchObjectRef = useRef<SearchObjectType | null>(null);
 
   useEffect(() => {
-    searchObjectRef.current = JSON.parse(window.localStorage.getItem("searchObject") ?? "{}") as SearchObjectType;
+    searchObjectRef.current = getSearchObjectFromLocalStorage();
 
     if (searchObjectRef.current !== null && searchInputElement.current !== null) {
       if (searchObjectRef.current.search !== undefined)
@@ -44,10 +44,7 @@ export default function QuickSearch({ className }: ComponentProps<"div">) {
 
   const handleOnChange = function (e: React.ChangeEvent<HTMLInputElement>) {
     if (window) {
-      window.localStorage.setItem(
-        "searchObject",
-        JSON.stringify({ ...searchObjectRef.current, search: e.target.value }),
-      );
+      setSearchObjectToLocalStorage({ ...searchObjectRef.current, search: e.target.value });
     }
 
     if (e.target.value !== "") return;
