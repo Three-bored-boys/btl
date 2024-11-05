@@ -4,6 +4,7 @@ import React, { ComponentProps, useRef, useState, useEffect } from "react";
 import QuickSearchResults from "./quick-search-results";
 import SearchInputRef from "@/root/src/libs/client/src/components/modules/search-input/search-input-ref";
 import { cn } from "@/client/utils";
+import type { SearchObjectType } from "@/server/types";
 
 const QuickSearchResultsWrapper = function ({ className, children }: ComponentProps<"div">) {
   return (
@@ -17,11 +18,14 @@ export default function QuickSearch({ className }: ComponentProps<"div">) {
   const [searchInput, setSearchInput] = useState<string>("");
   const [searchResultsVisible, setSearchResultsVisible] = useState<boolean>(false);
   const searchInputElement = useRef<HTMLInputElement | null>(null);
+  const searchObjectRef = useRef<SearchObjectType | null>(null);
 
   useEffect(() => {
-    const searchValue = window.localStorage.getItem("search");
-    if (searchValue !== null && searchInputElement.current !== null) {
-      searchInputElement.current.value = searchValue;
+    searchObjectRef.current = JSON.parse(window.localStorage.getItem("searchObject") ?? "{}") as SearchObjectType;
+
+    if (searchObjectRef.current !== null && searchInputElement.current !== null) {
+      if (searchObjectRef.current.search !== undefined)
+        searchInputElement.current.value = searchObjectRef.current.search;
     }
   }, []);
 
@@ -39,7 +43,12 @@ export default function QuickSearch({ className }: ComponentProps<"div">) {
   };
 
   const handleOnChange = function (e: React.ChangeEvent<HTMLInputElement>) {
-    if (window) window.localStorage.setItem("search", e.target.value);
+    if (window) {
+      window.localStorage.setItem(
+        "searchObject",
+        JSON.stringify({ ...searchObjectRef.current, search: e.target.value }),
+      );
+    }
 
     if (e.target.value !== "") return;
 
