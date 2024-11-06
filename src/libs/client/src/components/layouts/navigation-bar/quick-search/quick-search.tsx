@@ -50,7 +50,6 @@ export default function QuickSearch({ className }: ComponentProps<"div">) {
 
     delete searchObjectRef.current.search;
     setSearchObjectToLocalStorage(searchObjectRef.current);
-
     setSearchResultsVisible(false);
     setSearchInput("");
   };
