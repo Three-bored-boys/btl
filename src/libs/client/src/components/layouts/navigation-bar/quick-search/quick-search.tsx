@@ -18,12 +18,12 @@ export default function QuickSearch({ className }: ComponentProps<"div">) {
   const [searchInput, setSearchInput] = useState<string>("");
   const [searchResultsVisible, setSearchResultsVisible] = useState<boolean>(false);
   const searchInputElement = useRef<HTMLInputElement | null>(null);
-  const searchObjectRef = useRef<SearchObjectType | null>(null);
+  const searchObjectRef = useRef<SearchObjectType>({});
 
   useEffect(() => {
     searchObjectRef.current = getSearchObjectFromLocalStorage();
 
-    if (searchObjectRef.current !== null && searchInputElement.current !== null) {
+    if (searchInputElement.current !== null) {
       if (searchObjectRef.current.search !== undefined)
         searchInputElement.current.value = searchObjectRef.current.search;
     }
@@ -43,11 +43,13 @@ export default function QuickSearch({ className }: ComponentProps<"div">) {
   };
 
   const handleOnChange = function (e: React.ChangeEvent<HTMLInputElement>) {
-    if (window) {
+    if (e.target.value !== "") {
       setSearchObjectToLocalStorage({ ...searchObjectRef.current, search: e.target.value });
+      return;
     }
 
-    if (e.target.value !== "") return;
+    delete searchObjectRef.current.search;
+    setSearchObjectToLocalStorage(searchObjectRef.current);
 
     setSearchResultsVisible(false);
     setSearchInput("");
