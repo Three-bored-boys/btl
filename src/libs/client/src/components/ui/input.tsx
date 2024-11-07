@@ -1,9 +1,10 @@
-import React, { ComponentProps } from "react";
+import React, { ComponentProps, forwardRef } from "react";
 import { cn } from "../../utils";
 
 type InputProps = ComponentProps<"input">;
 
-export default function Input({ id, children, className, type, ...props }: InputProps) {
+const Input = forwardRef<HTMLInputElement, InputProps>(function InputRef(props, ref) {
+  const { id, className, type, children, ...otherProps } = props;
   return (
     <input
       id={id}
@@ -12,9 +13,12 @@ export default function Input({ id, children, className, type, ...props }: Input
         className,
       )}
       type={type}
-      {...props}
+      ref={ref}
+      {...otherProps}
     >
       {children}
     </input>
   );
-}
+});
+
+export default Input;
