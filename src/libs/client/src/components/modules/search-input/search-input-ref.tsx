@@ -6,7 +6,7 @@ type ClassNames = { classNameDiv?: string; classNameInput?: string };
 type Props = ComponentProps<"input"> & ClassNames;
 
 const SearchInputRef = forwardRef<HTMLInputElement, Props>(function SearchBarRef(props, ref) {
-  const { classNameDiv, classNameInput, placeholder, onChange, onKeyDown } = props;
+  const { classNameDiv, classNameInput, placeholder, onChange, onKeyDown, ...otherProps } = props;
   return (
     <div
       className={cn(
@@ -22,7 +22,7 @@ const SearchInputRef = forwardRef<HTMLInputElement, Props>(function SearchBarRef
         onChange={onChange}
         onKeyDown={onKeyDown}
         ref={ref}
-        {...props}
+        {...otherProps}
       />
     </div>
   );
