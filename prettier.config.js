@@ -16,7 +16,7 @@ const config = {
   embeddedLanguageFormatting: "auto",
   plugins: ["prettier-plugin-tailwindcss"],
   tailwindFunctions: ["clsx", "cn", "twMerge"],
-  tailwindAttributes: ["className"],
+  tailwindAttributes: ["className", "classNameDiv", "classNameInput"],
 };
 
 module.exports = config;
