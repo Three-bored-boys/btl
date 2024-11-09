@@ -1,10 +1,6 @@
 import { ReactElement } from "react";
-import AdjustmentsHorizontal from "@/client/components/ui/icons/adjustments-horizontal";
+import { SearchPage } from "@/root/src/libs/client/src/components/modules/search-page/search-page";
 
 export default function Search(): ReactElement {
-  return (
-    <div>
-      <AdjustmentsHorizontal />
-    </div>
-  );
+  return <SearchPage />;
 }
