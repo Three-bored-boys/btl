@@ -39,7 +39,7 @@ export const SearchPage = () => {
             <p>Filters</p>
             <hr />
             <div className="flex items-center justify-between">
-              {filters.map((str) => (
+              {filters.current.map((str) => (
                 <Label key={str}>
                   <span>By {str}</span>
                   <Input
