@@ -44,7 +44,7 @@ export default function QuickSearch({ className }: ComponentProps<"div">) {
 
   const handleOnChange = function (e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.value !== "") {
-      setSearchObjectToLocalStorage({ ...searchObjectRef.current, search: e.target.value });
+      setSearchObjectToLocalStorage({ ...getSearchObjectFromLocalStorage(), search: e.target.value });
       return;
     }
 
