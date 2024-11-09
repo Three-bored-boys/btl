@@ -9,7 +9,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(function InputRef(props, 
     <input
       id={id}
       className={cn(
-        "rounded-none border-2 border-primary-50 p-1 text-base outline-none focus:outline-1 focus:outline-offset-1 focus:outline-primary",
+        "rounded-none border-2 border-primary-50 px-1 text-base outline-none focus:border-primary focus:outline-0",
         className,
       )}
       type={type}
