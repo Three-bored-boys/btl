@@ -28,7 +28,6 @@ export default function useSearchPage(): SearchPageHookReturnType {
     allInputElementRefsMap.current.forEach((_, key, map) => {
       const node = map.get(key);
       const nodeValue = searchObjectRef.current[key];
-      console.log(node, key);
       if (nodeValue !== undefined && node !== null && node !== undefined) {
         node.value = nodeValue;
       }
