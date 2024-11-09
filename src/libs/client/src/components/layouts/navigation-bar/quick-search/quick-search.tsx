@@ -48,6 +48,7 @@ export default function QuickSearch({ className }: ComponentProps<"div">) {
       return;
     }
 
+    searchObjectRef.current = getSearchObjectFromLocalStorage();
     delete searchObjectRef.current.search;
     setSearchObjectToLocalStorage(searchObjectRef.current);
     setSearchResultsVisible(false);
