@@ -45,8 +45,8 @@ export default function NavBar({ className, ...props }: React.ComponentProps<"na
     <nav className={cn("relative w-full shadow-lg", className)} {...props}>
       <Container>
         <div
-          className={cn("", {
-            "grid grid-cols-[auto_1fr_auto] gap-x-2 py-1 xs:gap-x-4 radix-xs:gap-x-10 md:grid-cols-[auto_1fr_auto_auto] md:gap-x-1":
+          className={cn("py-1", {
+            "grid grid-cols-[auto_1fr_auto] gap-x-2 xs:gap-x-4 radix-xs:gap-x-10 md:grid-cols-[auto_1fr_auto_auto] md:gap-x-1":
               rootPathname !== "/search",
             "flex items-center justify-between": rootPathname === "/search",
           })}
@@ -60,9 +60,19 @@ export default function NavBar({ className, ...props }: React.ComponentProps<"na
             )}
           </div>
 
-          <div className={cn("flex items-center")}>
+          {rootPathname !== "/search" ? (
+            <div className="flex">
+              <QuickSearch className="w-full" />
+            </div>
+          ) : (
+            <div className="hidden">
+              <Logo className="block md:hidden" />
+            </div>
+          )}
+
+          {/* <div className={cn("flex items-center")}>
             {rootPathname !== "/search" ? <QuickSearch className="w-full" /> : <Logo className="block md:hidden" />}
-          </div>
+          </div> */}
 
           <div className="hidden md:flex md:items-center">
             <NavLinks device={"no-mobile"} routesArr={navLinkArr} rootPathname={rootPathname} className="w-full" />
