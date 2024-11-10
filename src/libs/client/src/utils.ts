@@ -39,14 +39,11 @@ export const fetchData = async function <T>(url: string, options?: RequestInit) 
 const BTL_LOCAL_STORAGE_SEARCH_OBJECT = "btlSearchObject";
 
 export const getSearchObjectFromLocalStorage = function () {
-  if (window) {
-    return JSON.parse(window.localStorage.getItem(BTL_LOCAL_STORAGE_SEARCH_OBJECT) ?? "{}") as SearchObjectType;
-  }
-  return {} as SearchObjectType;
+  return JSON.parse(window.localStorage.getItem(BTL_LOCAL_STORAGE_SEARCH_OBJECT) ?? "{}") as SearchObjectType;
 };
 
 export const setSearchObjectToLocalStorage = function (param: SearchObjectType) {
-  if (window) window.localStorage.setItem(BTL_LOCAL_STORAGE_SEARCH_OBJECT, JSON.stringify(param));
+  window.localStorage.setItem(BTL_LOCAL_STORAGE_SEARCH_OBJECT, JSON.stringify(param));
 };
 
 export const onInputChange = function (e: React.ChangeEvent<HTMLInputElement>, key: keyof SearchObjectType) {
