@@ -3,7 +3,7 @@
 import React, { ComponentProps, useRef, useState, useEffect } from "react";
 import QuickSearchResults from "./quick-search-results";
 import SearchInputRef from "@/root/src/libs/client/src/components/modules/search-input/search-input-ref";
-import { cn, getSearchObjectFromLocalStorage, setSearchObjectToLocalStorage } from "@/client/utils";
+import { cn, getSearchObjectFromLocalStorage, onInputChange } from "@/client/utils";
 import type { SearchObjectType } from "@/server/types";
 
 const QuickSearchResultsWrapper = function ({ className, children }: ComponentProps<"div">) {
@@ -42,15 +42,8 @@ export default function QuickSearch({ className }: ComponentProps<"div">) {
     }
   };
 
-  const handleOnChange = function (e: React.ChangeEvent<HTMLInputElement>) {
-    if (e.target.value !== "") {
-      setSearchObjectToLocalStorage({ ...getSearchObjectFromLocalStorage(), search: e.target.value });
-      return;
-    }
-
-    searchObjectRef.current = getSearchObjectFromLocalStorage();
-    delete searchObjectRef.current.search;
-    setSearchObjectToLocalStorage(searchObjectRef.current);
+  const handleOnChange = function (e: React.ChangeEvent<HTMLInputElement>, key: keyof SearchObjectType) {
+    searchObjectRef.current = onInputChange(e, key);
     setSearchResultsVisible(false);
     setSearchInput("");
   };
@@ -59,7 +52,7 @@ export default function QuickSearch({ className }: ComponentProps<"div">) {
     <div className={cn("relative", className)}>
       <SearchInputRef
         ref={searchInputElement}
-        onChange={handleOnChange}
+        onChange={(e) => handleOnChange(e, "search")}
         onKeyDown={handleOnEnterPress}
         placeholder="Enter book title, author or ISBN..."
       />

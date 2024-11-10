@@ -6,22 +6,14 @@ import SearchInputRef from "../search-input/search-input-ref";
 import Label from "../../ui/label";
 import Input from "../../ui/input";
 import { SearchObjectType } from "@/root/src/libs/server/src/types";
-import { getSearchObjectFromLocalStorage, setSearchObjectToLocalStorage } from "@/client/utils";
+import { onInputChange } from "@/client/utils";
 import useSearchPage from "./hook";
 
 export const SearchPage = () => {
   const [filters, allInputElementRefsMap, searchInputElement, searchObjectRef] = useSearchPage();
 
   const handleOnChange = function (e: React.ChangeEvent<HTMLInputElement>, key: keyof SearchObjectType) {
-    if (e.target.value !== "") {
-      setSearchObjectToLocalStorage({ ...getSearchObjectFromLocalStorage(), [key]: e.target.value });
-      return;
-    }
-
-    searchObjectRef.current = getSearchObjectFromLocalStorage();
-    /* eslint-disable-next-line */
-    delete searchObjectRef.current[key];
-    setSearchObjectToLocalStorage(searchObjectRef.current);
+    searchObjectRef.current = onInputChange(e, key);
   };
 
   return (

@@ -36,10 +36,31 @@ export const fetchData = async function <T>(url: string, options?: RequestInit) 
   return data;
 };
 
+const BTL_LOCAL_STORAGE_SEARCH_OBJECT = "btlSearchObject";
+
 export const getSearchObjectFromLocalStorage = function () {
-  return JSON.parse(window.localStorage.getItem("searchObject") ?? "{}") as SearchObjectType;
+  if (window) {
+    return JSON.parse(window.localStorage.getItem(BTL_LOCAL_STORAGE_SEARCH_OBJECT) ?? "{}") as SearchObjectType;
+  }
+  return {} as SearchObjectType;
 };
 
 export const setSearchObjectToLocalStorage = function (param: SearchObjectType) {
-  window.localStorage.setItem("searchObject", JSON.stringify(param));
+  if (window) window.localStorage.setItem(BTL_LOCAL_STORAGE_SEARCH_OBJECT, JSON.stringify(param));
+};
+
+export const onInputChange = function (e: React.ChangeEvent<HTMLInputElement>, key: keyof SearchObjectType) {
+  const trimmedValue = e.target.value.trim();
+  let searchObject: SearchObjectType;
+  if (trimmedValue !== "") {
+    setSearchObjectToLocalStorage({ ...getSearchObjectFromLocalStorage(), [key]: trimmedValue });
+    searchObject = getSearchObjectFromLocalStorage();
+    return searchObject;
+  }
+
+  searchObject = getSearchObjectFromLocalStorage();
+  /* eslint-disable-next-line */
+  delete searchObject[key];
+  setSearchObjectToLocalStorage(searchObject);
+  return searchObject;
 };
