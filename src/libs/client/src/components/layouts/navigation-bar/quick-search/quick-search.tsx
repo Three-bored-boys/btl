@@ -18,11 +18,9 @@ export default function QuickSearch({ className }: ComponentProps<"div">) {
   const [searchInput, setSearchInput] = useState<string>("");
   const [searchResultsVisible, setSearchResultsVisible] = useState<boolean>(false);
   const searchInputElement = useRef<HTMLInputElement | null>(null);
-  const searchObjectRef = useRef<SearchObjectType>({});
+  const searchObjectRef = useRef<SearchObjectType>(getSearchObjectFromLocalStorage());
 
   useEffect(() => {
-    searchObjectRef.current = getSearchObjectFromLocalStorage();
-
     if (searchInputElement.current !== null) {
       if (searchObjectRef.current.search !== undefined)
         searchInputElement.current.value = searchObjectRef.current.search;
