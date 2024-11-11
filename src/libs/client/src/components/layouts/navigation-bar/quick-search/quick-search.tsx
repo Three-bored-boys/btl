@@ -2,7 +2,7 @@
 
 import React, { ComponentProps, useRef, useState, useEffect } from "react";
 import QuickSearchResults from "./quick-search-results";
-import SearchInputRef from "@/root/src/libs/client/src/components/modules/search-input/search-input-ref";
+import SearchInput from "@/root/src/libs/client/src/components/ui/search-input";
 import { cn, getSearchObjectFromLocalStorage, editLocalStorageOnInputChange } from "@/client/utils";
 import type { SearchObjectType } from "@/server/types";
 
@@ -58,7 +58,7 @@ export default function QuickSearch({ className }: ComponentProps<"div">) {
 
   return (
     <div className={cn("relative", className)}>
-      <SearchInputRef
+      <SearchInput
         ref={searchInputElement}
         onChange={(e) => handleOnChange(e, "search")}
         onKeyDown={handleOnEnterPress}

@@ -2,7 +2,7 @@
 
 import React from "react";
 import Container from "../../layouts/container";
-import SearchInputRef from "../search-input/search-input-ref";
+import SearchInput from "../../ui/search-input";
 import Label from "../../ui/label";
 import Input from "../../ui/input";
 import { SearchObjectType } from "@/root/src/libs/server/src/types";
@@ -24,7 +24,7 @@ export const SearchPage = () => {
       <Container>
         <form className="mt-3 w-full">
           <div className="mx-auto w-11/12 max-w-96">
-            <SearchInputRef
+            <SearchInput
               classNameDiv="w-full border-2 border-primary-100"
               ref={searchInputElement}
               onChange={(e) => handleOnChange(e, "search")}

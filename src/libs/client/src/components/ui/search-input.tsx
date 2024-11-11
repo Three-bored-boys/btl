@@ -5,7 +5,7 @@ import { cn } from "@/client/utils";
 type ClassNames = { classNameDiv?: string; classNameInput?: string };
 type Props = ComponentProps<"input"> & ClassNames;
 
-const SearchInputRef = forwardRef<HTMLInputElement, Props>(function SearchBarRef(props, ref) {
+const SearchInput = forwardRef<HTMLInputElement, Props>(function SearchInputRef(props, ref) {
   const { classNameDiv, classNameInput, placeholder, onChange, onKeyDown, ...otherProps } = props;
   return (
     <div
@@ -28,4 +28,4 @@ const SearchInputRef = forwardRef<HTMLInputElement, Props>(function SearchBarRef
   );
 });
 
-export default SearchInputRef;
+export default SearchInput;
