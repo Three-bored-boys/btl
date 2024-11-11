@@ -3,7 +3,7 @@
 import React, { ComponentProps, useRef, useState, useEffect } from "react";
 import QuickSearchResults from "./quick-search-results";
 import SearchInputRef from "@/root/src/libs/client/src/components/modules/search-input/search-input-ref";
-import { cn, getSearchObjectFromLocalStorage, onInputChange } from "@/client/utils";
+import { cn, getSearchObjectFromLocalStorage, editLocalStorageOnInputChange } from "@/client/utils";
 import type { SearchObjectType } from "@/server/types";
 
 const QuickSearchResultsWrapper = function ({ className, children }: ComponentProps<"div">) {
@@ -18,9 +18,13 @@ export default function QuickSearch({ className }: ComponentProps<"div">) {
   const [searchInput, setSearchInput] = useState<string>("");
   const [searchResultsVisible, setSearchResultsVisible] = useState<boolean>(false);
   const searchInputElement = useRef<HTMLInputElement | null>(null);
-  const searchObjectRef = useRef<SearchObjectType>(getSearchObjectFromLocalStorage());
+  const searchObjectRef = useRef<SearchObjectType>({});
 
   useEffect(() => {
+    if (window) {
+      searchObjectRef.current = getSearchObjectFromLocalStorage();
+    }
+
     if (searchInputElement.current !== null) {
       if (searchObjectRef.current.search !== undefined)
         searchInputElement.current.value = searchObjectRef.current.search;
@@ -31,7 +35,7 @@ export default function QuickSearch({ className }: ComponentProps<"div">) {
     if (e.key !== "Enter") return;
 
     if (searchInputElement.current) {
-      if (searchInputElement.current.value === "") {
+      if (searchInputElement.current.value.trim() === "") {
         return;
       }
 
@@ -41,7 +45,13 @@ export default function QuickSearch({ className }: ComponentProps<"div">) {
   };
 
   const handleOnChange = function (e: React.ChangeEvent<HTMLInputElement>, key: keyof SearchObjectType) {
-    searchObjectRef.current = onInputChange(e, key);
+    const trimmedValue = e.target.value;
+    if (window) {
+      searchObjectRef.current = editLocalStorageOnInputChange(key, trimmedValue);
+    }
+
+    if (trimmedValue !== "") return;
+
     setSearchResultsVisible(false);
     setSearchInput("");
   };

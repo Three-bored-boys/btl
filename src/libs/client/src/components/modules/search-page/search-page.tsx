@@ -6,14 +6,17 @@ import SearchInputRef from "../search-input/search-input-ref";
 import Label from "../../ui/label";
 import Input from "../../ui/input";
 import { SearchObjectType } from "@/root/src/libs/server/src/types";
-import { onInputChange } from "@/client/utils";
+import { editLocalStorageOnInputChange } from "@/client/utils";
 import useSearchPage from "./hook";
 
 export const SearchPage = () => {
   const [filters, allInputElementRefsMap, searchInputElement, searchObjectRef] = useSearchPage();
 
   const handleOnChange = function (e: React.ChangeEvent<HTMLInputElement>, key: keyof SearchObjectType) {
-    searchObjectRef.current = onInputChange(e, key);
+    const trimmedValue = e.target.value.trim();
+    if (window) {
+      searchObjectRef.current = editLocalStorageOnInputChange(key, trimmedValue);
+    }
   };
 
   return (

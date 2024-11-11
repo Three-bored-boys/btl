@@ -15,10 +15,14 @@ export default function useSearchPage(): SearchPageHookReturnType {
     new Map(filters.current.map((str) => [str, null])),
   );
 
-  const searchObjectRef = useRef<SearchObjectType>(getSearchObjectFromLocalStorage());
+  const searchObjectRef = useRef<SearchObjectType>({});
   const searchInputElement = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
+    if (window) {
+      searchObjectRef.current = getSearchObjectFromLocalStorage();
+    }
+
     if (searchInputElement.current !== null && searchObjectRef.current.search !== undefined) {
       searchInputElement.current.value = searchObjectRef.current.search;
     }
