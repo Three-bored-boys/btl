@@ -51,11 +51,10 @@ export const setSearchObjectToLocalStorage = function (param: SearchObjectType) 
   }
 };
 
-export const onInputChange = function (e: React.ChangeEvent<HTMLInputElement>, key: keyof SearchObjectType) {
-  const trimmedValue = e.target.value.trim();
+export const editLocalStorageOnInputChange = function (key: keyof SearchObjectType, trimmedTargetValue: string) {
   let searchObject: SearchObjectType;
-  if (trimmedValue !== "") {
-    setSearchObjectToLocalStorage({ ...getSearchObjectFromLocalStorage(), [key]: trimmedValue });
+  if (trimmedTargetValue !== "") {
+    setSearchObjectToLocalStorage({ ...getSearchObjectFromLocalStorage(), [key]: trimmedTargetValue });
     searchObject = getSearchObjectFromLocalStorage();
     return searchObject;
   }
