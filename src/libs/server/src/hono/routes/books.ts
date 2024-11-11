@@ -97,11 +97,16 @@ books.get(
   zValidator(
     "param",
     z.object({
-      isbn: z
-        .string()
-        .min(10)
-        .max(13)
-        .refine((val) => Number.isFinite(+val)),
+      isbn: z.union([
+        z
+          .string()
+          .length(10)
+          .refine((val) => Number.isFinite(+val)),
+        z
+          .string()
+          .length(13)
+          .refine((val) => Number.isFinite(+val)),
+      ]),
     }),
     (result, c) => {
       if (!result.success) {
@@ -141,8 +146,16 @@ books.get(
       return c.json(responseData, 400);
     }
 
+    let book: Book[];
+
     const googleBooksService = new GoogleBooksService(c.env.GOOGLE_BOOKS_API_KEY);
-    const book = await googleBooksService.getBookByISBN(isbn);
+    book = await googleBooksService.getBookByISBN(isbn);
+
+    if (book.length === 0) {
+      book = await googleBooksService.getBooksByAllParameters({ search: isbn });
+      const responseData: GoodResponse<Book[]> = { success: true, data: book };
+      return c.json(responseData);
+    }
 
     const responseData: GoodResponse<Book[]> = { success: true, data: book };
     return c.json(responseData);
