@@ -70,10 +70,6 @@ export default function NavBar({ className, ...props }: React.ComponentProps<"na
             </div>
           )}
 
-          {/* <div className={cn("flex items-center")}>
-            {rootPathname !== "/search" ? <QuickSearch className="w-full" /> : <Logo className="block md:hidden" />}
-          </div> */}
-
           <div className="hidden md:flex md:items-center">
             <NavLinks device={"no-mobile"} routesArr={navLinkArr} rootPathname={rootPathname} className="w-full" />
           </div>

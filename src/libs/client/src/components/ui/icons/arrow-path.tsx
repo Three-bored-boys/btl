@@ -8,7 +8,6 @@ export default function ArrowPath({ className, onClick, ...props }: React.Compon
       viewBox="0 0 24 24"
       fill="currentColor"
       className={cn("h-4 w-4 cursor-default", className)}
-      //   onClick={onClick}
       {...props}
     >
       <path

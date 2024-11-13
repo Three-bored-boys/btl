@@ -18,5 +18,3 @@ export default function LoadingSkeleton() {
     </div>
   );
 }
-
-/* xs:grid-cols-[55px_1fr] sm:grid-cols-[70px_1fr]  --- lg:grid-cols-[1fr_7fr]*/
