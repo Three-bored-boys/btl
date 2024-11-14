@@ -52,7 +52,7 @@ export default function QuickSearchResults({
       {data.map((book, i) => (
         <Link
           className="grid w-full grid-cols-[40px_1fr] grid-rows-[auto] gap-1 rounded-xl py-2 hover:bg-secondary-100 xs:grid-cols-[45px_1fr] max-lg:md:grid-cols-[40px_1fr]"
-          href={`/book/${book.isbn13}`}
+          href={`/books/${book.isbn13 || book.isbn10}`}
           key={i}
         >
           <div className="aspect-square">
