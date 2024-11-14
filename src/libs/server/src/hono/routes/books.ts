@@ -182,11 +182,11 @@ books.get(
   },
 );
 
-books.get("/quick-search/:input", async (c) => {
-  const input = c.req.param("input");
+books.get("/quick-search/:search", async (c) => {
+  const search = c.req.param("search");
   const googleBooksService = new GoogleBooksService(c.env.GOOGLE_BOOKS_API_KEY);
 
-  const allBooksResults = await googleBooksService.getBooksByAllParameters({ search: input }, 8);
+  const allBooksResults = await googleBooksService.getBooksByAllParameters({ search }, 8);
 
   console.log(allBooksResults);
 
