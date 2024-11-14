@@ -70,7 +70,7 @@ export default function QuickSearchResults({
           </div>
         </Link>
       ))}
-      <Link href={`/search?q=${search}`}>View all results</Link>
+      <Link href={`/search`}>View all results</Link>
     </div>
   );
 }
