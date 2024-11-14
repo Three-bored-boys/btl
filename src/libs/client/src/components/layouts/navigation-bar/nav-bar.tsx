@@ -61,7 +61,7 @@ export default function NavBar({ className, ...props }: React.ComponentProps<"na
           </div>
 
           {rootPathname !== "/search" ? (
-            <div className="flex">
+            <div className="flex items-center justify-center">
               <QuickSearch className="w-full" />
             </div>
           ) : (
