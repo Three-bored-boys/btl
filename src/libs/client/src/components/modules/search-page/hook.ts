@@ -1,5 +1,5 @@
 import { SearchObjectType } from "@/root/src/libs/server/src/types";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { getSearchObjectFromLocalStorage } from "@/client/utils";
 
 type SearchPageHookReturnType = [
@@ -7,6 +7,10 @@ type SearchPageHookReturnType = [
   React.MutableRefObject<Map<string, HTMLInputElement | null>>,
   React.MutableRefObject<HTMLInputElement | null>,
   React.MutableRefObject<SearchObjectType>,
+  SearchObjectType,
+  React.Dispatch<React.SetStateAction<SearchObjectType>>,
+  boolean,
+  React.Dispatch<React.SetStateAction<boolean>>,
 ];
 
 export default function useSearchPage(): SearchPageHookReturnType {
@@ -17,6 +21,9 @@ export default function useSearchPage(): SearchPageHookReturnType {
 
   const searchObjectRef = useRef<SearchObjectType>({});
   const searchInputElement = useRef<HTMLInputElement | null>(null);
+
+  const [querySearchObject, setQuerySearchObject] = useState<SearchObjectType>({});
+  const [showSearchResults, setShowSearchResults] = useState<boolean>(false);
 
   useEffect(() => {
     if (window) {
@@ -34,7 +41,22 @@ export default function useSearchPage(): SearchPageHookReturnType {
         node.value = nodeValue;
       }
     });
+
+    if (Object.entries(searchObjectRef.current).length !== 0) {
+      console.log("Yeahhhhh");
+      setShowSearchResults(true);
+      setQuerySearchObject(searchObjectRef.current);
+    }
   }, []);
 
-  return [filters, allInputElementRefsMap, searchInputElement, searchObjectRef];
+  return [
+    filters,
+    allInputElementRefsMap,
+    searchInputElement,
+    searchObjectRef,
+    querySearchObject,
+    setQuerySearchObject,
+    showSearchResults,
+    setShowSearchResults,
+  ];
 }
