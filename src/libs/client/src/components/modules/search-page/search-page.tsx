@@ -31,8 +31,6 @@ export const SearchPage = () => {
 
   const handleOnSubmit = function (e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
-    console.log(e);
-    console.log(searchObjectRef.current);
 
     if (Object.entries(searchObjectRef.current).length === 0) return;
     setShowSearchResults(true);
