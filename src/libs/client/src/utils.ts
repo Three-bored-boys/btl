@@ -1,7 +1,8 @@
 import { twMerge } from "tailwind-merge";
 import { clsx, ClassValue } from "clsx";
 import { cva, VariantProps } from "class-variance-authority";
-import type { GoodResponse, BadResponse, SearchObjectType } from "@/libs/server/src/types";
+import type { GoodResponse, BadResponse } from "@/libs/server/src/types";
+import type { SearchObjectType } from "@/libs/server/src/schemas";
 
 export function cn(...inputs: ClassValue[]): string {
   return twMerge(clsx(inputs));

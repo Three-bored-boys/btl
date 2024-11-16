@@ -4,7 +4,8 @@ import { GoogleBooksService } from "../../services/google.service";
 import { NYTimesService } from "../../services/ny-times.service";
 import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
-import type { BadResponse, GoodResponse, Genres, BestSeller, Book } from "../../types";
+import { type BadResponse, type GoodResponse, type Genres, type BestSeller, type Book } from "../../types";
+import { searchObjectSchema } from "../../schemas";
 import { Environment } from "@/root/bindings";
 import { cache } from "hono/cache";
 

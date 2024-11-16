@@ -1,4 +1,5 @@
-import { SearchObjectType } from "@/root/src/libs/server/src/types";
+import { Book } from "@/root/src/libs/server/src/types";
+import { SearchObjectType } from "@/root/src/libs/server/src/schemas";
 import React, { useEffect, useRef, useState } from "react";
 import { getSearchObjectFromLocalStorage } from "@/client/utils";
 

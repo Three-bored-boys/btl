@@ -5,7 +5,7 @@ import Container from "../../layouts/container";
 import SearchInput from "../../ui/search-input";
 import Label from "../../ui/label";
 import Input from "../../ui/input";
-import { SearchObjectType } from "@/root/src/libs/server/src/types";
+import { SearchObjectType } from "@/root/src/libs/server/src/schemas";
 import { editLocalStorageOnInputChange } from "@/client/utils";
 import useSearchPage from "./hooks";
 import Button from "../../ui/button";
