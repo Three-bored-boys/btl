@@ -1,4 +1,5 @@
-import type { Book, GoogleBooksResponse, SearchObjectType } from "../types";
+import type { Book, GoogleBooksResponse } from "../types";
+import type { SearchObjectType } from "../schemas";
 
 type Item = GoogleBooksResponse["items"][number];
 
