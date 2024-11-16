@@ -8,15 +8,35 @@ import Input from "../../ui/input";
 import { SearchObjectType } from "@/root/src/libs/server/src/types";
 import { editLocalStorageOnInputChange } from "@/client/utils";
 import useSearchPage from "./hook";
+import Button from "../../ui/button";
 
 export const SearchPage = () => {
-  const [filters, allInputElementRefsMap, searchInputElement, searchObjectRef] = useSearchPage();
+  const [
+    filters,
+    allInputElementRefsMap,
+    searchInputElement,
+    searchObjectRef,
+    querySearchObject,
+    setQuerySearchObject,
+    showSearchResults,
+    setShowSearchResults,
+  ] = useSearchPage();
 
   const handleOnChange = function (e: React.ChangeEvent<HTMLInputElement>, key: keyof SearchObjectType) {
     const trimmedValue = e.target.value.trim();
     if (window) {
       searchObjectRef.current = editLocalStorageOnInputChange(key, trimmedValue);
     }
+  };
+
+  const handleOnSubmit = function (e: React.MouseEvent<HTMLButtonElement>) {
+    e.preventDefault();
+    console.log(e);
+    console.log(searchObjectRef.current);
+
+    if (Object.entries(searchObjectRef.current).length === 0) return;
+    setShowSearchResults(true);
+    setQuerySearchObject(searchObjectRef.current);
   };
 
   return (
@@ -53,7 +73,11 @@ export const SearchPage = () => {
               ))}
             </div>
           </div>
+          <Button type="submit" background={"dark"} textSize={"big"} onClick={handleOnSubmit}>
+            Submit
+          </Button>
         </form>
+        {showSearchResults && <div>{JSON.stringify(querySearchObject)}</div>}
       </Container>
     </div>
   );
