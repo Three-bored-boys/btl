@@ -73,7 +73,7 @@ export const SearchPage = () => {
               ))}
             </div>
           </div>
-          <Button type="submit" background={"dark"} textSize={"big"} onClick={handleOnSubmit}>
+          <Button type="submit" background={"light"} textSize={"big"} onClick={handleOnSubmit}>
             Submit
           </Button>
         </form>
