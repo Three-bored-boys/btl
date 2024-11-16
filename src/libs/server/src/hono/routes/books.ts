@@ -81,11 +81,14 @@ books.get(
     const { genre } = c.req.valid("param");
 
     const googleBooksService = new GoogleBooksService(c.env.GOOGLE_BOOKS_API_KEY);
-    const books = await googleBooksService.getBooksByAllParameters({ genre }, 6);
+    const returnedValue = await googleBooksService.getBooksByAllParameters({
+      searchInput: { genre },
+      maxResults: 6,
+    });
 
     const responseData: GoodResponse<Book[]> = {
       success: true,
-      data: books.filter((book) => book.isbn10 !== "" && book.isbn13 !== ""),
+      data: returnedValue.books.filter((book) => book.isbn10 !== "" && book.isbn13 !== ""),
     };
 
     return c.json(responseData);
@@ -152,7 +155,7 @@ books.get(
     book = await googleBooksService.getBookByISBN(isbn);
 
     if (book.length === 0) {
-      book = await googleBooksService.getBooksByAllParameters({ search: isbn });
+      book = (await googleBooksService.getBooksByAllParameters({ searchInput: { search: isbn } })).books;
       const responseData: GoodResponse<Book[]> = { success: true, data: book };
       return c.json(responseData);
     }
@@ -186,11 +189,14 @@ books.get("/quick-search/:search", async (c) => {
   const search = c.req.param("search");
   const googleBooksService = new GoogleBooksService(c.env.GOOGLE_BOOKS_API_KEY);
 
-  const allBooksResults = await googleBooksService.getBooksByAllParameters({ search }, 8);
+  const allBooksResults = await googleBooksService.getBooksByAllParameters({
+    searchInput: { search },
+    maxResults: 8,
+  });
 
   console.log(allBooksResults);
 
-  const responseData: GoodResponse<Book[]> = { success: true, data: allBooksResults };
+  const responseData: GoodResponse<Book[]> = { success: true, data: allBooksResults.books };
   return c.json(responseData);
 });
 

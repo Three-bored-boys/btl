@@ -5,7 +5,7 @@ type Item = GoogleBooksResponse["items"][number];
 export class GoogleBooksService {
   constructor(private apiKey: string) {}
 
-  private async fetchBooks(url: string): Promise<Book[]> {
+  private async fetchBooks(url: string): Promise<{ books: Book[]; totalItems: number }> {
     try {
       const response = await fetch(url);
       console.log(response.ok, response.status, response.statusText);
@@ -13,10 +13,10 @@ export class GoogleBooksService {
         throw new Error(response.statusText);
       }
       const data = (await response.json()) as GoogleBooksResponse;
-      return data.items.map((item) => this.mapBook(item));
+      return { books: data.items.map((item) => this.mapBook(item)), totalItems: data.totalItems };
     } catch (error) {
       console.error("Problem getting books:", JSON.stringify(error, null, 2));
-      return [];
+      return { books: [], totalItems: 0 };
     }
   }
 
@@ -45,30 +45,38 @@ export class GoogleBooksService {
   async getLatestBooks(): Promise<Book[]> {
     // use most common letter in the English language as a search term to satisfy the API
     const url = `https://www.googleapis.com/books/v1/volumes?q=e&key=${this.apiKey}&maxResults=5&startIndex=0&orderBy=newest`;
-    const books = await this.fetchBooks(url);
-    return books;
+    const latestBooks = (await this.fetchBooks(url)).books;
+    return latestBooks;
   }
 
   async getBookByISBN(isbn: string): Promise<Book[]> {
     const url = `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}&key=${this.apiKey}`;
-    const books = await this.fetchBooks(url);
+    const books = (await this.fetchBooks(url)).books;
     return books.length > 0 ? books : [];
   }
 
-  async getBooksByAllParameters(
-    { search, title, author, genre, publisher, isbn }: SearchObjectType,
-    maxResults = 40,
-  ): Promise<Book[]> {
+  async getBooksByAllParameters({
+    searchInput: { search, title, author, genre, publisher, isbn },
+    maxResults,
+    startIndex,
+  }: {
+    searchInput: SearchObjectType;
+    maxResults?: number;
+    startIndex?: number;
+  }): Promise<{ books: Book[]; totalItems: number }> {
     const searchUrl = search ?? "";
     const titleUrl = title !== undefined ? `+intitle:${title}` : "";
     const authorUrl = author !== undefined ? `+inauthor:${author}` : "";
     const genreUrl = genre !== undefined ? `+subject:${genre}` : "";
     const publisherUrl = publisher !== undefined ? `+inpublisher:${publisher}` : "";
     const isbnUrl = isbn !== undefined ? `+isbn:${isbn}` : "";
+    const maxResultsUrl = maxResults?.toString() ?? "40";
+    const startIndexUrl = startIndex?.toString() ?? "0";
 
-    const url = `https://www.googleapis.com/books/v1/volumes?q=${searchUrl + titleUrl + authorUrl + genreUrl + publisherUrl + isbnUrl}&maxResults=${maxResults.toString()}&orderBy=relevance&startIndex=0&key=${this.apiKey}`;
+    const url = `https://www.googleapis.com/books/v1/volumes?q=${searchUrl + titleUrl + authorUrl + genreUrl + publisherUrl + isbnUrl}&maxResults=${maxResultsUrl}&orderBy=relevance&startIndex=${startIndexUrl}&key=${this.apiKey}`;
     console.log(url);
     const books = await this.fetchBooks(url);
+    console.log(books.totalItems);
     return books;
   }
 }
