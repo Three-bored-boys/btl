@@ -41,12 +41,6 @@ export default function useSearchPage(): SearchPageHookReturnType {
         node.value = nodeValue;
       }
     });
-
-    if (Object.entries(searchObjectRef.current).length !== 0) {
-      console.log("Yeahhhhh");
-      setShowSearchResults(true);
-      setQuerySearchObject(searchObjectRef.current);
-    }
   }, []);
 
   return [
