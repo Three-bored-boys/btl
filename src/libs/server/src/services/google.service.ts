@@ -8,6 +8,7 @@ export class GoogleBooksService {
 
   private async fetchBooks(url: string): Promise<{ books: Book[]; totalItems: number }> {
     try {
+      console.log(url);
       const response = await fetch(url);
       console.log(response.ok, response.status, response.statusText);
       if (!response.ok) {
@@ -75,9 +76,9 @@ export class GoogleBooksService {
     const startIndexUrl = startIndex?.toString() ?? "0";
 
     const url = `https://www.googleapis.com/books/v1/volumes?q=${searchUrl + titleUrl + authorUrl + genreUrl + publisherUrl + isbnUrl}&maxResults=${maxResultsUrl}&orderBy=relevance&startIndex=${startIndexUrl}&key=${this.apiKey}`;
-    console.log(url);
+
     const books = await this.fetchBooks(url);
-    console.log(books.totalItems);
+
     return books;
   }
 }
