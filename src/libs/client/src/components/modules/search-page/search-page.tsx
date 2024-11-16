@@ -7,7 +7,7 @@ import Label from "../../ui/label";
 import Input from "../../ui/input";
 import { SearchObjectType } from "@/root/src/libs/server/src/types";
 import { editLocalStorageOnInputChange } from "@/client/utils";
-import useSearchPage from "./hook";
+import useSearchPage from "./hooks";
 import Button from "../../ui/button";
 
 export const SearchPage = () => {
