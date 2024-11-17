@@ -5,7 +5,7 @@ import { NYTimesService } from "../../services/ny-times.service";
 import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
 import { type BadResponse, type GoodResponse, type Genres, type BestSeller, type Book } from "../../types";
-import { searchObjectSchema } from "../../schemas";
+import { fullSearchObjectSchema } from "../../schemas";
 import { Environment } from "@/root/bindings";
 import { cache } from "hono/cache";
 
@@ -198,5 +198,28 @@ books.get("/quick-search/:search", async (c) => {
   const responseData: GoodResponse<Book[]> = { success: true, data: allBooksResults.books };
   return c.json(responseData);
 });
+
+books.get(
+  "/full-search",
+  zValidator("query", fullSearchObjectSchema, (result, c) => {
+    if (!result.success) {
+      console.log(result.error);
+      const responseData: BadResponse = { success: false, error: "Invalid entry" };
+      return c.json(responseData, 400);
+    }
+  }),
+  async (c) => {
+    const { startIndex, maxResults, ...search } = c.req.valid("query");
+    const googleBooksService = new GoogleBooksService(c.env.GOOGLE_BOOKS_API_KEY);
+
+    const allBooksResults = await googleBooksService.getBooksByAllParameters({
+      searchInput: search,
+      paginationFilter: { maxResults, startIndex },
+    });
+
+    const responseData: GoodResponse<{ books: Book[]; totalItems: number }> = { success: true, data: allBooksResults };
+    return c.json(responseData);
+  },
+);
 
 export default books;
