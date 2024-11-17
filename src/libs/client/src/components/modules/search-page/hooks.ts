@@ -1,7 +1,8 @@
 import { Book } from "@/root/src/libs/server/src/types";
-import { SearchObjectType } from "@/root/src/libs/server/src/schemas";
+import { PaginationObjectType, SearchObjectType } from "@/root/src/libs/server/src/schemas";
 import React, { useEffect, useRef, useState } from "react";
 import { fetchData, getSearchObjectFromLocalStorage, filterKeysArray } from "@/client/utils";
+import { useQuery } from "@tanstack/react-query";
 
 type SearchPageHookReturnType = [
   React.MutableRefObject<(keyof SearchObjectType)[]>,
@@ -55,3 +56,19 @@ export function useSearchPage(): SearchPageHookReturnType {
     setShowSearchResults,
   ];
 }
+
+const getFullSearchResults = async function (searchObject: SearchObjectType, paginationObject: PaginationObjectType) {
+  const results = await fetchData<{ books: Book[]; totalItems: number }>(
+    `${process.env.NEXT_PUBLIC_API_URL}/books/full-search?${new URLSearchParams({ ...searchObject, ...paginationObject }).toString()}`,
+  );
+  return results.books;
+};
+
+export const useFullSearchResults = function (searchObj: SearchObjectType, paginationObj: PaginationObjectType) {
+  const query = useQuery({
+    queryKey: ["full-search-results"],
+    queryFn: async () => await getFullSearchResults(searchObj, paginationObj),
+  });
+
+  return query;
+};
