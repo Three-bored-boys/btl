@@ -42,10 +42,7 @@ books.get(
   zValidator(
     "param",
     z.object({
-      genre: z
-        .string()
-        .min(1)
-        .refine((val) => val !== "null" && val !== "undefined"),
+      genre: z.string().min(1),
     }),
     (result, c) => {
       if (!result.success) {
