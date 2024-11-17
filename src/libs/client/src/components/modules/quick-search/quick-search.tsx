@@ -3,7 +3,7 @@
 import React, { ComponentProps, useRef, useState, useEffect } from "react";
 import QuickSearchResults from "./quick-search-results";
 import SearchInput from "@/root/src/libs/client/src/components/ui/search-input";
-import { cn, getSearchObjectFromLocalStorage, editLocalStorageOnInputChange } from "@/client/utils";
+import { cn, getSearchObjectFromLocalStorage, editSearchObjectInLocalStorage } from "@/client/utils";
 import type { SearchObjectType } from "@/server/schemas";
 
 const QuickSearchResultsWrapper = function ({ className, children }: ComponentProps<"div">) {
@@ -47,7 +47,7 @@ export default function QuickSearch({ className }: ComponentProps<"div">) {
   const handleOnChange = function (e: React.ChangeEvent<HTMLInputElement>, key: keyof SearchObjectType) {
     const trimmedValue = e.target.value;
     if (window) {
-      searchObjectRef.current = editLocalStorageOnInputChange(key, trimmedValue);
+      searchObjectRef.current = editSearchObjectInLocalStorage(key, trimmedValue);
     }
 
     if (trimmedValue !== "") return;
