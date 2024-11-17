@@ -14,7 +14,7 @@ type SearchPageHookReturnType = [
   React.Dispatch<React.SetStateAction<boolean>>,
 ];
 
-export default function useSearchPage(): SearchPageHookReturnType {
+export function useSearchPage(): SearchPageHookReturnType {
   const filters = useRef<(keyof SearchObjectType)[]>(filterKeysArray);
   const allInputElementRefsMap = useRef<Map<keyof SearchObjectType, HTMLInputElement | null>>(
     new Map(filters.current.map((str) => [str, null])),
