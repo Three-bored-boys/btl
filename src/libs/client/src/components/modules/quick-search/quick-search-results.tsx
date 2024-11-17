@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 // import { book } from "./data";
 import Image from "next/image";
 import Link from "next/link";
@@ -6,6 +6,8 @@ import useQuickSearchResults from "./useQuickSearchResults";
 import genericBookImage from "@/public/assets/images/generic-book.png";
 import Button from "../../ui/button";
 import Close from "../../ui/icons/close";
+import { getSearchObjectFromLocalStorage } from "../../../utils";
+import { PaginationObjectType, SearchObjectType } from "@/root/src/libs/server/src/schemas";
 
 export default function QuickSearchResults({
   search,
@@ -15,6 +17,12 @@ export default function QuickSearchResults({
   setSearchResultsVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const { error, data } = useQuickSearchResults({ search });
+  const urlSearchParamsObject = useRef<SearchObjectType & PaginationObjectType>({
+    ...getSearchObjectFromLocalStorage(),
+    search,
+    maxResults: (8).toString(),
+    startIndex: (0).toString(),
+  });
 
   if (error) return <div>Error: {error.message}</div>;
 
@@ -71,7 +79,7 @@ export default function QuickSearchResults({
         </Link>
       ))}
       <div className="flex items-center justify-between">
-        <Link href={`/search`}>Go to search page</Link>
+        <Link href={`/search?${new URLSearchParams(urlSearchParamsObject.current).toString()}`}>Go to search page</Link>
         <div onClick={() => setSearchResultsVisible(false)}>
           <Button background={"dark"} textSize={"small"} className="hidden xs:block">
             Close
