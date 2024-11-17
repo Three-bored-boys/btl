@@ -52,7 +52,7 @@ export const setSearchObjectToLocalStorage = function (param: SearchObjectType) 
   }
 };
 
-export const editLocalStorageOnInputChange = function (key: keyof SearchObjectType, trimmedTargetValue: string) {
+export const editLocalStorage = function (key: keyof SearchObjectType, trimmedTargetValue: string) {
   let searchObject: SearchObjectType;
   if (trimmedTargetValue !== "") {
     setSearchObjectToLocalStorage({ ...getSearchObjectFromLocalStorage(), [key]: trimmedTargetValue });
