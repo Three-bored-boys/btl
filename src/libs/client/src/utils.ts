@@ -66,3 +66,5 @@ export const editLocalStorageOnInputChange = function (key: keyof SearchObjectTy
   setSearchObjectToLocalStorage(searchObject);
   return searchObject;
 };
+
+export const filterKeysArray: (keyof SearchObjectType)[] = ["title", "author", "genre", "publisher"];

@@ -1,7 +1,7 @@
 import { Book } from "@/root/src/libs/server/src/types";
 import { SearchObjectType } from "@/root/src/libs/server/src/schemas";
 import React, { useEffect, useRef, useState } from "react";
-import { getSearchObjectFromLocalStorage } from "@/client/utils";
+import { fetchData, getSearchObjectFromLocalStorage, filterKeysArray } from "@/client/utils";
 
 type SearchPageHookReturnType = [
   React.MutableRefObject<(keyof SearchObjectType)[]>,
@@ -15,7 +15,7 @@ type SearchPageHookReturnType = [
 ];
 
 export default function useSearchPage(): SearchPageHookReturnType {
-  const filters = useRef<(keyof SearchObjectType)[]>(["title", "author", "genre", "publisher"]);
+  const filters = useRef<(keyof SearchObjectType)[]>(filterKeysArray);
   const allInputElementRefsMap = useRef<Map<keyof SearchObjectType, HTMLInputElement | null>>(
     new Map(filters.current.map((str) => [str, null])),
   );
