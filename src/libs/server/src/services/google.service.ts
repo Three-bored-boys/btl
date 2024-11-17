@@ -1,5 +1,5 @@
 import type { Book, GoogleBooksResponse } from "../types";
-import type { SearchObjectType } from "../schemas";
+import type { SearchObjectType, PaginationObjectType } from "../schemas";
 
 type Item = GoogleBooksResponse["items"][number];
 
@@ -59,12 +59,10 @@ export class GoogleBooksService {
 
   async getBooksByAllParameters({
     searchInput: { search, title, author, genre, publisher, isbn },
-    maxResults,
-    startIndex,
+    paginationFilter: { maxResults = (40).toString(), startIndex = (0).toString() },
   }: {
     searchInput: SearchObjectType;
-    maxResults?: number;
-    startIndex?: number;
+    paginationFilter: PaginationObjectType;
   }): Promise<{ books: Book[]; totalItems: number }> {
     const searchUrl = search ?? "";
     const titleUrl = title !== undefined ? `+intitle:${title}` : "";
@@ -72,8 +70,8 @@ export class GoogleBooksService {
     const genreUrl = genre !== undefined ? `+subject:${genre}` : "";
     const publisherUrl = publisher !== undefined ? `+inpublisher:${publisher}` : "";
     const isbnUrl = isbn !== undefined ? `+isbn:${isbn}` : "";
-    const maxResultsUrl = maxResults?.toString() ?? "40";
-    const startIndexUrl = startIndex?.toString() ?? "0";
+    const maxResultsUrl = maxResults?.toString();
+    const startIndexUrl = startIndex?.toString();
 
     const url = `https://www.googleapis.com/books/v1/volumes?q=${searchUrl + titleUrl + authorUrl + genreUrl + publisherUrl + isbnUrl}&maxResults=${maxResultsUrl}&orderBy=relevance&startIndex=${startIndexUrl}&key=${this.apiKey}`;
 

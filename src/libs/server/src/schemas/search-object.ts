@@ -11,4 +11,14 @@ export const searchObjectSchema = z
   })
   .strict();
 
+export const paginationObjectSchema = z
+  .object({
+    maxResults: z.string().optional(),
+    startIndex: z.string().optional(),
+  })
+  .strict();
+
+export const fullSearchObjectSchema = searchObjectSchema.merge(paginationObjectSchema);
+
 export type SearchObjectType = z.infer<typeof searchObjectSchema>;
+export type PaginationObjectType = z.infer<typeof paginationObjectSchema>;

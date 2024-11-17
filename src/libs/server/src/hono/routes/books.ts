@@ -84,7 +84,7 @@ books.get(
     const googleBooksService = new GoogleBooksService(c.env.GOOGLE_BOOKS_API_KEY);
     const returnedValue = await googleBooksService.getBooksByAllParameters({
       searchInput: { genre },
-      maxResults: 6,
+      paginationFilter: { maxResults: (6).toString() },
     });
 
     const responseData: GoodResponse<Book[]> = {
@@ -156,7 +156,8 @@ books.get(
     book = await googleBooksService.getBookByISBN(isbn);
 
     if (book.length === 0) {
-      book = (await googleBooksService.getBooksByAllParameters({ searchInput: { search: isbn } })).books;
+      book = (await googleBooksService.getBooksByAllParameters({ searchInput: { search: isbn }, paginationFilter: {} }))
+        .books;
       const responseData: GoodResponse<Book[]> = { success: true, data: book };
       return c.json(responseData);
     }
@@ -192,7 +193,7 @@ books.get("/quick-search/:search", async (c) => {
 
   const allBooksResults = await googleBooksService.getBooksByAllParameters({
     searchInput: { search },
-    maxResults: 8,
+    paginationFilter: { maxResults: (8).toString() },
   });
 
   console.log(allBooksResults);
