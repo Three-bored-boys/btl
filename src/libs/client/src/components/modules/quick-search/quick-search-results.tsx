@@ -4,6 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import useQuickSearchResults from "./useQuickSearchResults";
 import genericBookImage from "@/public/assets/images/generic-book.png";
+import Button from "../../ui/button";
+import Close from "../../ui/icons/close";
 
 export default function QuickSearchResults({
   search,
@@ -43,17 +45,15 @@ export default function QuickSearchResults({
   }
 
   return (
-    <div
-      className="h-full max-h-[95vh] overflow-y-auto"
-      onClick={() => {
-        setSearchResultsVisible(false);
-      }}
-    >
+    <div className="h-full max-h-[95vh] overflow-y-auto">
       {data.map((book, i) => (
         <Link
           className="grid w-full grid-cols-[40px_1fr] grid-rows-[auto] gap-1 rounded-xl py-2 hover:bg-secondary-100 xs:grid-cols-[45px_1fr] max-lg:md:grid-cols-[40px_1fr]"
           href={`/books/${book.isbn13 || book.isbn10}`}
           key={i}
+          onClick={() => {
+            setSearchResultsVisible(false);
+          }}
         >
           <div className="aspect-square">
             <Image
@@ -70,7 +70,15 @@ export default function QuickSearchResults({
           </div>
         </Link>
       ))}
-      <Link href={`/search`}>View all results</Link>
+      <div className="flex items-center justify-between">
+        <Link href={`/search`}>Go to search page</Link>
+        <div onClick={() => setSearchResultsVisible(false)}>
+          <Button background={"dark"} textSize={"small"} className="hidden xs:block">
+            Close
+          </Button>
+          <Close className="block rounded-full bg-primary hover:bg-primary-600 xs:hidden" stroke="#fff"></Close>
+        </div>
+      </div>
     </div>
   );
 }
