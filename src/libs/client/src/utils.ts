@@ -52,15 +52,19 @@ export const setSearchObjectToLocalStorage = function (param: SearchObjectType) 
   }
 };
 
-export const editLocalStorage = function (key: keyof SearchObjectType, trimmedTargetValue: string) {
+export const editSearchObjectInLocalStorage = function (
+  key: keyof SearchObjectType,
+  trimmedTargetValue: string,
+  previousSearchObject = getSearchObjectFromLocalStorage(),
+) {
   let searchObject: SearchObjectType;
   if (trimmedTargetValue !== "") {
-    setSearchObjectToLocalStorage({ ...getSearchObjectFromLocalStorage(), [key]: trimmedTargetValue });
-    searchObject = getSearchObjectFromLocalStorage();
+    searchObject = { ...previousSearchObject, [key]: trimmedTargetValue };
+    setSearchObjectToLocalStorage(searchObject);
     return searchObject;
   }
 
-  searchObject = getSearchObjectFromLocalStorage();
+  searchObject = previousSearchObject;
   /* eslint-disable-next-line */
   delete searchObject[key];
   setSearchObjectToLocalStorage(searchObject);
