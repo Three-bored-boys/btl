@@ -6,7 +6,7 @@ import useQuickSearchResults from "./useQuickSearchResults";
 import genericBookImage from "@/public/assets/images/generic-book.png";
 import Button from "../../ui/button";
 import Close from "../../ui/icons/close";
-import { getSearchObjectFromLocalStorage } from "../../../utils";
+import { getSearchObjectFromLocalStorage, DEFAULT_MAX_RESULTS, DEFAULT_START_INDEX } from "../../../utils";
 import { PaginationObjectType, SearchObjectType } from "@/root/src/libs/server/src/schemas";
 
 export default function QuickSearchResults({
@@ -20,8 +20,8 @@ export default function QuickSearchResults({
   const urlSearchParamsObject = useRef<SearchObjectType & PaginationObjectType>({
     ...getSearchObjectFromLocalStorage(),
     search,
-    maxResults: (8).toString(),
-    startIndex: (0).toString(),
+    maxResults: DEFAULT_MAX_RESULTS.toString(),
+    startIndex: DEFAULT_START_INDEX.toString(),
   });
 
   if (error) return <div>Error: {error.message}</div>;
