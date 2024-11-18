@@ -1,7 +1,7 @@
 "use client";
 
-import React from "react";
-import Container from "../../layouts/container";
+import React, { ReactElement } from "react";
+import Container from "../container";
 import SearchInput from "../../ui/search-input";
 import Label from "../../ui/label";
 import Input from "../../ui/input";
@@ -10,7 +10,7 @@ import { editSearchObjectInLocalStorage } from "@/client/utils";
 import { useSearchPage } from "./hooks";
 import Button from "../../ui/button";
 
-export const SearchPage = () => {
+export const SearchPage = function ({ children }: { children: React.ReactNode }): ReactElement {
   const [
     filters,
     allInputElementRefsMap,
@@ -76,6 +76,7 @@ export const SearchPage = () => {
           </Button>
         </form>
         {showSearchResults && <div>{JSON.stringify(querySearchObject)}</div>}
+        {children}
       </Container>
     </div>
   );
