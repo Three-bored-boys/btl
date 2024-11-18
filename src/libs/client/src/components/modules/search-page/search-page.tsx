@@ -6,7 +6,7 @@ import SearchInput from "../../ui/search-input";
 import Label from "../../ui/label";
 import Input from "../../ui/input";
 import { SearchObjectType } from "@/root/src/libs/server/src/schemas";
-import { editLocalStorage } from "@/client/utils";
+import { editSearchObjectInLocalStorage } from "@/client/utils";
 import { useSearchPage } from "./hooks";
 import Button from "../../ui/button";
 
@@ -25,7 +25,7 @@ export const SearchPage = () => {
   const handleOnChange = function (e: React.ChangeEvent<HTMLInputElement>, key: keyof SearchObjectType) {
     const trimmedValue = e.target.value.trim();
     if (window) {
-      searchObjectRef.current = editLocalStorage(key, trimmedValue);
+      searchObjectRef.current = editSearchObjectInLocalStorage(key, trimmedValue);
     }
   };
 
