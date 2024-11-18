@@ -3,6 +3,10 @@ import { SearchPage } from "@/root/src/libs/client/src/components/layouts/search
 
 export const revalidate = 0;
 
-export default function Search(): ReactElement {
-  return <SearchPage />;
+export default function SearchLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>): ReactElement {
+  return <SearchPage>{children}</SearchPage>;
 }
