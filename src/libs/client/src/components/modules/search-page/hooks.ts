@@ -1,8 +1,16 @@
 import { Book } from "@/root/src/libs/server/src/types";
 import { PaginationObjectType, SearchObjectType } from "@/root/src/libs/server/src/schemas";
 import React, { useEffect, useRef, useState } from "react";
-import { fetchData, getSearchObjectFromLocalStorage, filterKeysArray } from "@/client/utils";
+import {
+  fetchData,
+  filterKeysArray,
+  editSearchObjectInLocalStorage,
+  getSearchObjectFromLocalStorage,
+  DEFAULT_MAX_RESULTS,
+  DEFAULT_START_INDEX,
+} from "@/client/utils";
 import { useQuery } from "@tanstack/react-query";
+import { useRouter, useSearchParams } from "next/navigation";
 
 type SearchPageHookReturnType = [
   React.MutableRefObject<(keyof SearchObjectType)[]>,
@@ -22,27 +30,66 @@ export function useSearchPage(): SearchPageHookReturnType {
   );
 
   const searchObjectRef = useRef<SearchObjectType>({});
+  const paginationObjectRef = useRef<PaginationObjectType>({});
   const searchInputElement = useRef<HTMLInputElement | null>(null);
 
   const [querySearchObject, setQuerySearchObject] = useState<SearchObjectType>({});
   const [showSearchResults, setShowSearchResults] = useState<boolean>(false);
+
+  const searchParams = useSearchParams();
+  const router = useRouter();
 
   useEffect(() => {
     if (window) {
       searchObjectRef.current = getSearchObjectFromLocalStorage();
     }
 
-    if (searchInputElement.current !== null && searchObjectRef.current.search !== undefined) {
+    const searchQueryParam = searchParams.get("search");
+
+    if (searchInputElement.current !== null && searchQueryParam !== null) {
+      searchInputElement.current.value = searchQueryParam;
+      searchObjectRef.current = editSearchObjectInLocalStorage("search", searchQueryParam);
+    } else if (
+      searchInputElement.current !== null &&
+      searchQueryParam === null &&
+      searchObjectRef.current.search !== undefined
+    ) {
       searchInputElement.current.value = searchObjectRef.current.search;
     }
 
     allInputElementRefsMap.current.forEach((_, key, map) => {
+      const queryParam = searchParams.get(key);
       const node = map.get(key);
-      const nodeValue = searchObjectRef.current[key];
-      if (nodeValue !== undefined && node !== null && node !== undefined) {
-        node.value = nodeValue;
+      const searchObjectRefKeyValue = searchObjectRef.current[key];
+
+      if (node !== null && node !== undefined && queryParam !== null) {
+        node.value = queryParam;
+        searchObjectRef.current = editSearchObjectInLocalStorage(key, queryParam);
+      } else if (node !== null && node !== undefined && queryParam === null && searchObjectRefKeyValue !== undefined) {
+        node.value = searchObjectRefKeyValue;
       }
     });
+
+    const maxResultsQueryParam = searchParams.get("maxResults");
+    if (maxResultsQueryParam !== null) {
+      paginationObjectRef.current.maxResults = maxResultsQueryParam;
+    } else {
+      paginationObjectRef.current.maxResults = DEFAULT_MAX_RESULTS.toString();
+    }
+
+    const startIndexQueryParam = searchParams.get("startIndex");
+    if (startIndexQueryParam !== null) {
+      paginationObjectRef.current.startIndex = startIndexQueryParam;
+    } else {
+      paginationObjectRef.current.startIndex = DEFAULT_START_INDEX.toString();
+    }
+
+    const updatedParamsObject = new URLSearchParams({
+      ...searchObjectRef.current,
+      ...paginationObjectRef.current,
+    }).toString();
+
+    if (searchParams.toString() !== updatedParamsObject) router.replace(`/search?${updatedParamsObject}`);
   }, []);
 
   return [
