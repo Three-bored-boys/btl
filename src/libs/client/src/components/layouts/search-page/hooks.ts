@@ -8,6 +8,7 @@ import {
   getSearchObjectFromLocalStorage,
   DEFAULT_MAX_RESULTS,
   DEFAULT_START_INDEX,
+  handleNumberSearchParam,
 } from "@/client/utils";
 import { useQuery } from "@tanstack/react-query";
 import { ReadonlyURLSearchParams, useRouter, useSearchParams } from "next/navigation";
@@ -41,7 +42,6 @@ export function useSearchPage(): SearchPageHookReturnType {
     }
 
     const searchQueryParam = searchParams.get("search");
-
     if (searchInputElement.current !== null && searchQueryParam !== null) {
       searchInputElement.current.value = searchQueryParam;
       searchObjectRef.current = editSearchObjectInLocalStorage("search", searchQueryParam);
@@ -67,18 +67,18 @@ export function useSearchPage(): SearchPageHookReturnType {
     });
 
     const maxResultsQueryParam = searchParams.get("maxResults");
-    if (maxResultsQueryParam !== null) {
-      paginationObjectRef.current.maxResults = maxResultsQueryParam;
-    } else {
-      paginationObjectRef.current.maxResults = DEFAULT_MAX_RESULTS.toString();
-    }
+    paginationObjectRef.current.maxResults = handleNumberSearchParam(
+      maxResultsQueryParam,
+      DEFAULT_MAX_RESULTS,
+      DEFAULT_MAX_RESULTS,
+    );
 
     const startIndexQueryParam = searchParams.get("startIndex");
-    if (startIndexQueryParam !== null) {
-      paginationObjectRef.current.startIndex = startIndexQueryParam;
-    } else {
-      paginationObjectRef.current.startIndex = DEFAULT_START_INDEX.toString();
-    }
+    paginationObjectRef.current.startIndex = handleNumberSearchParam(
+      startIndexQueryParam,
+      DEFAULT_START_INDEX,
+      DEFAULT_START_INDEX,
+    );
 
     const updatedParamsObject = new URLSearchParams({
       ...searchObjectRef.current,

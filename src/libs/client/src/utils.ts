@@ -75,3 +75,19 @@ export const filterKeysArray: (keyof SearchObjectType)[] = ["title", "author", "
 
 export const DEFAULT_MAX_RESULTS = 8;
 export const DEFAULT_START_INDEX = 0;
+
+export const handleNumberSearchParam = function (param: string | null, defaultValue: number, minNumber?: number) {
+  if (param === null) {
+    return defaultValue.toString();
+  }
+
+  const parsedNumber = parseInt(param, 10);
+
+  if (Number.isNaN(parsedNumber)) return defaultValue.toString();
+
+  if (minNumber !== undefined) {
+    if (parsedNumber <= minNumber) return minNumber.toString();
+  }
+
+  return defaultValue.toString();
+};
