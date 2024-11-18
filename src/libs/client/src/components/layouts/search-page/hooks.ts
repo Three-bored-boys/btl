@@ -1,6 +1,6 @@
 import { Book } from "@/root/src/libs/server/src/types";
 import { PaginationObjectType, SearchObjectType } from "@/root/src/libs/server/src/schemas";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import {
   fetchData,
   filterKeysArray,
@@ -10,17 +10,16 @@ import {
   DEFAULT_START_INDEX,
 } from "@/client/utils";
 import { useQuery } from "@tanstack/react-query";
-import { useRouter, useSearchParams } from "next/navigation";
+import { ReadonlyURLSearchParams, useRouter, useSearchParams } from "next/navigation";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 type SearchPageHookReturnType = [
   React.MutableRefObject<(keyof SearchObjectType)[]>,
   React.MutableRefObject<Map<string, HTMLInputElement | null>>,
   React.MutableRefObject<HTMLInputElement | null>,
   React.MutableRefObject<SearchObjectType>,
-  SearchObjectType,
-  React.Dispatch<React.SetStateAction<SearchObjectType>>,
-  boolean,
-  React.Dispatch<React.SetStateAction<boolean>>,
+  ReadonlyURLSearchParams,
+  AppRouterInstance,
 ];
 
 export function useSearchPage(): SearchPageHookReturnType {
@@ -32,9 +31,6 @@ export function useSearchPage(): SearchPageHookReturnType {
   const searchObjectRef = useRef<SearchObjectType>({});
   const paginationObjectRef = useRef<PaginationObjectType>({});
   const searchInputElement = useRef<HTMLInputElement | null>(null);
-
-  const [querySearchObject, setQuerySearchObject] = useState<SearchObjectType>({});
-  const [showSearchResults, setShowSearchResults] = useState<boolean>(false);
 
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -92,16 +88,7 @@ export function useSearchPage(): SearchPageHookReturnType {
     if (searchParams.toString() !== updatedParamsObject) router.replace(`/search?${updatedParamsObject}`);
   }, []);
 
-  return [
-    filters,
-    allInputElementRefsMap,
-    searchInputElement,
-    searchObjectRef,
-    querySearchObject,
-    setQuerySearchObject,
-    showSearchResults,
-    setShowSearchResults,
-  ];
+  return [filters, allInputElementRefsMap, searchInputElement, searchObjectRef, searchParams, router];
 }
 
 const getFullSearchResults = async function (searchObject: SearchObjectType, paginationObject: PaginationObjectType) {

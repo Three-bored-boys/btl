@@ -6,21 +6,12 @@ import SearchInput from "../../ui/search-input";
 import Label from "../../ui/label";
 import Input from "../../ui/input";
 import { SearchObjectType } from "@/root/src/libs/server/src/schemas";
-import { editSearchObjectInLocalStorage } from "@/client/utils";
+import { DEFAULT_MAX_RESULTS, DEFAULT_START_INDEX, editSearchObjectInLocalStorage } from "@/client/utils";
 import { useSearchPage } from "./hooks";
 import Button from "../../ui/button";
 
 export const SearchPage = function ({ children }: { children: React.ReactNode }): ReactElement {
-  const [
-    filters,
-    allInputElementRefsMap,
-    searchInputElement,
-    searchObjectRef,
-    querySearchObject,
-    setQuerySearchObject,
-    showSearchResults,
-    setShowSearchResults,
-  ] = useSearchPage();
+  const [filters, allInputElementRefsMap, searchInputElement, searchObjectRef, searchParams, router] = useSearchPage();
 
   const handleOnChange = function (e: React.ChangeEvent<HTMLInputElement>, key: keyof SearchObjectType) {
     const trimmedValue = e.target.value.trim();
@@ -31,10 +22,12 @@ export const SearchPage = function ({ children }: { children: React.ReactNode })
 
   const handleOnSubmit = function (e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
-
-    if (Object.entries(searchObjectRef.current).length === 0) return;
-    setShowSearchResults(true);
-    setQuerySearchObject(searchObjectRef.current);
+    console.log(searchParams);
+    console.log(router);
+    console.log(searchObjectRef.current);
+    router.push(
+      `/search?${new URLSearchParams({ ...searchObjectRef.current, maxResults: DEFAULT_MAX_RESULTS.toString(), startIndex: DEFAULT_START_INDEX.toString() }).toString()}`,
+    );
   };
 
   return (
@@ -75,7 +68,6 @@ export const SearchPage = function ({ children }: { children: React.ReactNode })
             Submit
           </Button>
         </form>
-        {showSearchResults && <div>{JSON.stringify(querySearchObject)}</div>}
         {children}
       </Container>
     </div>
