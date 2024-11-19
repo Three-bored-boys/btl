@@ -64,7 +64,7 @@ export const SearchPage = function ({ children }: { children: React.ReactNode })
               ))}
             </div>
           </div>
-          <Button type="submit" background={"light"} textSize={"big"} onClick={handleOnSubmit}>
+          <Button type="submit" background={"light"} textSize={"small"} onClick={handleOnSubmit}>
             Submit
           </Button>
         </form>
