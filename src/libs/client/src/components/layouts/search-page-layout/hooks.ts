@@ -86,7 +86,7 @@ export function useSearchPage(): SearchPageHookReturnType {
     }).toString();
 
     if (searchParams.toString() !== updatedParamsObject) router.replace(`/search?${updatedParamsObject}`);
-  }, []);
+  }, [router, searchParams]);
 
   return [filters, allInputElementRefsMap, searchInputElement, searchObjectRef, searchParams, router];
 }
