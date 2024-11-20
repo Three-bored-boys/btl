@@ -26,7 +26,7 @@ export const SearchPageLayout = function ({ children }: { children: React.ReactN
     console.log(router);
     console.log(searchObjectRef.current);
     router.push(
-      `/search?${new URLSearchParams({ ...searchObjectRef.current, maxResults: DEFAULT_MAX_RESULTS.toString(), startIndex: DEFAULT_START_INDEX.toString() }).toString()}`,
+      `/search?${new URLSearchParams({ ...searchObjectRef.current, maxResults: DEFAULT_MAX_RESULTS.toString(), startIndex: DEFAULT_START_INDEX.toString(), run: searchObjectRef.current.search ?? "" }).toString()}`,
     );
   };
 
