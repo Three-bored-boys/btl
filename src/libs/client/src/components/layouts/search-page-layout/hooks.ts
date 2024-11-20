@@ -86,7 +86,8 @@ export function useSearchPage(): SearchPageHookReturnType {
     }).toString();
 
     if (searchParams.toString() !== updatedParamsObject) router.replace(`/search?${updatedParamsObject}`);
-  }, [router, searchParams]);
+    /* eslint-disable-next-line */ // I only need this to run once on mount
+  }, []);
 
   return [filters, allInputElementRefsMap, searchInputElement, searchObjectRef, searchParams, router];
 }
