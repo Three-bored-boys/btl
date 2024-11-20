@@ -10,7 +10,7 @@ import { DEFAULT_MAX_RESULTS, DEFAULT_START_INDEX, editSearchObjectInLocalStorag
 import { useSearchPage } from "./hooks";
 import Button from "../../ui/button";
 
-export const SearchPage = function ({ children }: { children: React.ReactNode }): ReactElement {
+export const SearchPageLayout = function ({ children }: { children: React.ReactNode }): ReactElement {
   const [filters, allInputElementRefsMap, searchInputElement, searchObjectRef, searchParams, router] = useSearchPage();
 
   const handleOnChange = function (e: React.ChangeEvent<HTMLInputElement>, key: keyof SearchObjectType) {
