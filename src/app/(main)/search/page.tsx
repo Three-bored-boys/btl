@@ -2,7 +2,7 @@ import SearchPage from "@/root/src/libs/client/src/components/modules/search-pag
 import React from "react";
 
 function Search() {
-  return <SearchPage></SearchPage>;
+  return <SearchPage />;
 }
 
 export default Search;
