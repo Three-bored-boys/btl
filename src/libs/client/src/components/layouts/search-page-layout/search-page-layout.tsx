@@ -39,6 +39,7 @@ export const SearchPageLayout = function ({ children }: { children: React.ReactN
               classNameDiv="w-full border-2 border-primary-100"
               ref={searchInputElement}
               onChange={(e) => handleOnChange(e, "search")}
+              placeholder="Search..."
             />
           </div>
           <div className="w-full">
