@@ -5,7 +5,7 @@ import React from "react";
 
 function SearchPage() {
   const searchParams = useSearchParams();
-  if (searchParams.has("run")) return <div>yessirrr you can run</div>;
+  if (searchParams.has("run")) return <div>yessirrr you can run: {searchParams.get("run")}</div>;
 
   return <div>You cannot run mate</div>;
 }
