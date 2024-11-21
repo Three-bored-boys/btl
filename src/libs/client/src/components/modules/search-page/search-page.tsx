@@ -1,13 +1,16 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
 import React from "react";
+import { useSearchPage } from "./hooks";
 
 function SearchPage() {
-  const searchParams = useSearchParams();
-  if (searchParams.has("run")) return <div>yessirrr you can run: {searchParams.get("run")}</div>;
+  const hello = useSearchPage();
 
-  return <div>You cannot run mate</div>;
+  if (hello[4].isLoading) return <div>Loading...</div>;
+
+  if (hello[4].error) return <div>Error!!!</div>;
+
+  return <div>{JSON.stringify(hello[4].data)}</div>;
 }
 
 export default SearchPage;
