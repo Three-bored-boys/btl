@@ -9,7 +9,7 @@ export default function SearchLayout({
   children: React.ReactNode;
 }>): ReactElement {
   return (
-    <Suspense fallback={<div>Yooo</div>}>
+    <Suspense fallback={<div>Loading...</div>}>
       <SearchPageLayout>{children}</SearchPageLayout>
     </Suspense>
   );
