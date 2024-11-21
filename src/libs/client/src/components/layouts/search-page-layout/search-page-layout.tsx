@@ -7,11 +7,12 @@ import Label from "../../ui/label";
 import Input from "../../ui/input";
 import { SearchObjectType } from "@/root/src/libs/server/src/schemas";
 import { DEFAULT_MAX_RESULTS, DEFAULT_START_INDEX, editSearchObjectInLocalStorage } from "@/client/utils";
-import { useSearchPage } from "./hooks";
+import { useSearchPageLayout } from "./hooks";
 import Button from "../../ui/button";
 
 export const SearchPageLayout = function ({ children }: { children: React.ReactNode }): ReactElement {
-  const [filters, allInputElementRefsMap, searchInputElement, searchObjectRef, searchParams, router] = useSearchPage();
+  const [filters, allInputElementRefsMap, searchInputElement, searchObjectRef, searchParams, router] =
+    useSearchPageLayout();
 
   const handleOnChange = function (e: React.ChangeEvent<HTMLInputElement>, key: keyof SearchObjectType) {
     const trimmedValue = e.target.value.trim();

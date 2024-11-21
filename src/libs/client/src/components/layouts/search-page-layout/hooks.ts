@@ -20,7 +20,7 @@ type SearchPageHookReturnType = [
   AppRouterInstance,
 ];
 
-export function useSearchPage(): SearchPageHookReturnType {
+export function useSearchPageLayout(): SearchPageHookReturnType {
   const filters = useRef<(keyof SearchObjectType)[]>(filterKeysArray);
   const allInputElementRefsMap = useRef<Map<keyof SearchObjectType, HTMLInputElement | null>>(
     new Map(filters.current.map((str) => [str, null])),
