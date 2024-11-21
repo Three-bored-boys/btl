@@ -87,6 +87,7 @@ export const handleNumberSearchParam = function (param: string | null, defaultVa
 
   if (minNumber !== undefined) {
     if (parsedNumber <= minNumber) return minNumber.toString();
+    return param;
   }
 
   return defaultValue.toString();

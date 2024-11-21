@@ -17,11 +17,12 @@ export default function QuickSearchResults({
   setSearchResultsVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const { error, data } = useQuickSearchResults({ search });
-  const urlSearchParamsObject = useRef<SearchObjectType & PaginationObjectType>({
+  const urlSearchParamsObject = useRef<SearchObjectType & PaginationObjectType & { run?: string | undefined }>({
     ...getSearchObjectFromLocalStorage(),
     search,
     maxResults: DEFAULT_MAX_RESULTS.toString(),
     startIndex: DEFAULT_START_INDEX.toString(),
+    run: "",
   });
 
   if (error) return <div>Error: {error.message}</div>;

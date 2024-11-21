@@ -1,4 +1,4 @@
-import { PaginationObjectType, SearchObjectType } from "@/root/src/libs/server/src/schemas";
+import { SearchObjectType } from "@/root/src/libs/server/src/schemas";
 import React, { useEffect, useRef } from "react";
 import {
   filterKeysArray,
@@ -27,7 +27,6 @@ export function useSearchPage(): SearchPageHookReturnType {
   );
 
   const searchObjectRef = useRef<SearchObjectType>({});
-  const paginationObjectRef = useRef<PaginationObjectType>({});
   const searchInputElement = useRef<HTMLInputElement | null>(null);
 
   const searchParams = useSearchParams();
@@ -38,51 +37,49 @@ export function useSearchPage(): SearchPageHookReturnType {
       searchObjectRef.current = getSearchObjectFromLocalStorage();
     }
 
-    const searchQueryParam = searchParams.get("search");
+    const searchParamsObject = new URLSearchParams(searchParams.toString());
+
+    const searchQueryParam = searchParamsObject.get("search");
     if (searchInputElement.current !== null && searchQueryParam !== null) {
       searchInputElement.current.value = searchQueryParam;
       searchObjectRef.current = editSearchObjectInLocalStorage("search", searchQueryParam);
+      searchParamsObject.set("search", searchQueryParam);
     } else if (
       searchInputElement.current !== null &&
       searchQueryParam === null &&
       searchObjectRef.current.search !== undefined
     ) {
       searchInputElement.current.value = searchObjectRef.current.search;
+      searchParamsObject.set("search", searchObjectRef.current.search);
     }
 
     allInputElementRefsMap.current.forEach((_, key, map) => {
-      const queryParam = searchParams.get(key);
+      const queryParam = searchParamsObject.get(key);
       const node = map.get(key);
-      const searchObjectRefKeyValue = searchObjectRef.current[key];
 
       if (node !== null && node !== undefined && queryParam !== null) {
         node.value = queryParam;
         searchObjectRef.current = editSearchObjectInLocalStorage(key, queryParam);
-      } else if (node !== null && node !== undefined && queryParam === null && searchObjectRefKeyValue !== undefined) {
-        node.value = searchObjectRefKeyValue;
+        searchParamsObject.set(key, queryParam);
+      } else {
+        searchObjectRef.current = editSearchObjectInLocalStorage(key, "");
       }
     });
 
-    const maxResultsQueryParam = searchParams.get("maxResults");
-    paginationObjectRef.current.maxResults = handleNumberSearchParam(
-      maxResultsQueryParam,
-      DEFAULT_MAX_RESULTS,
-      DEFAULT_MAX_RESULTS,
+    const maxResultsQueryParam = searchParamsObject.get("maxResults");
+    searchParamsObject.set(
+      "maxResults",
+      handleNumberSearchParam(maxResultsQueryParam, DEFAULT_MAX_RESULTS, DEFAULT_MAX_RESULTS),
     );
 
-    const startIndexQueryParam = searchParams.get("startIndex");
-    paginationObjectRef.current.startIndex = handleNumberSearchParam(
-      startIndexQueryParam,
-      DEFAULT_START_INDEX,
-      DEFAULT_START_INDEX,
+    const startIndexQueryParam = searchParamsObject.get("startIndex");
+    searchParamsObject.set(
+      "startIndex",
+      handleNumberSearchParam(startIndexQueryParam, DEFAULT_START_INDEX, DEFAULT_START_INDEX),
     );
 
-    const updatedParamsObject = new URLSearchParams({
-      ...searchObjectRef.current,
-      ...paginationObjectRef.current,
-    }).toString();
-
-    if (searchParams.toString() !== updatedParamsObject) router.replace(`/search?${updatedParamsObject}`);
+    if (searchParams.toString() !== searchParamsObject.toString())
+      router.replace(`/search?${searchParamsObject.toString()}`);
     /* eslint-disable-next-line */ // I only need this to run once on mount
   }, []);
 
