@@ -1,8 +1,6 @@
-import { Book } from "@/root/src/libs/server/src/types";
 import { PaginationObjectType, SearchObjectType } from "@/root/src/libs/server/src/schemas";
 import React, { useEffect, useRef } from "react";
 import {
-  fetchData,
   filterKeysArray,
   editSearchObjectInLocalStorage,
   getSearchObjectFromLocalStorage,
@@ -10,7 +8,6 @@ import {
   DEFAULT_START_INDEX,
   handleNumberSearchParam,
 } from "@/client/utils";
-import { useQuery } from "@tanstack/react-query";
 import { ReadonlyURLSearchParams, useRouter, useSearchParams } from "next/navigation";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
@@ -91,19 +88,3 @@ export function useSearchPage(): SearchPageHookReturnType {
 
   return [filters, allInputElementRefsMap, searchInputElement, searchObjectRef, searchParams, router];
 }
-
-const getFullSearchResults = async function (searchObject: SearchObjectType, paginationObject: PaginationObjectType) {
-  const results = await fetchData<{ books: Book[]; totalItems: number }>(
-    `${process.env.NEXT_PUBLIC_API_URL}/books/full-search?${new URLSearchParams({ ...searchObject, ...paginationObject }).toString()}`,
-  );
-  return results.books;
-};
-
-export const useFullSearchResults = function (searchObj: SearchObjectType, paginationObj: PaginationObjectType) {
-  const query = useQuery({
-    queryKey: ["full-search-results"],
-    queryFn: async () => await getFullSearchResults(searchObj, paginationObj),
-  });
-
-  return query;
-};
