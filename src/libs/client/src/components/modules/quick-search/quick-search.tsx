@@ -62,7 +62,7 @@ export default function QuickSearch({ className }: ComponentProps<"div">) {
         ref={searchInputElement}
         onChange={(e) => handleOnChange(e, "search")}
         onKeyDown={handleOnEnterPress}
-        placeholder="Enter book title, author or ISBN..."
+        placeholder="Search by book title, author, ISBN..."
       />
       {searchResultsVisible && (
         <QuickSearchResultsWrapper>
