@@ -8,7 +8,7 @@ export default function MainLayout({
   children: React.ReactNode;
 }>): ReactElement {
   return (
-    <div className="relative">
+    <div className="relative flex min-h-screen flex-col">
       <NavBar />
       {children}
       <Footer />
