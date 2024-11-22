@@ -22,7 +22,6 @@ export default function QuickSearchResults({
     search,
     maxResults: DEFAULT_MAX_RESULTS.toString(),
     startIndex: DEFAULT_START_INDEX.toString(),
-    run: "",
   });
 
   if (error) return <div>Error: {error.message}</div>;

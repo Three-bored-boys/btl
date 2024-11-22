@@ -1,19 +1,36 @@
 import { PaginationObjectType, SearchObjectType } from "@/root/src/libs/server/src/schemas";
 import { fetchData, filterKeysArray } from "../../../utils";
 import { Book } from "@/root/src/libs/server/src/types";
-import { UseQueryResult, useQuery } from "@tanstack/react-query";
+import { QueryClient, useQueryClient } from "@tanstack/react-query";
 import { ReadonlyURLSearchParams, useSearchParams } from "next/navigation";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type UseSearchPageHookReturnType = [
   ReadonlyURLSearchParams,
   React.MutableRefObject<(keyof SearchObjectType)[]>,
   React.MutableRefObject<SearchObjectType>,
   React.MutableRefObject<PaginationObjectType>,
-  UseQueryResult<{
-    books: Book[];
-    totalItems: number;
-  }>,
+  QueryClient,
+  (
+    | {
+        books: Book[];
+        totalItems: number;
+      }
+    | null
+    | string
+  ),
+  React.Dispatch<
+    React.SetStateAction<
+      | {
+          books: Book[];
+          totalItems: number;
+        }
+      | null
+      | string
+    >
+  >,
+  Error | null,
+  React.Dispatch<React.SetStateAction<Error | null>>,
 ];
 
 const getFullSearchResults = async function (searchObject: SearchObjectType, paginationObject: PaginationObjectType) {
@@ -23,36 +40,56 @@ const getFullSearchResults = async function (searchObject: SearchObjectType, pag
   return results;
 };
 
-export const useFullSearchResults = function (searchObj: SearchObjectType, paginationObj: PaginationObjectType) {
-  const query = useQuery({
-    queryKey: ["full-search-results"],
-    queryFn: async () => await getFullSearchResults(searchObj, paginationObj),
-  });
-
-  return query;
-};
-
 export const useSearchPage = function (): UseSearchPageHookReturnType {
+  const noSearchParams = "Please enter a search term";
   const searchParams = useSearchParams();
   const filters = useRef<(keyof SearchObjectType)[]>(filterKeysArray);
   const searchObjectRef = useRef<SearchObjectType>({});
   const paginationObjectRef = useRef<PaginationObjectType>({});
+  const queryClient = useQueryClient();
+  const [data, setData] = useState<{ books: Book[]; totalItems: number } | null | string>(null);
+  const [error, setError] = useState<Error | null>(null);
 
-  const searchQuery = searchParams.get("search");
-  if (searchQuery !== null) searchObjectRef.current.search = searchQuery;
+  useEffect(() => {
+    const getQueryData = async () => {
+      try {
+        if (Object.entries(searchObjectRef.current).length !== 0) {
+          const data = await queryClient.fetchQuery({
+            queryKey: ["full-search-results"],
+            queryFn: async () => await getFullSearchResults(searchObjectRef.current, paginationObjectRef.current),
+          });
+          setData(data);
+          setError(null);
+        } else {
+          setData(noSearchParams);
+          setError(null);
+        }
+      } catch (error) {
+        console.log(error);
+        const err = error as Error;
+        setError(err);
+        setData(null);
+      }
+    };
 
-  filters.current.forEach((key) => {
-    const searchParam = searchParams.get(key);
-    if (searchParam !== null) searchObjectRef.current[key] = searchParam;
-  });
+    const searchQuery = searchParams.get("search");
+    if (searchQuery !== null) searchObjectRef.current.search = searchQuery;
 
-  const maxResultsParam = searchParams.get("maxResults");
-  if (maxResultsParam !== null) paginationObjectRef.current.maxResults = maxResultsParam;
+    filters.current.forEach((key) => {
+      const searchParam = searchParams.get(key);
+      if (searchParam !== null) searchObjectRef.current[key] = searchParam;
+    });
 
-  const startIndexParam = searchParams.get("startIndex");
-  if (startIndexParam !== null) paginationObjectRef.current.startIndex = startIndexParam;
+    const maxResultsParam = searchParams.get("maxResults");
+    if (maxResultsParam !== null) paginationObjectRef.current.maxResults = maxResultsParam;
 
-  const query = useFullSearchResults(searchObjectRef.current, paginationObjectRef.current);
+    const startIndexParam = searchParams.get("startIndex");
+    if (startIndexParam !== null) paginationObjectRef.current.startIndex = startIndexParam;
 
-  return [searchParams, filters, searchObjectRef, paginationObjectRef, query];
+    console.log({ ...searchObjectRef.current, ...paginationObjectRef.current });
+
+    void getQueryData();
+  }, [searchParams, queryClient]);
+
+  return [searchParams, filters, searchObjectRef, paginationObjectRef, queryClient, data, setData, error, setError];
 };

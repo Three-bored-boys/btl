@@ -26,9 +26,11 @@ export const SearchPageLayout = function ({ children }: { children: React.ReactN
     console.log(searchParams);
     console.log(router);
     console.log(searchObjectRef.current);
-    router.push(
-      `/search?${new URLSearchParams({ ...searchObjectRef.current, maxResults: DEFAULT_MAX_RESULTS.toString(), startIndex: DEFAULT_START_INDEX.toString(), run: searchObjectRef.current.search ?? "" }).toString()}`,
-    );
+    if (Object.entries(searchObjectRef.current).length !== 0) {
+      router.push(
+        `/search?${new URLSearchParams({ ...searchObjectRef.current, maxResults: DEFAULT_MAX_RESULTS.toString(), startIndex: DEFAULT_START_INDEX.toString() }).toString()}`,
+      );
+    }
   };
 
   return (
