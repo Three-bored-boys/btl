@@ -34,7 +34,7 @@ jobs:
 
   database-backend-frontend:
     needs: "check-files-changed"
-    name: Generation and Migration to Production Database -> Cloudflare Workers Hono Production Deployment -> Vercel Production Deployment
+    name: Database -> Cloudflare:Hono -> Vercel
     if: ${{needs.check-files-changed.outputs.backend == 'true' && needs.check-files-changed.outputs.frontend == 'true' && needs.check-files-changed.outputs.database == 'true'}}
     env:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
@@ -83,7 +83,7 @@ jobs:
 
   backend-frontend:
     needs: "check-files-changed"
-    name: Cloudflare Workers Hono Production Deployment -> Vercel Production Deployment
+    name: Cloudflare:Hono -> Vercel
     if: ${{needs.check-files-changed.outputs.backend == 'true' && needs.check-files-changed.outputs.frontend == 'true' && needs.check-files-changed.outputs.database == 'false'}}
     env:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
@@ -123,7 +123,7 @@ jobs:
 
   database-backend:
     needs: "check-files-changed"
-    name: Generation and Migration to Production Database -> Cloudflare Workers Hono Production Deployment
+    name: Database -> Cloudflare:Hono
     if: ${{needs.check-files-changed.outputs.backend == 'true' && needs.check-files-changed.outputs.frontend == 'false' && needs.check-files-changed.outputs.database == 'true'}}
     runs-on: ubuntu-latest
     steps:
@@ -157,7 +157,7 @@ jobs:
 
   backend:
     needs: "check-files-changed"
-    name: Cloudflare Workers Hono Production Deployment
+    name: Cloudflare:Hono
     if: ${{needs.check-files-changed.outputs.backend == 'true' && needs.check-files-changed.outputs.frontend == 'false' && needs.check-files-changed.outputs.database == 'false'}}
     runs-on: ubuntu-latest
     steps:
@@ -182,7 +182,7 @@ jobs:
 
   database-frontend:
     needs: "check-files-changed"
-    name: Generation and Migration to Production Database -> Vercel Production Deployment
+    name: Database -> Vercel
     if: ${{needs.check-files-changed.outputs.backend == 'false' && needs.check-files-changed.outputs.frontend == 'true' && needs.check-files-changed.outputs.database == 'true'}}
     env:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
@@ -222,7 +222,7 @@ jobs:
 
   frontend:
     needs: "check-files-changed"
-    name: Vercel Production Deployment
+    name: Vercel
     if: ${{needs.check-files-changed.outputs.backend == 'false' && needs.check-files-changed.outputs.frontend == 'true' && needs.check-files-changed.outputs.database == 'false'}}
     env:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
@@ -253,7 +253,7 @@ jobs:
 
   database:
     needs: "check-files-changed"
-    name: Generation and Migration to Production Database
+    name: Database
     if: ${{needs.check-files-changed.outputs.backend == 'false' && needs.check-files-changed.outputs.frontend == 'false' && needs.check-files-changed.outputs.database == 'true'}}
     runs-on: ubuntu-latest
     steps:
