@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 // import { book } from "./data";
 import Image from "next/image";
 import Link from "next/link";
@@ -7,8 +7,6 @@ import genericBookImage from "@/public/assets/images/generic-book.png";
 import Button from "../../ui/button";
 import Close from "../../ui/icons/close";
 import { DEFAULT_MAX_RESULTS, DEFAULT_START_INDEX } from "@/libs/shared/src/utils";
-import { getSearchObjectFromLocalStorage } from "@/libs/client/src/utils";
-import { PaginationObjectType, SearchObjectType } from "@/root/src/libs/shared/src/schemas";
 
 export default function QuickSearchResults({
   search,
@@ -18,12 +16,6 @@ export default function QuickSearchResults({
   setSearchResultsVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const { error, data } = useQuickSearchResults({ search });
-  const urlSearchParamsObject = useRef<SearchObjectType & PaginationObjectType & { run?: string | undefined }>({
-    ...getSearchObjectFromLocalStorage(),
-    search,
-    maxResults: DEFAULT_MAX_RESULTS.toString(),
-    startIndex: DEFAULT_START_INDEX.toString(),
-  });
 
   if (error) return <div>Error: {error.message}</div>;
 
@@ -80,8 +72,12 @@ export default function QuickSearchResults({
         </Link>
       ))}
       <div className="flex items-center justify-between">
-        <Link href={`/search?${new URLSearchParams(urlSearchParamsObject.current).toString()}`}>Go to search page</Link>
-        <div onClick={() => setSearchResultsVisible(false)}>
+        <Link
+          href={`/search?${new URLSearchParams({ search, maxResults: DEFAULT_MAX_RESULTS.toString(), startIndex: DEFAULT_START_INDEX.toString() }).toString()}`}
+        >
+          Go to search page
+        </Link>
+        <div onClick={() => setSearchResultsVisible(false)} className="mt-2">
           <Button background={"dark"} textSize={"small"} className="hidden xs:block">
             Close
           </Button>

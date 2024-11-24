@@ -3,7 +3,7 @@
 import React, { ComponentProps, useRef, useState, useEffect } from "react";
 import QuickSearchResults from "./quick-search-results";
 import SearchInput from "@/root/src/libs/client/src/components/ui/search-input";
-import { cn, getSearchObjectFromLocalStorage, editSearchObjectInLocalStorage } from "@/client/utils";
+import { cn, getSearchObjectFromLocalStorage, setSearchObjectToLocalStorage } from "@/client/utils";
 import type { SearchObjectType } from "@/root/src/libs/shared/src/schemas";
 
 const QuickSearchResultsWrapper = function ({ className, children }: ComponentProps<"div">) {
@@ -18,16 +18,13 @@ export default function QuickSearch({ className }: ComponentProps<"div">) {
   const [searchInput, setSearchInput] = useState<string>("");
   const [searchResultsVisible, setSearchResultsVisible] = useState<boolean>(false);
   const searchInputElement = useRef<HTMLInputElement | null>(null);
-  const searchObjectRef = useRef<SearchObjectType>({});
 
   useEffect(() => {
-    if (window) {
-      searchObjectRef.current = getSearchObjectFromLocalStorage();
-    }
-
-    if (searchInputElement.current !== null) {
-      if (searchObjectRef.current.search !== undefined)
-        searchInputElement.current.value = searchObjectRef.current.search;
+    if (searchInputElement.current !== null && window) {
+      const searchObject = getSearchObjectFromLocalStorage();
+      if (searchObject.search !== undefined) {
+        searchInputElement.current.value = searchObject.search;
+      }
     }
   }, []);
 
@@ -39,16 +36,17 @@ export default function QuickSearch({ className }: ComponentProps<"div">) {
         return;
       }
 
-      setSearchInput(searchInputElement.current.value);
+      if (window) {
+        setSearchObjectToLocalStorage({ search: searchInputElement.current.value.trim() });
+      }
+
+      setSearchInput(searchInputElement.current.value.trim());
       setSearchResultsVisible(true);
     }
   };
 
   const handleOnChange = function (e: React.ChangeEvent<HTMLInputElement>, key: keyof SearchObjectType) {
     const trimmedValue = e.target.value;
-    if (window) {
-      searchObjectRef.current = editSearchObjectInLocalStorage(key, trimmedValue);
-    }
 
     if (trimmedValue !== "") return;
 
