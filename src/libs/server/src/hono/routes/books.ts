@@ -214,6 +214,45 @@ books.get(
       return c.json(responseData, 400);
     }
   }),
+  cache({
+    cacheName: (
+      c: Context<
+        Environment,
+        "/full-search",
+        {
+          in: {
+            query: {
+              isbn?: string | string[] | undefined;
+              search?: string | string[] | undefined;
+              title?: string | string[] | undefined;
+              author?: string | string[] | undefined;
+              genre?: string | string[] | undefined;
+              publisher?: string | string[] | undefined;
+              maxResults?: string | string[] | undefined;
+              startIndex?: string | string[] | undefined;
+            };
+          };
+          out: {
+            query: {
+              isbn?: string | string[] | undefined;
+              search?: string | string[] | undefined;
+              title?: string | string[] | undefined;
+              author?: string | string[] | undefined;
+              genre?: string | string[] | undefined;
+              publisher?: string | string[] | undefined;
+              maxResults?: string | string[] | undefined;
+              startIndex?: string | string[] | undefined;
+            };
+          };
+        }
+      >,
+    ) => {
+      // const query = c.req.valid("query");
+
+      return "hello";
+    },
+    cacheControl: "max-age=172800, must-revalidate, public",
+  }),
   async (c) => {
     const { startIndex, maxResults, ...search } = c.req.valid("query");
     const googleBooksService = new GoogleBooksService(c.env.GOOGLE_BOOKS_API_KEY);
