@@ -14,6 +14,7 @@ import {
 import { fullSearchObjectSchema } from "../../../../shared/src/schemas";
 import { Environment } from "@/root/bindings";
 import { cache } from "hono/cache";
+import { filterKeysArray } from "@/libs/shared/src/utils";
 
 const books = new Hono<Environment>();
 
@@ -247,9 +248,24 @@ books.get(
         }
       >,
     ) => {
-      // const query = c.req.valid("query");
+      const query = c.req.valid("query");
 
-      return "hello";
+      const getKeyForCache = (param: string | string[] | undefined) => {
+        if (param === undefined) return "";
+
+        if (Array.isArray(param)) return param.join("");
+
+        return param;
+      };
+
+      const searchQueryKey = getKeyForCache(query.search);
+      const filtersQueryKeyArray = filterKeysArray.map((key) => {
+        return getKeyForCache(query[key]);
+      });
+      const maxResultsQueryKey = getKeyForCache(query.maxResults);
+      const startIndexQueryKey = getKeyForCache(query.startIndex);
+
+      return `full-search-results ${searchQueryKey} ${filtersQueryKeyArray.join(" ")} ${maxResultsQueryKey} ${startIndexQueryKey}`;
     },
     cacheControl: "max-age=172800, must-revalidate, public",
   }),
