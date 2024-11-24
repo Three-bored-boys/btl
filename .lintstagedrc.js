@@ -8,4 +8,5 @@ module.exports = {
   "src/app/**/*.{js,jsx,ts,tsx}": [buildEslintCommand],
   "src/libs/client/**/*.{js,jsx,ts,tsx}": [buildEslintCommand],
   "src/libs/server/**/*.{js,ts}": ["eslint ."],
+  "src/libs/shared/**/*.{js,ts}": ["eslint ."],
 };
