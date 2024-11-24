@@ -4,8 +4,14 @@ import { GoogleBooksService } from "../../services/google.service";
 import { NYTimesService } from "../../services/ny-times.service";
 import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
-import { type BadResponse, type GoodResponse, type Genres, type BestSeller, type Book } from "../../types";
-import { fullSearchObjectSchema } from "../../schemas";
+import {
+  type BadResponse,
+  type GoodResponse,
+  type Genres,
+  type BestSeller,
+  type Book,
+} from "../../../../shared/src/types";
+import { fullSearchObjectSchema } from "../../../../shared/src/schemas";
 import { Environment } from "@/root/bindings";
 import { cache } from "hono/cache";
 

@@ -7,7 +7,7 @@ import genericBookImage from "@/public/assets/images/generic-book.png";
 import Button from "../../ui/button";
 import Close from "../../ui/icons/close";
 import { getSearchObjectFromLocalStorage, DEFAULT_MAX_RESULTS, DEFAULT_START_INDEX } from "../../../utils";
-import { PaginationObjectType, SearchObjectType } from "@/root/src/libs/server/src/schemas";
+import { PaginationObjectType, SearchObjectType } from "@/root/src/libs/shared/src/schemas";
 
 export default function QuickSearchResults({
   search,

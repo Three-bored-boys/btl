@@ -1,4 +1,4 @@
-import { PaginationObjectType, SearchObjectType } from "@/root/src/libs/server/src/schemas";
+import { PaginationObjectType, SearchObjectType } from "@/root/src/libs/shared/src/schemas";
 import {
   DEFAULT_MAX_RESULTS,
   DEFAULT_START_INDEX,
@@ -8,7 +8,7 @@ import {
   getSearchObjectFromLocalStorage,
   handleNumberSearchParam,
 } from "../../../utils";
-import { Book } from "@/root/src/libs/server/src/types";
+import { Book } from "@/root/src/libs/shared/src/types";
 import { useQuery } from "@tanstack/react-query";
 import { ReadonlyURLSearchParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";

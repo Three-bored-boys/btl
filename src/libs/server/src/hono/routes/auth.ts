@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import type { GoodResponse } from "../../types";
+import type { GoodResponse } from "../../../../shared/src/types";
 import { Environment } from "@/root/bindings";
 import { getCookie, setCookie, deleteCookie } from "hono/cookie";
 

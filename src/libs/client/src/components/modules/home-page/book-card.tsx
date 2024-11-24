@@ -1,5 +1,5 @@
 import React from "react";
-import type { Book } from "@/server/types";
+import type { Book } from "@/root/src/libs/shared/src/types";
 import Image from "next/image";
 import Link from "next/link";
 

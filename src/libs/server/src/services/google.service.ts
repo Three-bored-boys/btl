@@ -1,5 +1,5 @@
-import type { Book, GoogleBooksResponse } from "../types";
-import type { SearchObjectType, PaginationObjectType } from "../schemas";
+import type { Book, GoogleBooksResponse } from "../../../shared/src/types";
+import type { SearchObjectType, PaginationObjectType } from "../../../shared/src/schemas";
 
 type Item = GoogleBooksResponse["items"][number];
 

@@ -1,5 +1,5 @@
 import Container from "@/libs/client/src/components/layouts/container";
-import type { Book } from "@/root/src/libs/server/src/types";
+import type { Book } from "@/root/src/libs/shared/src/types";
 import { ComponentProps } from "react";
 import Image from "next/image";
 import genericBookImage from "@/public/assets/images/generic-book.png";

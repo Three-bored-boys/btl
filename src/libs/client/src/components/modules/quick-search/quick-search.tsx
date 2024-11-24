@@ -4,7 +4,7 @@ import React, { ComponentProps, useRef, useState, useEffect } from "react";
 import QuickSearchResults from "./quick-search-results";
 import SearchInput from "@/root/src/libs/client/src/components/ui/search-input";
 import { cn, getSearchObjectFromLocalStorage, editSearchObjectInLocalStorage } from "@/client/utils";
-import type { SearchObjectType } from "@/server/schemas";
+import type { SearchObjectType } from "@/root/src/libs/shared/src/schemas";
 
 const QuickSearchResultsWrapper = function ({ className, children }: ComponentProps<"div">) {
   return (

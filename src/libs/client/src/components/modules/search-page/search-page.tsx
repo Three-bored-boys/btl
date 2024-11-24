@@ -4,7 +4,7 @@ import React, { ReactElement } from "react";
 import SearchInput from "../../ui/search-input";
 import Label from "../../ui/label";
 import Input from "../../ui/input";
-import { SearchObjectType } from "@/root/src/libs/server/src/schemas";
+import { SearchObjectType } from "@/root/src/libs/shared/src/schemas";
 import { DEFAULT_MAX_RESULTS, DEFAULT_START_INDEX, editSearchObjectInLocalStorage } from "@/client/utils";
 import { useSearchPage } from "./hooks";
 import Button from "../../ui/button";

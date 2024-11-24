@@ -1,6 +1,6 @@
 import SectionPreamble from "@/client/components/modules/home-page/section-preamble";
 import Container from "@/client/components/layouts/container";
-import type { Book, Genres } from "@/libs/server/src/types";
+import type { Book, Genres } from "@/root/src/libs/shared/src/types";
 import { fetchData } from "@/libs/client/src/utils";
 import SectionBooksShowcase from "../section-books-showcase";
 import { Suspense } from "react";

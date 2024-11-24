@@ -1,6 +1,6 @@
 "use client";
 
-import type { Book } from "@/root/src/libs/server/src/types";
+import type { Book } from "@/root/src/libs/shared/src/types";
 import { ComponentProps, useState } from "react";
 import { cn } from "../../../utils";
 

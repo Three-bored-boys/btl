@@ -1,5 +1,5 @@
 import { fetchData } from "@/client/utils";
-import { Book } from "@/root/src/libs/server/src/types";
+import { Book } from "@/root/src/libs/shared/src/types";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 const getQuickSearchResultsBooks = async function (searchString: string) {

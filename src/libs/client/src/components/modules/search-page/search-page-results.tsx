@@ -1,6 +1,6 @@
 import React from "react";
 import { useSearchPageResults } from "./hooks";
-import { PaginationObjectType, SearchObjectType } from "@/root/src/libs/server/src/schemas";
+import { PaginationObjectType, SearchObjectType } from "@/root/src/libs/shared/src/schemas";
 
 function SearchPageResults({
   searchObject,
