@@ -58,22 +58,20 @@ export class GoogleBooksService {
   }
 
   async getBooksByAllParameters({
-    searchInput: { search, title, author, genre, publisher, isbn },
+    searchInput: { search, genre, publisher, isbn },
     paginationFilter: { maxResults = (40).toString(), startIndex = (0).toString() },
   }: {
     searchInput: SearchObjectType;
     paginationFilter: PaginationObjectType;
   }): Promise<{ books: Book[]; totalItems: number }> {
     const searchUrl = search ?? "";
-    const titleUrl = title !== undefined ? `+intitle:${title}` : "";
-    const authorUrl = author !== undefined ? `+inauthor:${author}` : "";
     const genreUrl = genre !== undefined ? `+subject:${genre}` : "";
     const publisherUrl = publisher !== undefined ? `+inpublisher:${publisher}` : "";
     const isbnUrl = isbn !== undefined ? `+isbn:${isbn}` : "";
     const maxResultsUrl = maxResults?.toString();
     const startIndexUrl = startIndex?.toString();
 
-    const url = `https://www.googleapis.com/books/v1/volumes?q=${searchUrl + titleUrl + authorUrl + genreUrl + publisherUrl + isbnUrl}&maxResults=${maxResultsUrl}&orderBy=relevance&startIndex=${startIndexUrl}&key=${this.apiKey}`;
+    const url = `https://www.googleapis.com/books/v1/volumes?q=${searchUrl + genreUrl + publisherUrl + isbnUrl}&maxResults=${maxResultsUrl}&orderBy=relevance&startIndex=${startIndexUrl}&key=${this.apiKey}`;
 
     const books = await this.fetchBooks(url);
 
