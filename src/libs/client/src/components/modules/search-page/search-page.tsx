@@ -9,7 +9,7 @@ import { DEFAULT_MAX_RESULTS, DEFAULT_START_INDEX } from "@/libs/shared/src/util
 import { useSearchPage } from "./hooks";
 import Button from "../../ui/button";
 import Container from "../../layouts/container";
-import SearchPageResults from "./search-page-results";
+import SearchPageResultsWrapper from "./search-page-results-wrapper";
 
 const SearchPage = function (): ReactElement {
   const { filters, allInputElementRefsMap, searchInputElement, router, searchParams } = useSearchPage();
@@ -93,7 +93,7 @@ const SearchPage = function (): ReactElement {
             Submit
           </Button>
         </form>
-        <div>{searchParams.toString()}</div>
+        <SearchPageResultsWrapper></SearchPageResultsWrapper>
       </Container>
     </div>
   );
