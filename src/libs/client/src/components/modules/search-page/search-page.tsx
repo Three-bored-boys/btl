@@ -4,8 +4,7 @@ import React, { ReactElement } from "react";
 import SearchInput from "../../ui/search-input";
 import Label from "../../ui/label";
 import Input from "../../ui/input";
-import { SearchObjectType } from "@/root/src/libs/shared/src/schemas";
-import { editSearchObjectInLocalStorage } from "@/client/utils";
+import { BTL_LOCAL_STORAGE_SEARCH_OBJECT, setSearchObjectToLocalStorage } from "@/client/utils";
 import { DEFAULT_MAX_RESULTS, DEFAULT_START_INDEX } from "@/libs/shared/src/utils";
 import { useSearchPage } from "./hooks";
 import Button from "../../ui/button";
@@ -13,32 +12,48 @@ import Container from "../../layouts/container";
 import SearchPageResults from "./search-page-results";
 
 const SearchPage = function (): ReactElement {
-  const {
-    filters,
-    allInputElementRefsMap,
-    searchInputElement,
-    searchObjectRef,
-    router,
-    paginationObjectState,
-    searchObjectState,
-  } = useSearchPage();
-
-  const handleOnChange = function (e: React.ChangeEvent<HTMLInputElement>, key: keyof SearchObjectType) {
-    const trimmedValue = e.target.value.trim();
-    if (window) {
-      searchObjectRef.current = editSearchObjectInLocalStorage(key, trimmedValue);
-    }
-  };
+  const { filters, allInputElementRefsMap, searchInputElement, router, searchParams } = useSearchPage();
 
   const handleOnSubmit = function (e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
-    console.log(searchObjectRef.current);
 
-    if (Object.entries(searchObjectRef.current).length !== 0) {
-      router.push(
-        `/search?${new URLSearchParams({ ...searchObjectRef.current, maxResults: DEFAULT_MAX_RESULTS.toString(), startIndex: DEFAULT_START_INDEX.toString() }).toString()}`,
-      );
+    const searchParamsObject = new URLSearchParams(searchParams.toString());
+
+    searchParamsObject.set("maxResults", DEFAULT_MAX_RESULTS.toString());
+    searchParamsObject.set("startIndex", DEFAULT_START_INDEX.toString());
+
+    if (searchInputElement.current !== null) {
+      const search = searchInputElement.current.value.trim();
+      if (search.length !== 0) {
+        searchParamsObject.set("search", search);
+        if (window) setSearchObjectToLocalStorage({ search });
+      } else {
+        searchParamsObject.delete("search");
+        if (window) window.localStorage.removeItem(BTL_LOCAL_STORAGE_SEARCH_OBJECT);
+      }
     }
+
+    allInputElementRefsMap.current.forEach((_, key, map) => {
+      const node = map.get(key);
+
+      if (node !== undefined && node !== null) {
+        const filterValue = node.value.trim();
+        if (filterValue.length !== 0) {
+          searchParamsObject.set(key, filterValue);
+        } else {
+          searchParamsObject.delete(key);
+        }
+      }
+    });
+
+    if (searchParamsObject.has("search") || filters.current.filter((key) => searchParamsObject.has(key)).length !== 0) {
+      searchParamsObject.set("run", "");
+    } else {
+      searchParamsObject.delete("run");
+    }
+    console.log(searchParamsObject);
+
+    router.push(`/search?${searchParamsObject.toString()}`);
   };
 
   return (
@@ -49,7 +64,6 @@ const SearchPage = function (): ReactElement {
             <SearchInput
               classNameDiv="w-full border-2 border-primary-100"
               ref={searchInputElement}
-              onChange={(e) => handleOnChange(e, "search")}
               placeholder="Search..."
             />
           </div>
@@ -70,7 +84,6 @@ const SearchPage = function (): ReactElement {
                         allInputElementRefsMap.current.delete(str);
                       }
                     }}
-                    onChange={(e) => handleOnChange(e, str)}
                   />
                 </Label>
               ))}
@@ -80,9 +93,7 @@ const SearchPage = function (): ReactElement {
             Submit
           </Button>
         </form>
-        {Object.entries(searchObjectState).length !== 0 ? (
-          <SearchPageResults paginationObject={paginationObjectState} searchObject={searchObjectState} />
-        ) : null}
+        <div>{searchParams.toString()}</div>
       </Container>
     </div>
   );
