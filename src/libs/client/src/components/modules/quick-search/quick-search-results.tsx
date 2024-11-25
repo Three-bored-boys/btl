@@ -73,7 +73,7 @@ export default function QuickSearchResults({
       ))}
       <div className="flex items-center justify-between">
         <Link
-          href={`/search?${new URLSearchParams({ search, maxResults: DEFAULT_MAX_RESULTS.toString(), startIndex: DEFAULT_START_INDEX.toString() }).toString()}`}
+          href={`/search?${new URLSearchParams({ search, maxResults: DEFAULT_MAX_RESULTS.toString(), startIndex: DEFAULT_START_INDEX.toString(), run: "" }).toString()}`}
         >
           Go to search page
         </Link>
