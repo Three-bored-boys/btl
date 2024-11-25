@@ -82,9 +82,6 @@ export function useSearchPage(): SearchPageHookReturnType {
       handleNumberSearchParam(startIndexQueryParam, DEFAULT_START_INDEX, DEFAULT_START_INDEX),
     );
 
-    console.log(searchParams.toString());
-    console.log(searchParamsObject.toString());
-
     if (searchParams.toString() !== searchParamsObject.toString()) {
       router.replace(`/search?${searchParamsObject.toString()}`);
     }
