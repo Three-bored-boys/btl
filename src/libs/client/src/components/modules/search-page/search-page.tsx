@@ -53,7 +53,9 @@ const SearchPage = function (): ReactElement {
     }
     console.log(searchParamsObject);
 
-    router.push(`/search?${searchParamsObject.toString()}`);
+    if (searchParamsObject.toString() !== searchParams.toString()) {
+      router.push(`/search?${searchParamsObject.toString()}`);
+    }
   };
 
   return (
