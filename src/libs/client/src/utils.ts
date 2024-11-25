@@ -37,7 +37,7 @@ export const fetchData = async function <T>(url: string, options?: RequestInit) 
   return data;
 };
 
-const BTL_LOCAL_STORAGE_SEARCH_OBJECT = "btlSearchObject";
+export const BTL_LOCAL_STORAGE_SEARCH_OBJECT = "btlSearchObject";
 
 export const getSearchObjectFromLocalStorage = function () {
   if (window) {
