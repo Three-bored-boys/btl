@@ -17,6 +17,15 @@ const SearchPage = function (): ReactElement {
   const handleOnSubmit = function (e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
 
+    if (
+      searchInputElement.current?.value.trim() === "" &&
+      Array.from(allInputElementRefsMap.current.values()).filter((elem) => {
+        return elem?.value.trim() !== "";
+      }).length === 0
+    ) {
+      return;
+    }
+
     const searchParamsObject = new URLSearchParams(searchParams.toString());
 
     searchParamsObject.set("maxResults", DEFAULT_MAX_RESULTS.toString());
