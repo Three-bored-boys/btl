@@ -35,5 +35,5 @@
     "environment.d.ts",
     "bindings.d.ts"
   ],
-  "exclude": ["node_modules", "genres.json"]
+  "exclude": ["node_modules"]
 }
