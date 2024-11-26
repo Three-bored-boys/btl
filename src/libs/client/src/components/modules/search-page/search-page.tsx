@@ -55,11 +55,6 @@ const SearchPage = function (): ReactElement {
       }
     });
 
-    if (searchParamsObject.has("search") || filters.current.filter((key) => searchParamsObject.has(key)).length !== 0) {
-      searchParamsObject.set("run", "");
-    } else {
-      searchParamsObject.delete("run");
-    }
     console.log(searchParamsObject);
 
     if (searchParamsObject.toString() !== searchParams.toString()) {
@@ -104,7 +99,7 @@ const SearchPage = function (): ReactElement {
             Submit
           </Button>
         </form>
-        {!searchParams.has("run") ? <div>Cannot run mate</div> : <SearchPageResultsWrapper></SearchPageResultsWrapper>}
+        <SearchPageResultsWrapper />
       </Container>
     </div>
   );
