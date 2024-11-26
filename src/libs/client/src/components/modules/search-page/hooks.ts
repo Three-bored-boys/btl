@@ -32,7 +32,7 @@ export function useSearchPageResults(searchObject: SearchObjectType, paginationO
 
 type SearchPageHookReturnType = {
   filters: React.MutableRefObject<(keyof SearchObjectType)[]>;
-  allInputElementRefsMap: React.MutableRefObject<Map<string, HTMLInputElement | null>>;
+  allInputElementRefsMap: React.MutableRefObject<Map<string, HTMLSelectElement | null>>;
   searchInputElement: React.MutableRefObject<HTMLInputElement | null>;
   searchParams: ReadonlyURLSearchParams;
   router: AppRouterInstance;
@@ -40,7 +40,7 @@ type SearchPageHookReturnType = {
 
 export function useSearchPage(): SearchPageHookReturnType {
   const filters = useRef<(keyof SearchObjectType)[]>(filterKeysArray);
-  const allInputElementRefsMap = useRef<Map<keyof SearchObjectType, HTMLInputElement | null>>(
+  const allInputElementRefsMap = useRef<Map<keyof SearchObjectType, HTMLSelectElement | null>>(
     new Map(filters.current.map((str) => [str, null])),
   );
   const searchInputElement = useRef<HTMLInputElement | null>(null);
