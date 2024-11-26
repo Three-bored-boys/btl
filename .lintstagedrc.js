@@ -7,6 +7,6 @@ module.exports = {
   "*.{js,jsx,ts,tsx}": ["prettier --write"],
   "src/app/**/*.{js,jsx,ts,tsx}": [buildEslintCommand],
   "src/libs/client/**/*.{js,jsx,ts,tsx}": [buildEslintCommand],
-  "src/libs/server/**/*.{js,ts}": ["eslint ."],
-  "src/libs/shared/**/*.{js,ts}": ["eslint ."],
+  "src/libs/server/**/*.{js,ts}": ["eslint ./src/libs/server/**"],
+  "src/libs/shared/**/*.{js,ts}": ["eslint ./src/libs/shared/**"],
 };
