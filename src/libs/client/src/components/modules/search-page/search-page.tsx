@@ -104,7 +104,7 @@ const SearchPage = function (): ReactElement {
             Submit
           </Button>
         </form>
-        <SearchPageResultsWrapper></SearchPageResultsWrapper>
+        {!searchParams.has("run") ? <div>Cannot run mate</div> : <SearchPageResultsWrapper></SearchPageResultsWrapper>}
       </Container>
     </div>
   );
