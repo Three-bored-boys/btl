@@ -1,6 +1,5 @@
 /** @type {import("eslint").Linter.Config} */
 module.exports = {
-  "root": true,
   "extends": ["plugin:@typescript-eslint/strict-type-checked", "plugin:@typescript-eslint/stylistic-type-checked"],
   "plugins": ["@typescript-eslint"],
   "parser": "@typescript-eslint/parser",
