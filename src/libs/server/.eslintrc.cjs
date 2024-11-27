@@ -4,8 +4,7 @@ module.exports = {
   "plugins": ["@typescript-eslint"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "project": true,
-    "tsconfigRootDir": __dirname,
+    "project": "./tsconfig.json",
   },
   "rules": {
     "@typescript-eslint/no-unused-vars": "off",
@@ -18,5 +17,6 @@ module.exports = {
       },
     ],
     "@typescript-eslint/no-unnecessary-condition": "off",
+    "@typescript-eslint/no-unnecessary-type-assertion": "off",
   },
 };

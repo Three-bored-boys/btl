@@ -1,5 +1,5 @@
 import { Context, Hono } from "hono";
-import genresList from "../../data/genres.json";
+import { genres as genresList } from "@/root/src/libs/shared/src/data/genres";
 import { GoogleBooksService } from "../../services/google.service";
 import { NYTimesService } from "../../services/ny-times.service";
 import { zValidator } from "@hono/zod-validator";
