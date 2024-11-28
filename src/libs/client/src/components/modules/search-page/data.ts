@@ -1,3 +1,5 @@
-import { genres } from "@/root/src/libs/shared/src/data/genres";
+import { genres as genresList } from "@/root/src/libs/shared/src/data/genres";
 
-const publishers = [];
+const genres = genresList.map((val) => val.name);
+
+const publishers = [""];
