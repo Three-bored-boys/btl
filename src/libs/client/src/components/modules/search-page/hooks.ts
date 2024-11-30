@@ -2,7 +2,7 @@ import { PaginationObjectType, SearchObjectType } from "@/root/src/libs/shared/s
 import { fetchData, getSearchObjectFromLocalStorage, handleNumberSearchParam } from "../../../utils";
 import { DEFAULT_MAX_RESULTS, DEFAULT_START_INDEX, filterKeysArray } from "@/libs/shared/src/utils";
 import { Book } from "@/root/src/libs/shared/src/types";
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { ReadonlyURLSearchParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
@@ -22,7 +22,7 @@ export function useSearchPageResults(searchObject: SearchObjectType, paginationO
   const maxResultsQueryKey = paginationObject.maxResults ?? "";
   const startIndexQueryKey = paginationObject.startIndex ?? "";
 
-  return useQuery({
+  return useSuspenseQuery({
     queryKey: ["full-search-results", searchQueryKey, ...filtersQueryKeyArray, maxResultsQueryKey, startIndexQueryKey],
     queryFn: async () => {
       return await getFullSearchResults(searchObject, paginationObject);
