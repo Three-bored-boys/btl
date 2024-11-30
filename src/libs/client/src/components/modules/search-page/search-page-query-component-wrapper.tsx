@@ -2,9 +2,9 @@ import { PaginationObjectType, SearchObjectType } from "@/root/src/libs/shared/s
 import { filterKeysArray } from "@/root/src/libs/shared/src/utils";
 import { useSearchParams } from "next/navigation";
 import React from "react";
-import SearchPageResults from "./search-page-results";
+import SearchPageQueryComponent from "./search-page-query-component";
 
-export default function SearchPageResultsWrapper() {
+export default function SearchPageQueryComponentWrapper() {
   const searchParams = useSearchParams();
 
   const searchObject: SearchObjectType = {};
@@ -39,5 +39,5 @@ export default function SearchPageResultsWrapper() {
     paginationObject.startIndex = startIndex;
   }
 
-  return <SearchPageResults searchObject={searchObject} paginationObject={paginationObject} />;
+  return <SearchPageQueryComponent searchObject={searchObject} paginationObject={paginationObject} />;
 }
