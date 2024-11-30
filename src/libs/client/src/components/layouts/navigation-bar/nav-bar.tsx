@@ -81,10 +81,8 @@ export default function NavBar({ className, ...props }: React.ComponentProps<"na
       </Container>
       {showMobileMenu && (
         <NavMenu className={cn("block md:hidden")} onClick={() => setShowMobileMenu(false)}>
-          <NavLinks device={"mobile"} routesArr={navLinkArr} rootPathname={rootPathname} />
-          {rootPathname !== "/search" && (
-            <Logo className="mt-5 block text-xl" onClick={() => setShowMobileMenu(false)} />
-          )}
+          <NavLinks device={"mobile"} routesArr={navLinkArr} rootPathname={rootPathname} className="mb-5" />
+          <Logo className="inline text-xl" onClick={() => setShowMobileMenu(false)} />
         </NavMenu>
       )}
     </nav>
