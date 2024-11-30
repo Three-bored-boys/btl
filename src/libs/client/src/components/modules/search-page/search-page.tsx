@@ -3,13 +3,13 @@
 import React, { ReactElement } from "react";
 import SearchInput from "../../ui/search-input";
 import Label from "../../ui/label";
-import Input from "../../ui/input";
 import { BTL_LOCAL_STORAGE_SEARCH_OBJECT, setSearchObjectToLocalStorage } from "@/client/utils";
 import { DEFAULT_MAX_RESULTS, DEFAULT_START_INDEX } from "@/libs/shared/src/utils";
 import { useSearchPage } from "./hooks";
 import Button from "../../ui/button";
 import Container from "../../layouts/container";
 import SearchPageResultsWrapper from "./search-page-results-wrapper";
+import { data } from "./data";
 
 const SearchPage = function (): ReactElement {
   const { filters, allInputElementRefsMap, searchInputElement, router, searchParams } = useSearchPage();
@@ -76,21 +76,30 @@ const SearchPage = function (): ReactElement {
           <div className="w-full">
             <p>Filters</p>
             <hr />
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-center gap-x-3">
               {filters.current.map((str) => (
                 <Label key={str}>
-                  <span>By {str}</span>
-                  <Input
-                    className="w-full border-2 border-primary-100"
-                    type="search"
-                    ref={(node) => {
-                      if (node) {
-                        allInputElementRefsMap.current.set(str, node);
-                      } else {
-                        allInputElementRefsMap.current.delete(str);
-                      }
-                    }}
-                  />
+                  <span>{str[0].toUpperCase() + str.slice(1)}</span>
+                  <div className="appearance-none">
+                    <select
+                      className="w-full rounded-md border-2 border-primary-100"
+                      ref={(node) => {
+                        if (node) {
+                          allInputElementRefsMap.current.set(str, node);
+                        } else {
+                          allInputElementRefsMap.current.delete(str);
+                        }
+                      }}
+                      onChange={(e) => console.log(e.target.value)}
+                    >
+                      <option value="">All {str}s</option>
+                      {data[str]?.map((val, i) => (
+                        <option value={val} selected={val === searchParams.get(str)} key={i}>
+                          {val}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </Label>
               ))}
             </div>
