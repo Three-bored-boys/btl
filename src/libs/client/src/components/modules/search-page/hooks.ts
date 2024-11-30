@@ -53,7 +53,11 @@ export function useSearchPage(): SearchPageHookReturnType {
 
     const searchQueryParam = searchParamsObject.get("search");
     if (searchInputElement.current !== null && searchQueryParam !== null) {
-      searchInputElement.current.value = searchQueryParam;
+      if (searchQueryParam !== "") {
+        searchInputElement.current.value = searchQueryParam;
+      } else {
+        searchParamsObject.delete("search");
+      }
     } else if (searchInputElement.current !== null && searchQueryParam === null && window) {
       const searchObject = getSearchObjectFromLocalStorage();
       if (searchObject.search !== undefined) {
@@ -63,10 +67,8 @@ export function useSearchPage(): SearchPageHookReturnType {
 
     allInputElementRefsMap.current.forEach((_, key, map) => {
       const queryParam = searchParamsObject.get(key);
-      const node = map.get(key);
-
-      if (node !== null && node !== undefined && queryParam !== null) {
-        node.value = queryParam;
+      if (queryParam !== null && queryParam.length === 0) {
+        searchParamsObject.delete(key);
       }
     });
 
