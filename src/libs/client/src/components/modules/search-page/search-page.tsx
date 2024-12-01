@@ -12,7 +12,7 @@ import SearchPageResultsWrapper from "./search-page-results-wrapper";
 import { data } from "./data";
 
 const SearchPage = function (): ReactElement {
-  const { filters, allInputElementRefsMap, searchInputElement, router, searchParams } = useSearchPage();
+  const { filters, allInputElementRefsMap, searchInputElement, router, searchParams, run } = useSearchPage();
 
   const handleOnSubmit = function (e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();

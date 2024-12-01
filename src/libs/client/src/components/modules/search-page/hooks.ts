@@ -10,7 +10,7 @@ import {
 import { Book } from "@/root/src/libs/shared/src/types";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { ReadonlyURLSearchParams, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 const getFullSearchResults = async function (searchObject: SearchObjectType, paginationObject: PaginationObjectType) {
@@ -42,6 +42,8 @@ type SearchPageHookReturnType = {
   searchInputElement: React.MutableRefObject<HTMLInputElement | null>;
   searchParams: ReadonlyURLSearchParams;
   router: AppRouterInstance;
+  run: boolean;
+  setRun: Dispatch<SetStateAction<boolean>>;
 };
 
 export function useSearchPage(): SearchPageHookReturnType {
@@ -53,6 +55,7 @@ export function useSearchPage(): SearchPageHookReturnType {
 
   const searchParams = useSearchParams();
   const router = useRouter();
+  const [run, setRun] = useState(false);
 
   useEffect(() => {
     const searchParamsObject = new URLSearchParams(searchParams.toString());
@@ -90,6 +93,8 @@ export function useSearchPage(): SearchPageHookReturnType {
     if (searchParams.toString() !== searchParamsObject.toString()) {
       router.replace(`/search?${searchParamsObject.toString()}`);
     }
+
+    setRun(true);
   }, [router, searchParams]);
 
   return {
@@ -98,5 +103,7 @@ export function useSearchPage(): SearchPageHookReturnType {
     searchInputElement,
     searchParams,
     router,
+    run,
+    setRun,
   };
 }
