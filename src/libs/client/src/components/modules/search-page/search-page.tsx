@@ -66,23 +66,23 @@ const SearchPage = function (): ReactElement {
     <div className="w-full">
       <Container>
         <form className="mt-3 w-full">
-          <div className="mx-auto w-11/12 max-w-96">
+          <div className="mx-auto mb-5 w-11/12 max-w-96">
             <SearchInput
               classNameDiv="w-full border-2 border-primary-100"
               ref={searchInputElement}
-              placeholder="Search..."
+              placeholder="Search by book title, author, ISBN..."
             />
           </div>
-          <div className="w-full">
-            <p>Filters</p>
-            <hr />
+          <div className="mb-6 w-full">
+            <p className="text-2xl font-semibold">Filters</p>
+            <hr className="h-5" />
             <div className="flex items-center justify-center gap-x-3">
               {filters.current.map((str) => (
                 <Label key={str}>
-                  <span>{str[0].toUpperCase() + str.slice(1)}</span>
+                  <span className="text-xl font-medium">{str[0].toUpperCase() + str.slice(1)}</span>
                   <div className="appearance-none">
                     <select
-                      className="w-full rounded-md border-2 border-primary-100"
+                      className="w-full rounded-md border-2 border-primary-100 px-1 py-0.5 text-base lg:text-lg"
                       ref={(node) => {
                         if (node) {
                           allInputElementRefsMap.current.set(str, node);
@@ -90,7 +90,6 @@ const SearchPage = function (): ReactElement {
                           allInputElementRefsMap.current.delete(str);
                         }
                       }}
-                      onChange={(e) => console.log(e.target.value)}
                     >
                       <option value="">All {str}s</option>
                       {data[str]?.map((val, i) => (
