@@ -71,7 +71,12 @@ export const editSearchObjectInLocalStorage = function (
   return searchObject;
 };
 
-export const handleNumberSearchParam = function (param: string | null, defaultValue: number, minNumber?: number) {
+export const handleNumberSearchParam = function (
+  param: string | null,
+  defaultValue: number,
+  minNumber?: number,
+  maxNumber?: number,
+) {
   if (param === null) {
     return defaultValue.toString();
   }
@@ -80,9 +85,10 @@ export const handleNumberSearchParam = function (param: string | null, defaultVa
 
   if (Number.isNaN(parsedNumber)) return defaultValue.toString();
 
-  if (minNumber !== undefined) {
+  if (minNumber !== undefined && maxNumber !== undefined) {
     if (parsedNumber <= minNumber) return minNumber.toString();
-    return param;
+    if (parsedNumber >= maxNumber) return maxNumber.toString();
+    return defaultValue.toString();
   }
 
   return defaultValue.toString();

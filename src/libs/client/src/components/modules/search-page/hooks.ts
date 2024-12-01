@@ -1,6 +1,12 @@
 import { PaginationObjectType, SearchObjectType } from "@/root/src/libs/shared/src/schemas";
 import { fetchData, getSearchObjectFromLocalStorage, handleNumberSearchParam } from "../../../utils";
-import { DEFAULT_MAX_RESULTS, DEFAULT_PAGE_NUMBER, filterKeysArray } from "@/libs/shared/src/utils";
+import {
+  DEFAULT_MAX_RESULTS,
+  DEFAULT_PAGE_NUMBER,
+  MAX_MAX_RESULTS,
+  MIN_MAX_RESULTS,
+  filterKeysArray,
+} from "@/libs/shared/src/utils";
 import { Book } from "@/root/src/libs/shared/src/types";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { ReadonlyURLSearchParams, useRouter, useSearchParams } from "next/navigation";
@@ -75,7 +81,7 @@ export function useSearchPage(): SearchPageHookReturnType {
     const maxResultsQueryParam = searchParamsObject.get("maxResults");
     searchParamsObject.set(
       "maxResults",
-      handleNumberSearchParam(maxResultsQueryParam, DEFAULT_MAX_RESULTS, DEFAULT_MAX_RESULTS),
+      handleNumberSearchParam(maxResultsQueryParam, DEFAULT_MAX_RESULTS, MIN_MAX_RESULTS, MAX_MAX_RESULTS),
     );
 
     const pageQueryParam = searchParamsObject.get("page");
