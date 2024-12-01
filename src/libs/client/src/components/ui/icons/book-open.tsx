@@ -1,7 +1,7 @@
 import React from "react";
 import { cn } from "@/client/utils";
 
-export default function BookOpen({ className, ...props }: React.ComponentProps<"svg">) {
+export function BookOpen({ className, ...props }: React.ComponentProps<"svg">) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

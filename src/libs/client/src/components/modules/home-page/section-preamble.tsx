@@ -1,6 +1,6 @@
 import React from "react";
 
-function SectionPreamble({ title, children }: { title: string; children: React.ReactNode }): React.ReactElement {
+export function SectionPreamble({ title, children }: { title: string; children: React.ReactNode }): React.ReactElement {
   return (
     <>
       <h2 className="font-semibold uppercase tracking-wide">{title}</h2>
@@ -8,5 +8,3 @@ function SectionPreamble({ title, children }: { title: string; children: React.R
     </>
   );
 }
-
-export default SectionPreamble;

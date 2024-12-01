@@ -1,14 +1,14 @@
-import Container from "@/libs/client/src/components/layouts/container";
+import { Container } from "@/libs/client/src/components/layouts/container";
 import type { Book } from "@/root/src/libs/shared/src/types";
 import { ComponentProps } from "react";
 import Image from "next/image";
 import genericBookImage from "@/public/assets/images/generic-book.png";
-import BookInformation from "./book-information";
-import BookLocationRadioGroup from "./book-location-radio-group";
+import { BookInformation } from "./book-information";
+import { BookLocationRadioGroup } from "./book-location-radio-group";
 
 type BookPageProps = { book: Book } & ComponentProps<"div">;
 
-export default function BookPage({ book, ...props }: BookPageProps) {
+export function BookPage({ book, ...props }: BookPageProps) {
   return (
     <div className="mt-5" {...props}>
       <Container>

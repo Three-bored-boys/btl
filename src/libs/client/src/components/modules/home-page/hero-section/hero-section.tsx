@@ -1,9 +1,9 @@
-import Container from "@/client/components/layouts/container";
+import { Container } from "@/client/components/layouts/container";
 import Image from "next/image";
 import heroImage from "@/public/assets/images/hero-section.png";
-import LinkButton from "../../../ui/link-button";
+import { LinkButton } from "../../../ui/link-button";
 
-export default function HeroSection() {
+export function HeroSection() {
   return (
     <div className="w-full py-10">
       <Container>

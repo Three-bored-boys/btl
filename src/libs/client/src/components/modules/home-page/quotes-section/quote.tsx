@@ -3,7 +3,7 @@ import { cn } from "@/client/utils";
 
 type QuoteProps = { author: string; quote: string } & ComponentProps<"div">;
 
-export default function Quote({ author, quote, className, ...props }: QuoteProps) {
+export function Quote({ author, quote, className, ...props }: QuoteProps) {
   return (
     <div className={cn("min-w-0 flex-[0_0_100%]", className)} {...props}>
       <q className="mb-5 inline-block w-full text-wrap text-center text-base font-medium italic xs:text-lg sm:text-xl md:text-2xl lg:text-3xl">

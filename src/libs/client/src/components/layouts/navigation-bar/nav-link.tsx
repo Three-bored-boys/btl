@@ -19,13 +19,7 @@ export type NavLinkProps = ComponentProps<"span"> &
     rootPathname: string;
   };
 
-export default function NavLink({
-  className,
-  routeObj,
-  device,
-  rootPathname,
-  ...props
-}: NavLinkProps): React.ReactElement {
+export function NavLink({ className, routeObj, device, rootPathname, ...props }: NavLinkProps): React.ReactElement {
   return (
     <span {...props}>
       <Link

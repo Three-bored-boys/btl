@@ -2,13 +2,13 @@ import React from "react";
 // import { book } from "./data";
 import Image from "next/image";
 import Link from "next/link";
-import useQuickSearchResults from "./useQuickSearchResults";
+import { useQuickSearchResults } from "./useQuickSearchResults";
 import genericBookImage from "@/public/assets/images/generic-book.png";
-import Button from "../../ui/button";
-import Close from "../../ui/icons/close";
+import { Button } from "../../ui/button";
+import { Close } from "../../ui/icons/close";
 import { DEFAULT_MAX_RESULTS, DEFAULT_PAGE_NUMBER } from "@/libs/shared/src/utils";
 
-export default function QuickSearchResults({
+export function QuickSearchResults({
   search,
   setSearchResultsVisible,
 }: {

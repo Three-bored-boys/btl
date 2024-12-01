@@ -1,15 +1,15 @@
-import SectionPreamble from "@/client/components/modules/home-page/section-preamble";
-import Container from "@/client/components/layouts/container";
+import { SectionPreamble } from "@/client/components/modules/home-page/section-preamble";
+import { Container } from "@/client/components/layouts/container";
 import type { Book, Genres } from "@/root/src/libs/shared/src/types";
 import { fetchData } from "@/libs/client/src/utils";
-import SectionBooksShowcase from "../section-books-showcase";
+import { SectionBooksShowcase } from "../section-books-showcase";
 import { Suspense } from "react";
-import LoadingSkeleton from "../loading-skeleton";
-import BookCard from "../book-card";
+import { LoadingSkeleton } from "../loading-skeleton";
+import { BookCard } from "../book-card";
 import { ErrorBoundary } from "react-error-boundary";
 import ErrorBoundaryRender from "../error-boundary-render";
 
-export default function GenresSection() {
+export function GenresSection() {
   return (
     <section className="w-full py-10">
       <Container>

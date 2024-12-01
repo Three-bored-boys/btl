@@ -7,7 +7,7 @@ const getQuickSearchResultsBooks = async function (searchString: string) {
   return results;
 };
 
-const useQuickSearchResults = function ({ search }: { search: string }) {
+export const useQuickSearchResults = function ({ search }: { search: string }) {
   const query = useSuspenseQuery({
     queryKey: ["quick-search-results", search],
     queryFn: async () => await getQuickSearchResultsBooks(search),
@@ -15,5 +15,3 @@ const useQuickSearchResults = function ({ search }: { search: string }) {
 
   return query;
 };
-
-export default useQuickSearchResults;

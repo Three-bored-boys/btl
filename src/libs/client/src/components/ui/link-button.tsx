@@ -4,7 +4,7 @@ import Link, { LinkProps } from "next/link";
 
 type LinkButtonProps = ButtonVariants & LinkProps & React.ComponentProps<"a">;
 
-export default function LinkButton({
+export function LinkButton({
   className,
   children,
   background,

@@ -1,5 +1,5 @@
 import React from "react";
-import NavLink from "./nav-link";
+import { NavLink } from "./nav-link";
 import { cn } from "@/client/utils";
 import { NavLinkArr } from "./nav-bar";
 import { cva, VariantProps } from "class-variance-authority";
@@ -19,13 +19,7 @@ export type NavLinksProps = React.ComponentProps<"div"> &
     rootPathname: string;
   };
 
-export default function NavLinks({
-  device,
-  routesArr,
-  className,
-  rootPathname,
-  ...props
-}: NavLinksProps): React.ReactElement {
+export function NavLinks({ device, routesArr, className, rootPathname, ...props }: NavLinksProps): React.ReactElement {
   return (
     <div className={cn(navLinks({ device }), className)} {...props}>
       {routesArr.map((value, i) => (

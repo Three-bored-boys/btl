@@ -1,16 +1,16 @@
 "use client";
 
-import Logo from "../../ui/logo";
+import { Logo } from "../../ui/logo";
 import React from "react";
-import NavLinks from "./nav-links";
-import NavBarRight from "./nav-bar-right";
-import NavMenu from "./nav-menu";
-import Hamburger from "@/client/components/ui/icons/hamburger";
-import Close from "@/client/components/ui/icons/close";
+import { NavLinks } from "./nav-links";
+import { NavBarRight } from "./nav-bar-right";
+import { NavMenu } from "./nav-menu";
+import { Hamburger } from "@/client/components/ui/icons/hamburger";
+import { Close } from "@/client/components/ui/icons/close";
 import { usePathname } from "next/navigation";
-import Container from "../container";
+import { Container } from "../container";
 import { cn } from "../../../utils";
-import QuickSearch from "../../modules/quick-search/quick-search";
+import { QuickSearch } from "../../modules/quick-search/quick-search";
 
 const navLinkArr = [
   { name: "Home", path: "/" },
@@ -26,7 +26,7 @@ const navAuthLinkArr = [
 export type NavLinkArr = typeof navLinkArr;
 export type NavAuthLinkArr = typeof navAuthLinkArr;
 
-export default function NavBar({ className, ...props }: React.ComponentProps<"nav">): React.ReactElement {
+export function NavBar({ className, ...props }: React.ComponentProps<"nav">): React.ReactElement {
   const getRootPathname = (path: string): string => {
     return "/" + path.split("/")[1];
   };

@@ -1,15 +1,15 @@
 "use client";
 
 import { cn } from "@/client/utils";
-import ArrowLeftCircle from "@/client/components/ui/icons/arrow-left-circle";
-import ArrowRightCircle from "@/client/components/ui/icons/arrow-right-circle";
-import Container from "@/client/components/layouts/container";
-import Quote from "./quote";
+import { ArrowLeftCircle } from "@/client/components/ui/icons/arrow-left-circle";
+import { ArrowRightCircle } from "@/client/components/ui/icons/arrow-right-circle";
+import { Container } from "@/client/components/layouts/container";
+import { Quote } from "./quote";
 import quotes from "./quotes.json";
 import { useCallback, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 
-export default function QuotesSection() {
+export function QuotesSection() {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false, duration: 30, startIndex: 0 });
   const [index, setIndex] = useState(0);
 

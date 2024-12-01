@@ -1,11 +1,11 @@
 import React, { ComponentProps, forwardRef } from "react";
-import MagnifyingGlass from "@/client/components/ui/icons/magnifying-glass";
+import { MagnifyingGlass } from "@/client/components/ui/icons/magnifying-glass";
 import { cn } from "@/client/utils";
 
 type ClassNames = { classNameDiv?: string; classNameInput?: string };
 type Props = ComponentProps<"input"> & ClassNames;
 
-const SearchInput = forwardRef<HTMLInputElement, Props>(function SearchInputRef(props, ref) {
+export const SearchInput = forwardRef<HTMLInputElement, Props>(function SearchInputRef(props, ref) {
   const { classNameDiv, classNameInput, placeholder, onChange, onKeyDown, ...otherProps } = props;
   return (
     <div
@@ -27,5 +27,3 @@ const SearchInput = forwardRef<HTMLInputElement, Props>(function SearchInputRef(
     </div>
   );
 });
-
-export default SearchInput;

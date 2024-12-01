@@ -1,13 +1,13 @@
 import React, { ComponentProps } from "react";
 import type { NavAuthLinkArr } from "./nav-bar";
-import LinkButton from "@/client/components/ui/link-button";
+import { LinkButton } from "@/client/components/ui/link-button";
 import { cn } from "../../../utils";
 
 type NavBarRightProps = {
   routesArr: NavAuthLinkArr;
 } & ComponentProps<"div">;
 
-function NavBarRight({ routesArr, className }: NavBarRightProps): React.ReactElement {
+export function NavBarRight({ routesArr, className }: NavBarRightProps): React.ReactElement {
   return (
     <div className={cn("m-auto", className)}>
       <LinkButton background={"dark"} href={routesArr[0].path} textSize={"big"}>
@@ -24,5 +24,3 @@ function NavBarRight({ routesArr, className }: NavBarRightProps): React.ReactEle
     </div>
   );
 }
-
-export default NavBarRight;

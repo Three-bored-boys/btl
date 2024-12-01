@@ -8,11 +8,11 @@ import {
   MAX_MAX_RESULTS,
   MIN_MAX_RESULTS,
 } from "@/root/src/libs/shared/src/utils";
-import ArrowLeftCircle from "../../ui/icons/arrow-left-circle";
-import ArrowRightCircle from "../../ui/icons/arrow-right-circle";
+import { ArrowLeftCircle } from "../../ui/icons/arrow-left-circle";
+import { ArrowRightCircle } from "../../ui/icons/arrow-right-circle";
 import { cn, handleNumberSearchParam } from "@/libs/client/src/utils";
 
-function SearchPageQueryComponent({
+export function SearchPageQueryComponent({
   searchObject,
   paginationObject,
 }: {
@@ -65,5 +65,3 @@ function SearchPageQueryComponent({
     </div>
   );
 }
-
-export default SearchPageQueryComponent;

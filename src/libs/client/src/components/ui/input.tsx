@@ -3,7 +3,7 @@ import { cn } from "../../utils";
 
 type InputProps = ComponentProps<"input">;
 
-const Input = forwardRef<HTMLInputElement, InputProps>(function InputRef(props, ref) {
+export const Input = forwardRef<HTMLInputElement, InputProps>(function InputRef(props, ref) {
   const { id, className, type, children, ...otherProps } = props;
   return (
     <input
@@ -20,5 +20,3 @@ const Input = forwardRef<HTMLInputElement, InputProps>(function InputRef(props, 
     </input>
   );
 });
-
-export default Input;

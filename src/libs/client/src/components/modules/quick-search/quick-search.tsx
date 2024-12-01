@@ -1,8 +1,8 @@
 "use client";
 
 import React, { ComponentProps, useRef, useState, useEffect } from "react";
-import QuickSearchResults from "./quick-search-results";
-import SearchInput from "@/root/src/libs/client/src/components/ui/search-input";
+import { QuickSearchResults } from "./quick-search-results";
+import { SearchInput } from "@/root/src/libs/client/src/components/ui/search-input";
 import { cn, getSearchObjectFromLocalStorage, setSearchObjectToLocalStorage } from "@/client/utils";
 import type { SearchObjectType } from "@/root/src/libs/shared/src/schemas";
 
@@ -14,7 +14,7 @@ const QuickSearchResultsWrapper = function ({ className, children }: ComponentPr
   );
 };
 
-export default function QuickSearch({ className }: ComponentProps<"div">) {
+export function QuickSearch({ className }: ComponentProps<"div">) {
   const [searchInput, setSearchInput] = useState<string>("");
   const [searchResultsVisible, setSearchResultsVisible] = useState<boolean>(false);
   const searchInputElement = useRef<HTMLInputElement | null>(null);

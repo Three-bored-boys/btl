@@ -1,7 +1,7 @@
 import React from "react";
 import { Skeleton } from "@radix-ui/themes";
 
-export default function LoadingSkeleton() {
+export function LoadingSkeleton() {
   return (
     <div className="grid w-full grid-cols-[40px_1fr] grid-rows-[auto] gap-1 xs:grid-cols-[60px_1fr] max-lg:md:grid-cols-[50px_1fr]">
       <div className="aspect-square">

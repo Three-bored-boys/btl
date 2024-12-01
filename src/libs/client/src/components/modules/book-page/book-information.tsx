@@ -6,7 +6,7 @@ import { cn } from "../../../utils";
 
 type BookInformationProps = { book: Book } & ComponentProps<"div">;
 
-export default function BookInformation({ book, ...props }: BookInformationProps) {
+export function BookInformation({ book, ...props }: BookInformationProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (

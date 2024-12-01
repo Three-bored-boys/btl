@@ -1,8 +1,8 @@
 "use client";
 
 import React, { ReactElement, Suspense } from "react";
-import SearchInput from "../../ui/search-input";
-import Label from "../../ui/label";
+import { SearchInput } from "../../ui/search-input";
+import { Label } from "../../ui/label";
 import {
   BTL_LOCAL_STORAGE_SEARCH_OBJECT,
   handleNumberSearchParam,
@@ -10,12 +10,12 @@ import {
 } from "@/client/utils";
 import { DEFAULT_MAX_RESULTS, DEFAULT_PAGE_NUMBER, MAX_MAX_RESULTS, MIN_MAX_RESULTS } from "@/libs/shared/src/utils";
 import { useSearchPage } from "./hooks";
-import Button from "../../ui/button";
-import Container from "../../layouts/container";
-import SearchPageQueryComponentWrapper from "./search-page-query-component-wrapper";
+import { Button } from "../../ui/button";
+import { Container } from "../../layouts/container";
+import { SearchPageQueryComponentWrapper } from "./search-page-query-component-wrapper";
 import { data } from "./data";
 
-const SearchPage = function (): ReactElement {
+export const SearchPage = function (): ReactElement {
   const { filters, allInputElementRefsMap, searchInputElement, router, searchParams, run } = useSearchPage();
 
   const handleOnSubmit = function (e: React.MouseEvent<HTMLButtonElement>) {
@@ -128,5 +128,3 @@ const SearchPage = function (): ReactElement {
     </div>
   );
 };
-
-export default SearchPage;

@@ -1,11 +1,11 @@
 "use client";
 
 import React from "react";
-import Label from "@/client/components/ui/label";
-import Input from "@/client/components/ui/input";
-import Button from "../../../ui/button";
+import { Label } from "@/client/components/ui/label";
+import { Input } from "@/client/components/ui/input";
+import { Button } from "../../../ui/button";
 
-export default function LogInForm() {
+export function LogInForm() {
   const onFormSubmission = function (e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     console.log("Logged In!");

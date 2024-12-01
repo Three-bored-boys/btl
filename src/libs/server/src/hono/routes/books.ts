@@ -16,7 +16,7 @@ import { Environment } from "@/root/bindings";
 import { cache } from "hono/cache";
 import { filterKeysArray } from "@/libs/shared/src/utils";
 
-const books = new Hono<Environment>();
+export const books = new Hono<Environment>();
 
 books.get(
   "/best-sellers",
@@ -282,5 +282,3 @@ books.get(
     return c.json(responseData);
   },
 );
-
-export default books;
