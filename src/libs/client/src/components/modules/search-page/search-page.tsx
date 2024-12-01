@@ -1,14 +1,18 @@
 "use client";
 
-import React, { ReactElement } from "react";
+import React, { ReactElement, Suspense } from "react";
 import SearchInput from "../../ui/search-input";
 import Label from "../../ui/label";
-import { BTL_LOCAL_STORAGE_SEARCH_OBJECT, setSearchObjectToLocalStorage } from "@/client/utils";
-import { DEFAULT_MAX_RESULTS, DEFAULT_PAGE_NUMBER } from "@/libs/shared/src/utils";
+import {
+  BTL_LOCAL_STORAGE_SEARCH_OBJECT,
+  handleNumberSearchParam,
+  setSearchObjectToLocalStorage,
+} from "@/client/utils";
+import { DEFAULT_MAX_RESULTS, DEFAULT_PAGE_NUMBER, MAX_MAX_RESULTS, MIN_MAX_RESULTS } from "@/libs/shared/src/utils";
 import { useSearchPage } from "./hooks";
 import Button from "../../ui/button";
 import Container from "../../layouts/container";
-import SearchPageResultsWrapper from "./search-page-results-wrapper";
+import SearchPageQueryComponentWrapper from "./search-page-query-component-wrapper";
 import { data } from "./data";
 
 const SearchPage = function (): ReactElement {
@@ -28,7 +32,15 @@ const SearchPage = function (): ReactElement {
 
     const searchParamsObject = new URLSearchParams(searchParams.toString());
 
-    searchParamsObject.set("maxResults", DEFAULT_MAX_RESULTS.toString());
+    searchParamsObject.set(
+      "maxResults",
+      handleNumberSearchParam(
+        searchParamsObject.get("maxResults"),
+        DEFAULT_MAX_RESULTS,
+        MIN_MAX_RESULTS,
+        MAX_MAX_RESULTS,
+      ),
+    );
     searchParamsObject.set("page", DEFAULT_PAGE_NUMBER.toString());
 
     if (searchInputElement.current !== null) {
@@ -107,7 +119,11 @@ const SearchPage = function (): ReactElement {
             Submit
           </Button>
         </form>
-        <SearchPageResultsWrapper />
+        {run && (
+          <Suspense fallback={<div>Loading...</div>}>
+            <SearchPageQueryComponentWrapper />
+          </Suspense>
+        )}
       </Container>
     </div>
   );
