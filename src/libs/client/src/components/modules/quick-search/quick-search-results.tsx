@@ -6,7 +6,7 @@ import useQuickSearchResults from "./useQuickSearchResults";
 import genericBookImage from "@/public/assets/images/generic-book.png";
 import Button from "../../ui/button";
 import Close from "../../ui/icons/close";
-import { DEFAULT_MAX_RESULTS, DEFAULT_START_INDEX } from "@/libs/shared/src/utils";
+import { DEFAULT_MAX_RESULTS, DEFAULT_PAGE_NUMBER } from "@/libs/shared/src/utils";
 
 export default function QuickSearchResults({
   search,
@@ -73,7 +73,7 @@ export default function QuickSearchResults({
       ))}
       <div className="flex items-center justify-between">
         <Link
-          href={`/search?${new URLSearchParams({ search, maxResults: DEFAULT_MAX_RESULTS.toString(), startIndex: DEFAULT_START_INDEX.toString() }).toString()}`}
+          href={`/search?${new URLSearchParams({ search, maxResults: DEFAULT_MAX_RESULTS.toString(), page: DEFAULT_PAGE_NUMBER.toString() }).toString()}`}
         >
           Go to search page
         </Link>

@@ -1,6 +1,6 @@
 import type { Book, GoogleBooksResponse } from "../../../shared/src/types";
 import type { SearchObjectType, PaginationObjectType } from "../../../shared/src/schemas";
-import { DEFAULT_MAX_RESULTS, DEFAULT_START_INDEX } from "@/root/src/libs/shared/src/utils";
+import { DEFAULT_MAX_RESULTS, DEFAULT_PAGE_NUMBER } from "@/root/src/libs/shared/src/utils";
 
 type Item = GoogleBooksResponse["items"][number];
 
@@ -60,7 +60,7 @@ export class GoogleBooksService {
 
   async getBooksByAllParameters({
     searchInput: { search, genre, publisher, isbn },
-    paginationFilter: { maxResults = DEFAULT_MAX_RESULTS.toString(), startIndex = DEFAULT_START_INDEX.toString() },
+    paginationFilter: { maxResults = DEFAULT_MAX_RESULTS.toString(), page = DEFAULT_PAGE_NUMBER.toString() },
   }: {
     searchInput: SearchObjectType;
     paginationFilter: PaginationObjectType;
@@ -69,6 +69,14 @@ export class GoogleBooksService {
     const genreUrl = genre !== undefined ? `+subject:${genre}` : "";
     const publisherUrl = publisher !== undefined ? `+inpublisher:${publisher}` : "";
     const isbnUrl = isbn !== undefined ? `+isbn:${isbn}` : "";
+    const startIndexNumber = (parseInt(page, 10) - 1) * parseInt(maxResults, 10);
+    let startIndex: string;
+
+    if (!Number.isNaN(startIndexNumber)) {
+      startIndex = startIndexNumber.toString();
+    } else {
+      startIndex = "0";
+    }
 
     const url = `https://www.googleapis.com/books/v1/volumes?q=${searchUrl + genreUrl + publisherUrl + isbnUrl}&maxResults=${maxResults}&orderBy=relevance&startIndex=${startIndex}&key=${this.apiKey}`;
 

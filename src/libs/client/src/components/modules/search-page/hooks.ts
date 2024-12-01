@@ -1,6 +1,6 @@
 import { PaginationObjectType, SearchObjectType } from "@/root/src/libs/shared/src/schemas";
 import { fetchData, getSearchObjectFromLocalStorage, handleNumberSearchParam } from "../../../utils";
-import { DEFAULT_MAX_RESULTS, DEFAULT_START_INDEX, filterKeysArray } from "@/libs/shared/src/utils";
+import { DEFAULT_MAX_RESULTS, DEFAULT_PAGE_NUMBER, filterKeysArray } from "@/libs/shared/src/utils";
 import { Book } from "@/root/src/libs/shared/src/types";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { ReadonlyURLSearchParams, useRouter, useSearchParams } from "next/navigation";
@@ -20,10 +20,10 @@ export function useSearchPageResults(searchObject: SearchObjectType, paginationO
     return searchObject[key] ?? "";
   });
   const maxResultsQueryKey = paginationObject.maxResults ?? "";
-  const startIndexQueryKey = paginationObject.startIndex ?? "";
+  const pageQueryKey = paginationObject.page ?? "";
 
   return useSuspenseQuery({
-    queryKey: ["full-search-results", searchQueryKey, ...filtersQueryKeyArray, maxResultsQueryKey, startIndexQueryKey],
+    queryKey: ["full-search-results", searchQueryKey, ...filtersQueryKeyArray, maxResultsQueryKey, pageQueryKey],
     queryFn: async () => {
       return await getFullSearchResults(searchObject, paginationObject);
     },
@@ -78,11 +78,8 @@ export function useSearchPage(): SearchPageHookReturnType {
       handleNumberSearchParam(maxResultsQueryParam, DEFAULT_MAX_RESULTS, DEFAULT_MAX_RESULTS),
     );
 
-    const startIndexQueryParam = searchParamsObject.get("startIndex");
-    searchParamsObject.set(
-      "startIndex",
-      handleNumberSearchParam(startIndexQueryParam, DEFAULT_START_INDEX, DEFAULT_START_INDEX),
-    );
+    const pageQueryParam = searchParamsObject.get("page");
+    searchParamsObject.set("page", handleNumberSearchParam(pageQueryParam, DEFAULT_PAGE_NUMBER, DEFAULT_PAGE_NUMBER));
 
     if (searchParams.toString() !== searchParamsObject.toString()) {
       router.replace(`/search?${searchParamsObject.toString()}`);

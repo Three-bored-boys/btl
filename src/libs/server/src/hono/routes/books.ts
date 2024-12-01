@@ -230,7 +230,7 @@ books.get(
               genre?: string | string[] | undefined;
               publisher?: string | string[] | undefined;
               maxResults?: string | string[] | undefined;
-              startIndex?: string | string[] | undefined;
+              page?: string | string[] | undefined;
             };
           };
           out: {
@@ -242,7 +242,7 @@ books.get(
               genre?: string | string[] | undefined;
               publisher?: string | string[] | undefined;
               maxResults?: string | string[] | undefined;
-              startIndex?: string | string[] | undefined;
+              page?: string | string[] | undefined;
             };
           };
         }
@@ -263,19 +263,19 @@ books.get(
         return getKeyForCache(query[key]);
       });
       const maxResultsQueryKey = getKeyForCache(query.maxResults);
-      const startIndexQueryKey = getKeyForCache(query.startIndex);
+      const pageQueryKey = getKeyForCache(query.page);
 
-      return `full-search-results ${searchQueryKey} ${filtersQueryKeyArray.join(" ")} ${maxResultsQueryKey} ${startIndexQueryKey}`;
+      return `full-search-results ${searchQueryKey} ${filtersQueryKeyArray.join(" ")} ${maxResultsQueryKey} ${pageQueryKey}`;
     },
     cacheControl: "max-age=172800, must-revalidate, public",
   }),
   async (c) => {
-    const { startIndex, maxResults, ...search } = c.req.valid("query");
+    const { page, maxResults, ...search } = c.req.valid("query");
     const googleBooksService = new GoogleBooksService(c.env.GOOGLE_BOOKS_API_KEY);
 
     const allBooksResults = await googleBooksService.getBooksByAllParameters({
       searchInput: search,
-      paginationFilter: { maxResults, startIndex },
+      paginationFilter: { maxResults, page },
     });
 
     const responseData: GoodResponse<{ books: Book[]; totalItems: number }> = { success: true, data: allBooksResults };

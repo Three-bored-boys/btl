@@ -34,9 +34,9 @@ export default function SearchPageQueryComponentWrapper() {
     paginationObject.maxResults = maxResults;
   }
 
-  const startIndex = searchParams.get("startIndex");
-  if (startIndex !== null) {
-    paginationObject.startIndex = startIndex;
+  const page = searchParams.get("page");
+  if (page !== null) {
+    paginationObject.page = page;
   }
 
   return <SearchPageQueryComponent searchObject={searchObject} paginationObject={paginationObject} />;

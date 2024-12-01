@@ -12,7 +12,7 @@ export const searchObjectSchema = z
 export const paginationObjectSchema = z
   .object({
     maxResults: z.string().optional(),
-    startIndex: z.string().optional(),
+    page: z.string().optional(),
   })
   .strict();
 

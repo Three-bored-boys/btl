@@ -4,7 +4,7 @@ import React, { ReactElement } from "react";
 import SearchInput from "../../ui/search-input";
 import Label from "../../ui/label";
 import { BTL_LOCAL_STORAGE_SEARCH_OBJECT, setSearchObjectToLocalStorage } from "@/client/utils";
-import { DEFAULT_MAX_RESULTS, DEFAULT_START_INDEX } from "@/libs/shared/src/utils";
+import { DEFAULT_MAX_RESULTS, DEFAULT_PAGE_NUMBER } from "@/libs/shared/src/utils";
 import { useSearchPage } from "./hooks";
 import Button from "../../ui/button";
 import Container from "../../layouts/container";
@@ -29,7 +29,7 @@ const SearchPage = function (): ReactElement {
     const searchParamsObject = new URLSearchParams(searchParams.toString());
 
     searchParamsObject.set("maxResults", DEFAULT_MAX_RESULTS.toString());
-    searchParamsObject.set("startIndex", DEFAULT_START_INDEX.toString());
+    searchParamsObject.set("page", DEFAULT_PAGE_NUMBER.toString());
 
     if (searchInputElement.current !== null) {
       const search = searchInputElement.current.value.trim();
