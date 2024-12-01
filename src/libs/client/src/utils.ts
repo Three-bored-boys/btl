@@ -91,5 +91,10 @@ export const handleNumberSearchParam = function (
     return defaultValue.toString();
   }
 
+  if (minNumber !== undefined && maxNumber === undefined) {
+    if (parsedNumber <= minNumber) return minNumber.toString();
+    return param;
+  }
+
   return defaultValue.toString();
 };
