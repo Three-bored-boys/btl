@@ -1,12 +1,8 @@
 import SearchPage from "@/root/src/libs/client/src/components/modules/search-page/search-page";
-import React, { Suspense } from "react";
+import React from "react";
 
 function Search() {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <SearchPage />
-    </Suspense>
-  );
+  return <SearchPage />;
 }
 
 export default Search;
