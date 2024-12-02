@@ -11,6 +11,7 @@ import {
 import { ArrowLeftCircle } from "../../ui/icons/arrow-left-circle";
 import { ArrowRightCircle } from "../../ui/icons/arrow-right-circle";
 import { cn, handleNumberSearchParam } from "@/libs/client/src/utils";
+import { SearchPageResults } from "./search-page-results";
 
 export function SearchPageQueryComponent({
   searchObject,
@@ -20,7 +21,7 @@ export function SearchPageQueryComponent({
   paginationObject: PaginationObjectType;
 }) {
   const {
-    data: { books, totalItems },
+    data: { books },
     error,
   } = useSearchPageResults(searchObject, paginationObject);
   const searchParams = useSearchParams();
@@ -39,7 +40,7 @@ export function SearchPageQueryComponent({
 
   return (
     <div>
-      {JSON.stringify({ books, totalItems })}
+      <SearchPageResults books={books}></SearchPageResults>
       <div className="flex">
         <div
           className={cn({ "invisible": searchParams.get("page") === "1" })}
