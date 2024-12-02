@@ -19,7 +19,10 @@ export function SearchPageQueryComponent({
   searchObject: SearchObjectType;
   paginationObject: PaginationObjectType;
 }) {
-  const { data, error } = useSearchPageResults(searchObject, paginationObject);
+  const {
+    data: { books, totalItems },
+    error,
+  } = useSearchPageResults(searchObject, paginationObject);
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -32,11 +35,11 @@ export function SearchPageQueryComponent({
     MAX_MAX_RESULTS,
   );
   const pageNumber = handleNumberSearchParam(searchParams.get("page"), DEFAULT_PAGE_NUMBER, DEFAULT_PAGE_NUMBER);
-  const totalBooksThisSearch = data.books.length;
+  const totalBooksThisSearch = books.length;
 
   return (
     <div>
-      {JSON.stringify({ totalBooksThisSearch, maxResults })}
+      {JSON.stringify({ books, totalItems })}
       <div className="flex">
         <div
           className={cn({ "invisible": searchParams.get("page") === "1" })}
@@ -49,7 +52,6 @@ export function SearchPageQueryComponent({
         >
           <ArrowLeftCircle />
         </div>
-
         <div
           className={cn({ "invisible": totalBooksThisSearch < Number(maxResults) })}
           onClick={() => {
