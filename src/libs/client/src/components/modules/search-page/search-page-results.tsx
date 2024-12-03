@@ -1,4 +1,5 @@
 import { Book } from "@/root/src/libs/shared/src/types";
+import Link from "next/link";
 import React from "react";
 
 export function SearchPageResults({ books }: { books: Book[] }) {
@@ -7,11 +8,13 @@ export function SearchPageResults({ books }: { books: Book[] }) {
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="grid grid-cols-4 gap-3">
       {books
         .filter((book) => book.isbn13 !== "" || book.isbn10 !== "")
         .map((book, i) => (
-          <div key={i}>{book.isbn13 || book.isbn10}</div>
+          <Link href={`/books/${book.isbn13 || book.isbn10}`} key={i} className="bg-red-800">
+            <div className="mx-auto w-1/2 bg-white text-center text-red-950">{book.isbn13 || book.isbn10}</div>
+          </Link>
         ))}
     </div>
   );
