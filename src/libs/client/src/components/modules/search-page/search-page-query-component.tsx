@@ -26,6 +26,13 @@ export function SearchPageQueryComponent({
   } = useSearchPageResults(searchObject, paginationObject);
   const searchParams = useSearchParams();
   const router = useRouter();
+  const newSearchParams = React.useRef<null | URLSearchParams>(null);
+  const [loading, setLoading] = React.useState(false);
+  React.useEffect(() => {
+    if (searchParams.toString() === newSearchParams.current?.toString()) {
+      setLoading(false);
+    }
+  }, [searchParams]);
 
   if (error) return <div>{error.message}</div>;
 
@@ -38,16 +45,21 @@ export function SearchPageQueryComponent({
   const pageNumber = handleNumberSearchParam(searchParams.get("page"), DEFAULT_PAGE_NUMBER, DEFAULT_PAGE_NUMBER);
   const totalBooksThisSearch = books.length;
 
+  const handlePageNavigation = function (param: string) {
+    setLoading(true);
+    newSearchParams.current = new URLSearchParams(searchParams);
+    newSearchParams.current.set("page", param);
+    router.push(`/search?${newSearchParams.current.toString()}`);
+  };
+
   return (
     <div>
-      <SearchPageResults books={books}></SearchPageResults>
+      {loading ? <div>cheeee</div> : <SearchPageResults books={books}></SearchPageResults>}
       <div className="flex">
         <div
           className={cn({ "invisible": searchParams.get("page") === "1" })}
           onClick={() => {
-            const newSearchParams = new URLSearchParams(searchParams);
-            newSearchParams.set("page", (Number(pageNumber) - 1).toString());
-            router.push(`/search?${newSearchParams.toString()}`);
+            handlePageNavigation((Number(pageNumber) - 1).toString());
           }}
           title="Previous page"
         >
@@ -56,9 +68,7 @@ export function SearchPageQueryComponent({
         <div
           className={cn({ "invisible": totalBooksThisSearch < Number(maxResults) })}
           onClick={() => {
-            const newSearchParams = new URLSearchParams(searchParams);
-            newSearchParams.set("page", (Number(pageNumber) + 1).toString());
-            router.push(`/search?${newSearchParams.toString()}`);
+            handlePageNavigation((Number(pageNumber) + 1).toString());
           }}
           title="Next page"
         >
