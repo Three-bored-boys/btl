@@ -137,4 +137,4 @@ const publisher = [
   "White Thread Press",
 ];
 
-export const data = { genre, publisher } as { [key in keyof SearchObjectType]: string[] };
+export const data: { [key in keyof SearchObjectType]: string[] } = { genre, publisher };
