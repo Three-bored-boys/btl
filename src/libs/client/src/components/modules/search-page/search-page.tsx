@@ -102,10 +102,11 @@ export const SearchPage = function (): ReactElement {
                           allInputElementRefsMap.current.delete(str);
                         }
                       }}
+                      defaultValue={searchParams.get(str) ?? ""}
                     >
                       <option value="">All {str}s</option>
                       {data[str]?.map((val, i) => (
-                        <option value={val} selected={val === searchParams.get(str)} key={i}>
+                        <option value={val} key={i}>
                           {val}
                         </option>
                       ))}
