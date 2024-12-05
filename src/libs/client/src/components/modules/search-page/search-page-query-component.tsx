@@ -52,9 +52,8 @@ export function SearchPageQueryComponent({
     router.push(`/search?${newSearchParams.current.toString()}`);
   };
 
-  return (
-    <div>
-      {loading ? <div>cheeee</div> : <SearchPageResults books={books}></SearchPageResults>}
+  const PageNavigation = function () {
+    return (
       <div className="flex">
         <div
           className={cn({ "invisible": searchParams.get("page") === "1" })}
@@ -75,6 +74,13 @@ export function SearchPageQueryComponent({
           <ArrowRightCircle />
         </div>
       </div>
+    );
+  };
+
+  return (
+    <div className="flex flex-col items-center">
+      {loading ? <div>cheeee</div> : <SearchPageResults books={books}></SearchPageResults>}
+      <PageNavigation />
     </div>
   );
 }
