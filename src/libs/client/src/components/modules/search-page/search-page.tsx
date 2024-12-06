@@ -14,6 +14,7 @@ import { Button } from "../../ui/button";
 import { Container } from "../../layouts/container";
 import { SearchPageQueryComponentWrapper } from "./search-page-query-component-wrapper";
 import { data } from "./data";
+import { SearchPageResultsLoadingSkeleton } from "./search-page-results-loading-skeleton";
 
 export const SearchPage = function (): ReactElement {
   const { filters, allInputElementRefsMap, searchInputElement, router, searchParams, run } = useSearchPage();
@@ -120,10 +121,12 @@ export const SearchPage = function (): ReactElement {
             Submit
           </Button>
         </form>
-        {run && (
-          <Suspense fallback={<div>Loading...</div>}>
+        {run ? (
+          <Suspense fallback={<SearchPageResultsLoadingSkeleton />}>
             <SearchPageQueryComponentWrapper />
           </Suspense>
+        ) : (
+          <SearchPageResultsLoadingSkeleton />
         )}
       </Container>
     </div>

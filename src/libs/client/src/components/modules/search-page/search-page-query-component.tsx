@@ -12,6 +12,7 @@ import { ArrowLeftCircle } from "../../ui/icons/arrow-left-circle";
 import { ArrowRightCircle } from "../../ui/icons/arrow-right-circle";
 import { cn, handleNumberSearchParam } from "@/libs/client/src/utils";
 import { SearchPageResults } from "./search-page-results";
+import { SearchPageResultsLoadingSkeleton } from "./search-page-results-loading-skeleton";
 
 export function SearchPageQueryComponent({
   searchObject,
@@ -79,7 +80,7 @@ export function SearchPageQueryComponent({
 
   return (
     <div className="flex flex-col items-center">
-      {loading ? <div>cheeee</div> : <SearchPageResults books={books}></SearchPageResults>}
+      {loading ? <SearchPageResultsLoadingSkeleton /> : <SearchPageResults books={books} />}
       <PageNavigation />
     </div>
   );
