@@ -10,13 +10,6 @@ export function SearchPageQueryComponentWrapper() {
   const searchObject: SearchObjectType = {};
   const paginationObject: PaginationObjectType = {};
 
-  const paramsHasSearch = searchParams.has("search");
-  const paramsHasFilters = filterKeysArray.filter((val) => searchParams.has(val));
-
-  if (!paramsHasSearch && paramsHasFilters.length === 0) {
-    return <div>Please enter a search term or select a filter and click &quot;Submit&quot;</div>;
-  }
-
   const searchQueryParam = searchParams.get("search");
   if (searchQueryParam !== null) {
     searchObject.search = searchQueryParam;

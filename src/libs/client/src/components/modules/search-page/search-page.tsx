@@ -15,9 +15,13 @@ import { Container } from "../../layouts/container";
 import { SearchPageQueryComponentWrapper } from "./search-page-query-component-wrapper";
 import { data } from "./data";
 import { SearchPageResultsLoadingSkeleton } from "./search-page-results-loading-skeleton";
+import { filterKeysArray } from "@/root/src/libs/shared/src/utils";
 
 export const SearchPage = function (): ReactElement {
   const { filters, allInputElementRefsMap, searchInputElement, router, searchParams, run } = useSearchPage();
+
+  const paramsHasSearch = searchParams.has("search");
+  const paramsHasFilters = filterKeysArray.filter((val) => searchParams.has(val));
 
   const handleOnSubmit = function (e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
@@ -121,7 +125,9 @@ export const SearchPage = function (): ReactElement {
             Submit
           </Button>
         </form>
-        {run ? (
+        {run && !paramsHasSearch && paramsHasFilters.length === 0 ? (
+          <div>Please enter a search term or select a filter and click &quot;Submit&quot;</div>
+        ) : run ? (
           <Suspense fallback={<SearchPageResultsLoadingSkeleton />}>
             <SearchPageQueryComponentWrapper />
           </Suspense>
