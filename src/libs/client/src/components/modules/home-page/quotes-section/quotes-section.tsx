@@ -10,7 +10,7 @@ import { useCallback, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 
 export function QuotesSection() {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false, duration: 30, startIndex: 0 });
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false, duration: 30, startIndex: 0, watchDrag: false });
   const [index, setIndex] = useState(0);
 
   const scrollPrev = useCallback(() => {
