@@ -1,11 +1,11 @@
 "use client";
 
-import BookOpen from "@/client/components/ui/icons/book-open";
-import ListBullet from "@/client/components/ui/icons/list-bullet";
-import Check from "@/client/components/ui/icons/check";
-import Trash from "@/client/components/ui/icons/trash";
+import { BookOpen } from "@/client/components/ui/icons/book-open";
+import { ListBullet } from "@/client/components/ui/icons/list-bullet";
+import { Check } from "@/client/components/ui/icons/check";
+import { Trash } from "@/client/components/ui/icons/trash";
 import { RadioCards } from "@radix-ui/themes";
-import Button from "../../ui/button";
+import { Button } from "../../ui/button";
 import { cn } from "../../../utils";
 import { useState } from "react";
 
@@ -16,7 +16,7 @@ const bookLocations = [
   { name: "Did Not Finish", value: "did-not-finish", icon: <Trash /> },
 ] as const;
 
-export default function BookLocationRadioGroup() {
+export function BookLocationRadioGroup() {
   const [location, setLocation] = useState<string | null>(null);
 
   return (

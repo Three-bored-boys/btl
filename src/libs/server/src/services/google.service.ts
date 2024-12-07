@@ -1,22 +1,25 @@
-import type { Book, GoogleBooksResponse } from "../types";
+import type { Book, GoogleBooksResponse } from "../../../shared/src/types";
+import type { SearchObjectType, PaginationObjectType } from "../../../shared/src/schemas";
+import { DEFAULT_MAX_RESULTS, DEFAULT_PAGE_NUMBER } from "@/root/src/libs/shared/src/utils";
 
 type Item = GoogleBooksResponse["items"][number];
 
 export class GoogleBooksService {
   constructor(private apiKey: string) {}
 
-  private async fetchBooks(url: string): Promise<Book[]> {
+  private async fetchBooks(url: string): Promise<{ books: Book[]; totalItems: number }> {
     try {
+      console.log(url);
       const response = await fetch(url);
       console.log(response.ok, response.status, response.statusText);
       if (!response.ok) {
         throw new Error(response.statusText);
       }
       const data = (await response.json()) as GoogleBooksResponse;
-      return data.items.map((item) => this.mapBook(item));
+      return { books: data.items.map((item) => this.mapBook(item)), totalItems: data.totalItems };
     } catch (error) {
       console.error("Problem getting books:", JSON.stringify(error, null, 2));
-      return [];
+      return { books: [], totalItems: 0 };
     }
   }
 
@@ -45,37 +48,40 @@ export class GoogleBooksService {
   async getLatestBooks(): Promise<Book[]> {
     // use most common letter in the English language as a search term to satisfy the API
     const url = `https://www.googleapis.com/books/v1/volumes?q=e&key=${this.apiKey}&maxResults=5&startIndex=0&orderBy=newest`;
-    const books = await this.fetchBooks(url);
-    return books;
+    const latestBooks = (await this.fetchBooks(url)).books;
+    return latestBooks;
   }
 
   async getBookByISBN(isbn: string): Promise<Book[]> {
     const url = `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}&key=${this.apiKey}`;
-    const books = await this.fetchBooks(url);
+    const books = (await this.fetchBooks(url)).books;
     return books.length > 0 ? books : [];
   }
 
-  async getBooksByTitle(title: string, maxResults = 40): Promise<Book[]> {
-    const url = `https://www.googleapis.com/books/v1/volumes?q=intitle:${title}&maxResults=${maxResults.toString()}&orderBy=newest&startIndex=0&key=${this.apiKey}`;
-    const books = await this.fetchBooks(url);
-    return books;
-  }
+  async getBooksByAllParameters({
+    searchInput: { search, genre, publisher, isbn },
+    paginationFilter: { maxResults = DEFAULT_MAX_RESULTS.toString(), page = DEFAULT_PAGE_NUMBER.toString() },
+  }: {
+    searchInput: SearchObjectType;
+    paginationFilter: PaginationObjectType;
+  }): Promise<{ books: Book[]; totalItems: number }> {
+    const searchUrl = search ?? "";
+    const genreUrl = genre !== undefined ? `+subject:${genre}` : "";
+    const publisherUrl = publisher !== undefined ? `+inpublisher:${publisher}` : "";
+    const isbnUrl = isbn !== undefined ? `+isbn:${isbn}` : "";
+    const startIndexNumber = (parseInt(page, 10) - 1) * parseInt(maxResults, 10);
+    let startIndex: string;
 
-  async getBooksByAuthor(author: string, maxResults = 40): Promise<Book[]> {
-    const url = `https://www.googleapis.com/books/v1/volumes?q=inauthor:${author}&maxResults=${maxResults.toString()}&orderBy=newest&startIndex=0&key=${this.apiKey}`;
-    const books = await this.fetchBooks(url);
-    return books;
-  }
+    if (!Number.isNaN(startIndexNumber)) {
+      startIndex = startIndexNumber.toString();
+    } else {
+      startIndex = "0";
+    }
 
-  async getBooksByGenre(genre: string, maxResults = 40): Promise<Book[]> {
-    const url = `https://www.googleapis.com/books/v1/volumes?q=subject:${genre}&maxResults=${maxResults.toString()}&orderBy=newest&startIndex=0&key=${this.apiKey}`;
-    const books = await this.fetchBooks(url);
-    return books;
-  }
+    const url = `https://www.googleapis.com/books/v1/volumes?q=${searchUrl + genreUrl + publisherUrl + isbnUrl}&maxResults=${maxResults}&orderBy=relevance&startIndex=${startIndex}&key=${this.apiKey}`;
 
-  async getBooksByPublisher(publisher: string, maxResults = 40): Promise<Book[]> {
-    const url = `https://www.googleapis.com/books/v1/volumes?q=inpublisher:${publisher}&maxResults=${maxResults.toString()}&orderBy=newest&startIndex=0&key=${this.apiKey}`;
     const books = await this.fetchBooks(url);
+
     return books;
   }
 }

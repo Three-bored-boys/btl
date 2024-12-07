@@ -1,14 +1,22 @@
 import { Context, Hono } from "hono";
-import genresList from "../../data/genres.json";
+import { genres as genresList } from "@/root/src/libs/shared/src/data/genres";
 import { GoogleBooksService } from "../../services/google.service";
 import { NYTimesService } from "../../services/ny-times.service";
 import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
-import type { BadResponse, GoodResponse, Genres, BestSeller, Book } from "../../types";
+import {
+  type BadResponse,
+  type GoodResponse,
+  type Genres,
+  type BestSeller,
+  type Book,
+} from "../../../../shared/src/types";
+import { fullSearchObjectSchema } from "../../../../shared/src/schemas";
 import { Environment } from "@/root/bindings";
 import { cache } from "hono/cache";
+import { filterKeysArray } from "@/libs/shared/src/utils";
 
-const books = new Hono<Environment>();
+export const books = new Hono<Environment>();
 
 books.get(
   "/best-sellers",
@@ -41,10 +49,7 @@ books.get(
   zValidator(
     "param",
     z.object({
-      genre: z
-        .string()
-        .min(1)
-        .refine((val) => val !== "null" && val !== "undefined"),
+      genre: z.string().min(1),
     }),
     (result, c) => {
       if (!result.success) {
@@ -81,11 +86,14 @@ books.get(
     const { genre } = c.req.valid("param");
 
     const googleBooksService = new GoogleBooksService(c.env.GOOGLE_BOOKS_API_KEY);
-    const books = await googleBooksService.getBooksByGenre(genre, 6);
+    const returnedValue = await googleBooksService.getBooksByAllParameters({
+      searchInput: { genre },
+      paginationFilter: { maxResults: (6).toString() },
+    });
 
     const responseData: GoodResponse<Book[]> = {
       success: true,
-      data: books.filter((book) => book.isbn10 !== "" && book.isbn13 !== ""),
+      data: returnedValue.books.filter((book) => book.isbn10 !== "" && book.isbn13 !== ""),
     };
 
     return c.json(responseData);
@@ -97,11 +105,16 @@ books.get(
   zValidator(
     "param",
     z.object({
-      isbn: z
-        .string()
-        .min(10)
-        .max(13)
-        .refine((val) => Number.isFinite(+val)),
+      isbn: z.union([
+        z
+          .string()
+          .length(10)
+          .refine((val) => Number.isFinite(+val)),
+        z
+          .string()
+          .length(13)
+          .refine((val) => Number.isFinite(+val)),
+      ]),
     }),
     (result, c) => {
       if (!result.success) {
@@ -141,8 +154,17 @@ books.get(
       return c.json(responseData, 400);
     }
 
+    let book: Book[];
+
     const googleBooksService = new GoogleBooksService(c.env.GOOGLE_BOOKS_API_KEY);
-    const book = await googleBooksService.getBookByISBN(isbn);
+    book = await googleBooksService.getBookByISBN(isbn);
+
+    if (book.length === 0) {
+      book = (await googleBooksService.getBooksByAllParameters({ searchInput: { search: isbn }, paginationFilter: {} }))
+        .books;
+      const responseData: GoodResponse<Book[]> = { success: true, data: book };
+      return c.json(responseData);
+    }
 
     const responseData: GoodResponse<Book[]> = { success: true, data: book };
     return c.json(responseData);
@@ -169,29 +191,94 @@ books.get(
   },
 );
 
-books.get("/quick-search/:input", async (c) => {
-  const input = c.req.param("input");
+books.get("/quick-search/:search", async (c) => {
+  const search = c.req.param("search");
   const googleBooksService = new GoogleBooksService(c.env.GOOGLE_BOOKS_API_KEY);
 
-  const settledBooksPromises = await Promise.allSettled([
-    googleBooksService.getBooksByTitle(input, 2),
-    googleBooksService.getBooksByAuthor(input, 2),
-    googleBooksService.getBooksByPublisher(input, 2),
-    googleBooksService.getBooksByGenre(input, 2),
-    googleBooksService.getBookByISBN(input),
-  ]);
-
-  const isFulfilled = <T>(p: PromiseSettledResult<T>): p is PromiseFulfilledResult<T> => p.status === "fulfilled";
-
-  const allBooksResults = settledBooksPromises
-    .filter(isFulfilled)
-    .map((res) => res.value)
-    .flat();
+  const allBooksResults = await googleBooksService.getBooksByAllParameters({
+    searchInput: { search },
+    paginationFilter: { maxResults: (8).toString() },
+  });
 
   console.log(allBooksResults);
 
-  const responseData: GoodResponse<Book[]> = { success: true, data: allBooksResults };
+  const responseData: GoodResponse<Book[]> = { success: true, data: allBooksResults.books };
   return c.json(responseData);
 });
 
-export default books;
+books.get(
+  "/full-search",
+  zValidator("query", fullSearchObjectSchema, (result, c) => {
+    if (!result.success) {
+      console.log(result.error);
+      const responseData: BadResponse = { success: false, error: "Invalid entry" };
+      return c.json(responseData, 400);
+    }
+  }),
+  cache({
+    cacheName: (
+      c: Context<
+        Environment,
+        "/full-search",
+        {
+          in: {
+            query: {
+              isbn?: string | string[] | undefined;
+              search?: string | string[] | undefined;
+              title?: string | string[] | undefined;
+              author?: string | string[] | undefined;
+              genre?: string | string[] | undefined;
+              publisher?: string | string[] | undefined;
+              maxResults?: string | string[] | undefined;
+              page?: string | string[] | undefined;
+            };
+          };
+          out: {
+            query: {
+              isbn?: string | string[] | undefined;
+              search?: string | string[] | undefined;
+              title?: string | string[] | undefined;
+              author?: string | string[] | undefined;
+              genre?: string | string[] | undefined;
+              publisher?: string | string[] | undefined;
+              maxResults?: string | string[] | undefined;
+              page?: string | string[] | undefined;
+            };
+          };
+        }
+      >,
+    ) => {
+      const query = c.req.valid("query");
+
+      const getKeyForCache = (param: string | string[] | undefined) => {
+        if (param === undefined) return "";
+
+        if (Array.isArray(param)) return param.join("");
+
+        return param;
+      };
+
+      const searchQueryKey = getKeyForCache(query.search);
+      const filtersQueryKeyArray = filterKeysArray.map((key) => {
+        return getKeyForCache(query[key]);
+      });
+      const maxResultsQueryKey = getKeyForCache(query.maxResults);
+      const pageQueryKey = getKeyForCache(query.page);
+
+      return `full-search-results ${searchQueryKey} ${filtersQueryKeyArray.join(" ")} ${maxResultsQueryKey} ${pageQueryKey}`;
+    },
+    cacheControl: "max-age=172800, must-revalidate, public",
+  }),
+  async (c) => {
+    const { page, maxResults, ...search } = c.req.valid("query");
+    const googleBooksService = new GoogleBooksService(c.env.GOOGLE_BOOKS_API_KEY);
+
+    const allBooksResults = await googleBooksService.getBooksByAllParameters({
+      searchInput: search,
+      paginationFilter: { maxResults, page },
+    });
+
+    const responseData: GoodResponse<{ books: Book[]; totalItems: number }> = { success: true, data: allBooksResults };
+    return c.json(responseData);
+  },
+);

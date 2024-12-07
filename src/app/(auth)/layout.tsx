@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Logo from "../../libs/client/src/components/ui/logo";
+import { Logo } from "../../libs/client/src/components/ui/logo";
 import { cn } from "../../libs/client/src/utils";
 
 export default function AuthLayout({

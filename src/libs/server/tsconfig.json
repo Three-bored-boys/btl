@@ -9,5 +9,5 @@
       "~/*": ["./*"]
     }
   },
-  "include": ["**/*.ts", "**/*.tsx", "src/db/migrate.ts"]
+  "include": ["src/**/*.ts", "src/db/migrate.ts"]
 }

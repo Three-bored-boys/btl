@@ -1,12 +1,12 @@
 "use client";
 
-import type { Book } from "@/root/src/libs/server/src/types";
+import type { Book } from "@/root/src/libs/shared/src/types";
 import { ComponentProps, useState } from "react";
 import { cn } from "../../../utils";
 
 type BookInformationProps = { book: Book } & ComponentProps<"div">;
 
-export default function BookInformation({ book, ...props }: BookInformationProps) {
+export function BookInformation({ book, ...props }: BookInformationProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (

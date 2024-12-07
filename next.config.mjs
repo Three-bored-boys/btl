@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ["books.google.com", "storage.googleapis.com"],
+    remotePatterns: [{ hostname: "books.google.com" }, { hostname: "storage.googleapis.com" }],
   },
 };
 

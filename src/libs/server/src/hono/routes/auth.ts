@@ -1,9 +1,9 @@
 import { Hono } from "hono";
-import type { GoodResponse } from "../../types";
+import type { GoodResponse } from "../../../../shared/src/types";
 import { Environment } from "@/root/bindings";
 import { getCookie, setCookie, deleteCookie } from "hono/cookie";
 
-const auth = new Hono<Environment>();
+export const auth = new Hono<Environment>();
 
 auth.get("/login", (c) => {
   const dateNow = new Date();
@@ -43,5 +43,3 @@ auth.get("/check-cookie", (c) => {
   const responseData: GoodResponse<string> = { success: true, data: "Just checking if cookie still exists!" };
   return c.json(responseData);
 });
-
-export default auth;

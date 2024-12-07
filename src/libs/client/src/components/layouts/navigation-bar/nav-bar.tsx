@@ -1,16 +1,16 @@
 "use client";
 
-import Logo from "../../ui/logo";
+import { Logo } from "../../ui/logo";
 import React from "react";
-import NavLinks from "./nav-links";
-import NavBarRight from "./nav-bar-right";
-import NavMenu from "./nav-menu";
-import Hamburger from "@/client/components/ui/icons/hamburger";
-import Close from "@/client/components/ui/icons/close";
+import { NavLinks } from "./nav-links";
+import { NavBarRight } from "./nav-bar-right";
+import { NavMenu } from "./nav-menu";
+import { Hamburger } from "@/client/components/ui/icons/hamburger";
+import { Close } from "@/client/components/ui/icons/close";
 import { usePathname } from "next/navigation";
-import Container from "../container";
+import { Container } from "../container";
 import { cn } from "../../../utils";
-import BookSearch from "./book-search/book-search";
+import { QuickSearch } from "../../modules/quick-search/quick-search";
 
 const navLinkArr = [
   { name: "Home", path: "/" },
@@ -26,7 +26,7 @@ const navAuthLinkArr = [
 export type NavLinkArr = typeof navLinkArr;
 export type NavAuthLinkArr = typeof navAuthLinkArr;
 
-export default function NavBar({ className, ...props }: React.ComponentProps<"nav">): React.ReactElement {
+export function NavBar({ className, ...props }: React.ComponentProps<"nav">): React.ReactElement {
   const getRootPathname = (path: string): string => {
     return "/" + path.split("/")[1];
   };
@@ -44,7 +44,13 @@ export default function NavBar({ className, ...props }: React.ComponentProps<"na
   return (
     <nav className={cn("relative w-full shadow-lg", className)} {...props}>
       <Container>
-        <div className="grid grid-cols-[auto_1fr_auto] gap-x-2 py-1 xs:gap-x-4 radix-xs:gap-x-10 md:grid-cols-[auto_1fr_auto_auto] md:gap-x-1">
+        <div
+          className={cn("py-1", {
+            "grid grid-cols-[auto_1fr_auto] gap-x-2 xs:gap-x-4 radix-xs:gap-x-10 md:grid-cols-[auto_1fr_auto_auto] md:gap-x-1":
+              rootPathname !== "/search",
+            "flex items-center justify-between": rootPathname === "/search",
+          })}
+        >
           <div>
             <Logo className="hidden md:block" onClick={() => setShowMobileMenu(false)} />
             {showMobileMenu ? (
@@ -54,9 +60,15 @@ export default function NavBar({ className, ...props }: React.ComponentProps<"na
             )}
           </div>
 
-          <div className="flex items-center">
-            <BookSearch className="w-full" />
-          </div>
+          {rootPathname !== "/search" ? (
+            <div className="flex items-center justify-center">
+              <QuickSearch className="w-full" />
+            </div>
+          ) : (
+            <div className="hidden">
+              <Logo className="block md:hidden" />
+            </div>
+          )}
 
           <div className="hidden md:flex md:items-center">
             <NavLinks device={"no-mobile"} routesArr={navLinkArr} rootPathname={rootPathname} className="w-full" />
@@ -69,8 +81,8 @@ export default function NavBar({ className, ...props }: React.ComponentProps<"na
       </Container>
       {showMobileMenu && (
         <NavMenu className={cn("block md:hidden")} onClick={() => setShowMobileMenu(false)}>
-          <NavLinks device={"mobile"} routesArr={navLinkArr} rootPathname={rootPathname} />
-          <Logo className="mt-5 block text-xl" onClick={() => setShowMobileMenu(false)} />
+          <NavLinks device={"mobile"} routesArr={navLinkArr} rootPathname={rootPathname} className="mb-5" />
+          <Logo className="inline text-xl" onClick={() => setShowMobileMenu(false)} />
         </NavMenu>
       )}
     </nav>

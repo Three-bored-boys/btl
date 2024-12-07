@@ -1,4 +1,4 @@
-import type { NYTimesBestSellersResponse, BestSeller } from "../types";
+import type { NYTimesBestSellersResponse, BestSeller } from "../../../shared/src/types";
 
 export class NYTimesService {
   constructor(private apiKey: string) {}

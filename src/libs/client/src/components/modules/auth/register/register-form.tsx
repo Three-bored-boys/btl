@@ -1,11 +1,11 @@
 "use client";
 
 import React from "react";
-import Label from "@/client/components/ui/label";
-import Input from "@/client/components/ui/input";
-import Button from "../../../ui/button";
+import { Label } from "@/client/components/ui/label";
+import { Input } from "@/client/components/ui/input";
+import { Button } from "../../../ui/button";
 
-export default function RegisterForm() {
+export function RegisterForm() {
   const onFormSubmission = function (e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     console.log("Registered!");

@@ -1,20 +1,22 @@
-import React, { ComponentProps } from "react";
+import React, { ComponentProps, forwardRef } from "react";
 import { cn } from "../../utils";
 
 type InputProps = ComponentProps<"input">;
 
-export default function Input({ id, children, className, type, ...props }: InputProps) {
+export const Input = forwardRef<HTMLInputElement, InputProps>(function InputRef(props, ref) {
+  const { id, className, type, children, ...otherProps } = props;
   return (
     <input
       id={id}
       className={cn(
-        "rounded-none border-2 border-primary-50 p-1 text-base outline-none focus:outline-1 focus:outline-offset-1 focus:outline-primary",
+        "rounded-none border-2 border-primary-50 px-1 text-base outline-none focus:border-primary focus:outline-0",
         className,
       )}
       type={type}
-      {...props}
+      ref={ref}
+      {...otherProps}
     >
       {children}
     </input>
   );
-}
+});

@@ -1,10 +1,8 @@
-import Container from "@/libs/client/src/components/layouts/container";
-import { ReactElement } from "react";
+import { SearchPage } from "@/root/src/libs/client/src/components/modules/search-page/search-page";
+import React from "react";
 
-export default function Search(): ReactElement {
-  return (
-    <div className="text-3xl">
-      <Container>Search</Container>
-    </div>
-  );
+function Search() {
+  return <SearchPage />;
 }
+
+export default Search;
