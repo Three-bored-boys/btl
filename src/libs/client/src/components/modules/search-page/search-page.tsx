@@ -18,7 +18,7 @@ import { SearchPageResultsLoadingSkeleton } from "./search-page-results-loading-
 import { filterKeysArray } from "@/root/src/libs/shared/src/utils";
 
 export const SearchPage = function (): ReactElement {
-  const { filters, allInputElementRefsMap, searchInputElement, router, searchParams, run } = useSearchPage();
+  const { filters, allInputElementRefsMap, searchInputElement, router, searchParams, run, setRun } = useSearchPage();
 
   const paramsHasSearch = searchParams.has("search");
   const paramsHasFilters = filterKeysArray.filter((val) => searchParams.has(val));
@@ -34,6 +34,8 @@ export const SearchPage = function (): ReactElement {
     ) {
       return;
     }
+
+    setRun(false);
 
     const searchParamsObject = new URLSearchParams(searchParams.toString());
 
