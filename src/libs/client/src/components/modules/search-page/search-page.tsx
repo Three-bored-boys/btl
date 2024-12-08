@@ -78,6 +78,8 @@ export const SearchPage = function (): ReactElement {
 
     if (searchParamsObject.toString() !== searchParams.toString()) {
       router.push(`/search?${searchParamsObject.toString()}`);
+    } else {
+      setRun(true);
     }
   };
 
