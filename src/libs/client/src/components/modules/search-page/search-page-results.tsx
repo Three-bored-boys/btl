@@ -6,7 +6,7 @@ import genericBookImage from "@/public/assets/images/generic-book.png";
 
 export function SearchPageResults({ books }: { books: Book[] }) {
   if (books.length === 0) {
-    return <div>No more books to render :(</div>;
+    return <div>No more books to render</div>;
   }
 
   const booksWithISBN = books.filter((book) => book.isbn13 !== "" || book.isbn10 !== "");
