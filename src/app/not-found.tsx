@@ -1,15 +1,12 @@
 import React from "react";
 import Image from "next/image";
 import { Container } from "../libs/client/src/components/layouts/container";
-import { NavBar } from "../libs/client/src/components/layouts/navigation-bar/nav-bar";
-import { Footer } from "../libs/client/src/components/layouts/footer/footer";
 import { LinkButton } from "../libs/client/src/components/ui/link-button";
 import notFoundImage from "@/public/assets/images/not-found.webp";
 
 export default function NotFound() {
   return (
-    <div className="relative flex min-h-screen w-full flex-col">
-      <NavBar />
+    <div className="relative min-h-screen w-full">
       <Container>
         <div className="flex flex-col items-center justify-start gap-y-3">
           <p className="text-9xl font-extralight">404</p>
@@ -23,7 +20,6 @@ export default function NotFound() {
           </div>
         </div>
       </Container>
-      <Footer />
     </div>
   );
 }
