@@ -8,11 +8,13 @@ export default function NotFound() {
   return (
     <div className="relative min-h-screen w-full">
       <Container>
-        <div className="flex flex-col items-center justify-start gap-y-3">
-          <p className="text-9xl font-extralight">404</p>
-          <h2 className="text-5xl">Oops! Page not found!</h2>
-          <p>The page you are looking for is not available</p>
-          <LinkButton href="/" background={"light"} textSize={"big"}>
+        <div className="flex flex-col items-center justify-start gap-y-3 py-5">
+          <p className="mb-3 text-8xl font-extralight md:mb-9 md:text-9xl">404</p>
+          <h2 className="mb-2 text-4xl radix-xs:text-5xl md:mb-5 md:text-7xl">Oops! Page not found!</h2>
+          <p className="mb-8 text-base radix-xs:text-xl md:mb-3 md:text-2xl">
+            The page you are looking for is not available
+          </p>
+          <LinkButton href="/" background={"light"} textSize={"big"} className="mb-28 radix-xs:mb-9">
             Return Home
           </LinkButton>
           <div>
