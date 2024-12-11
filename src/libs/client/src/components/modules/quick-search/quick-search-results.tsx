@@ -41,13 +41,15 @@ export function QuickSearchResults({
     </Link>
   )); */
 
-  if (data.length === 0) {
+  const booksWithISBN = data.filter((book) => book.isbn10 !== "" || book.isbn13 !== "");
+
+  if (data.length === 0 || booksWithISBN.length === 0) {
     return <div>No books found from search :(</div>;
   }
 
   return (
     <div className="h-full max-h-[95vh] overflow-y-auto">
-      {data.map((book, i) => (
+      {booksWithISBN.map((book, i) => (
         <Link
           className="grid w-full grid-cols-[40px_1fr] grid-rows-[auto] gap-1 rounded-xl py-2 hover:bg-secondary-100 xs:grid-cols-[45px_1fr] max-lg:md:grid-cols-[40px_1fr]"
           href={`/books/${book.isbn13 || book.isbn10}`}
