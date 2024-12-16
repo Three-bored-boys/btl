@@ -14,7 +14,7 @@ export function BookInformation({ book, ...props }: BookInformationProps) {
       <div className={cn("mb-2 w-full", { "line-clamp-2": !isExpanded, "h-auto": isExpanded })}>
         <p className="text-wrap">{book.description}</p>
         <div className={cn("mt-5 grid-cols-[150px_1fr] gap-2", { "hidden": !isExpanded, "grid": isExpanded })}>
-          <div>ISBN</div>
+          <div>ISBN 10</div>
           <div>{book.isbn10}</div>
           <div>ISBN 13</div>
           <div>{book.isbn13}</div>
