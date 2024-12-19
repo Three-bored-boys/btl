@@ -1,5 +1,7 @@
 import { Container } from "@/client/components/layouts/container";
+// import genericBookImage from "@/public/assets/images/generic-book.png";
 import { Skeleton } from "@radix-ui/themes";
+// import Image from "next/image";
 import React from "react";
 
 export default function BookPageLoadingSkeleton() {
