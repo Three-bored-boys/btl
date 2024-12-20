@@ -23,9 +23,9 @@ export function BookPage({ book, ...props }: BookPageProps) {
             />
           </div>
           <div className="truncate text-pretty">
-            <div className="flex items-center justify-center sm:block">
+            <div className="mb-3 flex items-center justify-center sm:block">
               {book.categories?.map((category, i) => (
-                <div key={i} className="mb-3 inline-block rounded-xl bg-secondary-50 px-3 py-0.5 text-secondary-300">
+                <div key={i} className="inline-block rounded-xl bg-secondary-50 px-3 py-0.5 text-secondary-300">
                   {category}
                 </div>
               ))}
