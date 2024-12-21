@@ -149,22 +149,14 @@ books.get(
   }),
   async (c) => {
     const { isbn } = c.req.valid("param");
+    console.log(isbn);
     if (!isbn) {
       const responseData: BadResponse = { success: false, error: "ISBN is required" };
       return c.json(responseData, 400);
     }
 
-    let book: Book[];
-
     const googleBooksService = new GoogleBooksService(c.env.GOOGLE_BOOKS_API_KEY);
-    book = await googleBooksService.getBookByISBN(isbn);
-
-    if (book.length === 0) {
-      book = (await googleBooksService.getBooksByAllParameters({ searchInput: { search: isbn }, paginationFilter: {} }))
-        .books;
-      const responseData: GoodResponse<Book[]> = { success: true, data: book };
-      return c.json(responseData);
-    }
+    const book = await googleBooksService.getBookByISBN(isbn);
 
     const responseData: GoodResponse<Book[]> = { success: true, data: book };
     return c.json(responseData);
