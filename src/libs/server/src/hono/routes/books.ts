@@ -155,8 +155,34 @@ books.get(
       return c.json(responseData, 400);
     }
 
+    let book: Book[];
+
     const googleBooksService = new GoogleBooksService(c.env.GOOGLE_BOOKS_API_KEY);
-    const book = await googleBooksService.getBookByISBN(isbn);
+    book = await googleBooksService.getBookByISBN(isbn);
+
+    if (book.length === 0) {
+      const bookSearchResult = (
+        await googleBooksService.getBooksByAllParameters({ searchInput: { isbn }, paginationFilter: {} })
+      ).books.find((book) => book.isbn10 || book.isbn13 === isbn);
+
+      if (!bookSearchResult) {
+        book = [];
+      } else {
+        book = [bookSearchResult];
+      }
+    }
+
+    if (book.length === 0) {
+      const bookSearchResult = (
+        await googleBooksService.getBooksByAllParameters({ searchInput: { search: isbn }, paginationFilter: {} })
+      ).books.find((book) => book.isbn10 || book.isbn13 === isbn);
+
+      if (!bookSearchResult) {
+        book = [];
+      } else {
+        book = [bookSearchResult];
+      }
+    }
 
     const responseData: GoodResponse<Book[]> = { success: true, data: book };
     return c.json(responseData);
