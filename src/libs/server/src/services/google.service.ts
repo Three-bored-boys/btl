@@ -55,7 +55,7 @@ export class GoogleBooksService {
   async getBookByISBN(isbn: string): Promise<Book[]> {
     const url = `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}&key=${this.apiKey}`;
     const books = (await this.fetchBooks(url)).books;
-    const book = books.find((book) => book.isbn13 || book.isbn10 === isbn);
+    const book = books.find((book) => book.isbn13 === isbn || book.isbn10 === isbn);
 
     if (books.length === 0 || !book) {
       return [];

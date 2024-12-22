@@ -159,11 +159,13 @@ books.get(
 
     const googleBooksService = new GoogleBooksService(c.env.GOOGLE_BOOKS_API_KEY);
     book = await googleBooksService.getBookByISBN(isbn);
+    console.log("This is the first level of isbn search", book);
 
     if (book.length === 0) {
+      console.log("This is the second level of isbn search because the main ISBN search returned no books");
       const bookSearchResult = (
         await googleBooksService.getBooksByAllParameters({ searchInput: { isbn }, paginationFilter: {} })
-      ).books.find((book) => book.isbn10 || book.isbn13 === isbn);
+      ).books.find((book) => book.isbn10 === isbn || book.isbn13 === isbn);
 
       if (!bookSearchResult) {
         book = [];
@@ -173,9 +175,10 @@ books.get(
     }
 
     if (book.length === 0) {
+      console.log("This is the third level of isbn search because the second level of isbn search returned no books");
       const bookSearchResult = (
         await googleBooksService.getBooksByAllParameters({ searchInput: { search: isbn }, paginationFilter: {} })
-      ).books.find((book) => book.isbn10 || book.isbn13 === isbn);
+      ).books.find((book) => book.isbn10 === isbn || book.isbn13 === isbn);
 
       if (!bookSearchResult) {
         book = [];
