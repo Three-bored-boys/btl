@@ -149,6 +149,7 @@ books.get(
   }),
   async (c) => {
     const { isbn } = c.req.valid("param");
+    console.log(isbn);
     if (!isbn) {
       const responseData: BadResponse = { success: false, error: "ISBN is required" };
       return c.json(responseData, 400);
@@ -158,12 +159,32 @@ books.get(
 
     const googleBooksService = new GoogleBooksService(c.env.GOOGLE_BOOKS_API_KEY);
     book = await googleBooksService.getBookByISBN(isbn);
+    console.log("This is the first level of isbn search", book);
 
     if (book.length === 0) {
-      book = (await googleBooksService.getBooksByAllParameters({ searchInput: { search: isbn }, paginationFilter: {} }))
-        .books;
-      const responseData: GoodResponse<Book[]> = { success: true, data: book };
-      return c.json(responseData);
+      console.log("This is the second level of isbn search because the main ISBN search returned no books");
+      const bookSearchResult = (
+        await googleBooksService.getBooksByAllParameters({ searchInput: { isbn }, paginationFilter: {} })
+      ).books.find((book) => book.isbn10 === isbn || book.isbn13 === isbn);
+
+      if (!bookSearchResult) {
+        book = [];
+      } else {
+        book = [bookSearchResult];
+      }
+    }
+
+    if (book.length === 0) {
+      console.log("This is the third level of isbn search because the second level of isbn search returned no books");
+      const bookSearchResult = (
+        await googleBooksService.getBooksByAllParameters({ searchInput: { search: isbn }, paginationFilter: {} })
+      ).books.find((book) => book.isbn10 === isbn || book.isbn13 === isbn);
+
+      if (!bookSearchResult) {
+        book = [];
+      } else {
+        book = [bookSearchResult];
+      }
     }
 
     const responseData: GoodResponse<Book[]> = { success: true, data: book };
