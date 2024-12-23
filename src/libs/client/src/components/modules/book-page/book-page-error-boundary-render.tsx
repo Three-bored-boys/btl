@@ -1,18 +1,9 @@
-"use client";
-
 import { Container } from "@/libs/client/src/components/layouts/container";
 import { LinkButton } from "@/root/src/libs/client/src/components/ui/link-button";
 import notFoundImage from "@/public/assets/images/not-found.webp";
 import Image from "next/image";
-import { Button } from "@/root/src/libs/client/src/components/ui/button";
 
-export function BookPageErrorBoundaryRender({
-  error,
-  resetErrorBoundary,
-}: {
-  error: Error;
-  resetErrorBoundary: () => void;
-}) {
+export function BookPageErrorBoundaryRender({ error }: { error: Error }) {
   const status = error.cause as number;
 
   console.log(error.message, error);
@@ -27,9 +18,6 @@ export function BookPageErrorBoundaryRender({
           <LinkButton href="/" background={"light"} textSize={"big"} className="mb-2">
             Return Home
           </LinkButton>
-          <Button background={"dark"} onClick={() => resetErrorBoundary()} textSize={"big"}>
-            Try again
-          </Button>
           <div>
             <Image src={notFoundImage} alt="Cartoon image of man sitting on floor and reading a book"></Image>
           </div>
