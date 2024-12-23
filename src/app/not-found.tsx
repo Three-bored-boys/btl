@@ -12,7 +12,7 @@ export default function NotFound() {
           <p className="mb-3 text-8xl font-extralight md:mb-9 md:text-9xl">404</p>
           <h2 className="mb-2 text-4xl radix-xs:text-5xl md:mb-5 md:text-7xl">Oops! Page not found!</h2>
           <p className="mb-8 text-base radix-xs:text-xl md:mb-3 md:text-2xl">
-            The page you are looking for is not available
+            The page or resource you are looking for is not available
           </p>
           <LinkButton href="/" background={"light"} textSize={"big"} className="mb-28 radix-xs:mb-9">
             Return Home
