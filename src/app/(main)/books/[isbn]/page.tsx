@@ -1,9 +1,11 @@
-import { BookPage } from "@/root/src/libs/client/src/components/modules/book-page/book-page";
-import { fetchData } from "@/root/src/libs/client/src/utils";
-import type { Book } from "@/root/src/libs/shared/src/types";
+import { BookPageErrorBoundaryRender } from "@/root/src/libs/client/src/components/modules/book-page/book-page-error-boundary-render";
+import { BookPageWrapper } from "@/root/src/libs/client/src/components/modules/book-page/book-page-wrapper";
+import { ErrorBoundary } from "react-error-boundary";
 
-export default async function Book({ params: { isbn } }: { params: { isbn: string } }) {
-  const bookObject = await fetchData<Book[]>(`${process.env.API_URL}/books/isbn/${isbn}`);
-
-  return <BookPage book={bookObject[0]} />;
+export default function Book({ params: { isbn } }: { params: { isbn: string } }) {
+  return (
+    <ErrorBoundary fallbackRender={BookPageErrorBoundaryRender}>
+      <BookPageWrapper params={{ isbn }} />
+    </ErrorBoundary>
+  );
 }

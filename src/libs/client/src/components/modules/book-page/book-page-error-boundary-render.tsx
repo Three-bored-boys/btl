@@ -6,9 +6,15 @@ import notFoundImage from "@/public/assets/images/not-found.webp";
 import Image from "next/image";
 import { Button } from "@/root/src/libs/client/src/components/ui/button";
 
-export default function Error({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
+export function BookPageErrorBoundaryRender({
+  error,
+  resetErrorBoundary,
+}: {
+  error: Error;
+  resetErrorBoundary: () => void;
+}) {
   const status = error.cause as number;
-  error.digest = error.message;
+
   console.log(error.message, error);
 
   return (
@@ -21,7 +27,7 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
           <LinkButton href="/" background={"light"} textSize={"big"} className="mb-2">
             Return Home
           </LinkButton>
-          <Button background={"dark"} onClick={() => reset()} textSize={"big"}>
+          <Button background={"dark"} onClick={() => resetErrorBoundary()} textSize={"big"}>
             Try again
           </Button>
           <div>
