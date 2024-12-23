@@ -25,12 +25,15 @@ export const button = cva(["h-auto", "rounded-3xl", "border-2", "border-transpar
 
 export type ButtonVariants = VariantProps<typeof button>;
 
+export type ErrorMessageObject = { message: string; statusCode: number };
+
 export const fetchData = async function <T>(url: string, options?: RequestInit) {
   const res = await fetch(url, options);
 
   if (!res.ok) {
     const errorObj = (await res.json()) as BadResponse;
-    throw new Error(errorObj.error);
+    const errorMessageJSONString = JSON.stringify({ message: errorObj.error, statusCode: res.status });
+    throw new Error(errorMessageJSONString);
   }
 
   const { data } = (await res.json()) as GoodResponse<T>;
