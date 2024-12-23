@@ -30,7 +30,7 @@ export const fetchData = async function <T>(url: string, options?: RequestInit) 
 
   if (!res.ok) {
     const errorObj = (await res.json()) as BadResponse;
-    throw new Error(errorObj.error);
+    throw new Error(errorObj.error, { cause: res.status });
   }
 
   const { data } = (await res.json()) as GoodResponse<T>;

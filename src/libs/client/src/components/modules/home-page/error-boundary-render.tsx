@@ -2,13 +2,7 @@
 
 import { Button } from "../../ui/button";
 
-export default function ErrorBoundaryRender({
-  error,
-  resetErrorBoundary,
-}: {
-  error: Error;
-  resetErrorBoundary: () => void;
-}) {
+export function ErrorBoundaryRender({ error, resetErrorBoundary }: { error: Error; resetErrorBoundary: () => void }) {
   return (
     <div className="w-full">
       <p>Something went wrong: {error.message}</p>
