@@ -7,7 +7,7 @@ import { Suspense } from "react";
 import { LoadingSkeleton } from "../loading-skeleton";
 import { BookCard } from "../book-card";
 import { ErrorBoundary } from "react-error-boundary";
-import ErrorBoundaryRender from "../error-boundary-render";
+import { ErrorBoundaryRender } from "../error-boundary-render";
 
 export function GenresSection() {
   return (
