@@ -118,7 +118,10 @@ books.get(
     }),
     (result, c) => {
       if (!result.success) {
-        const responseData: BadResponse = { success: false, error: "Invalid ISBN entry" };
+        const responseData: BadResponse = {
+          success: false,
+          error: "Invalid ISBN. Please enter a valid ISBN and try again",
+        };
         return c.json(responseData, 400);
       }
     },
@@ -151,7 +154,10 @@ books.get(
     const { isbn } = c.req.valid("param");
     console.log(isbn);
     if (!isbn) {
-      const responseData: BadResponse = { success: false, error: "ISBN is required" };
+      const responseData: BadResponse = {
+        success: false,
+        error: "A valid ISBN is required. Please enter one and try again.",
+      };
       return c.json(responseData, 400);
     }
 
@@ -159,10 +165,8 @@ books.get(
 
     const googleBooksService = new GoogleBooksService(c.env.GOOGLE_BOOKS_API_KEY);
     book = await googleBooksService.getBookByISBN(isbn);
-    console.log("This is the first level of isbn search", book);
 
     if (book.length === 0) {
-      console.log("This is the second level of isbn search because the main ISBN search returned no books");
       const bookSearchResult = (
         await googleBooksService.getBooksByAllParameters({ searchInput: { isbn }, paginationFilter: {} })
       ).books.find((book) => book.isbn10 === isbn || book.isbn13 === isbn);
@@ -175,7 +179,6 @@ books.get(
     }
 
     if (book.length === 0) {
-      console.log("This is the third level of isbn search because the second level of isbn search returned no books");
       const bookSearchResult = (
         await googleBooksService.getBooksByAllParameters({ searchInput: { search: isbn }, paginationFilter: {} })
       ).books.find((book) => book.isbn10 === isbn || book.isbn13 === isbn);
@@ -185,6 +188,14 @@ books.get(
       } else {
         book = [bookSearchResult];
       }
+    }
+
+    if (book.length === 0) {
+      const responseData: BadResponse = {
+        success: false,
+        error: "The book you are currently looking for could not be found.",
+      };
+      return c.json(responseData, 404);
     }
 
     const responseData: GoodResponse<Book[]> = { success: true, data: book };
