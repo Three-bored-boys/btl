@@ -33,6 +33,7 @@ export const fetchData = async function <T>(url: string, options?: RequestInit) 
   if (!res.ok) {
     const errorObj = (await res.json()) as BadResponse;
     const errorMessageJSONString = JSON.stringify({ message: errorObj.error, statusCode: res.status });
+    console.log(errorMessageJSONString);
     throw new Error(errorMessageJSONString);
   }
 

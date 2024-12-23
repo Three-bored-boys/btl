@@ -10,6 +10,7 @@ import { Button } from "@/root/src/libs/client/src/components/ui/button";
 export default function Error({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
   const errorObj = JSON.parse(error.message) as ErrorMessageObject;
   error.digest = errorObj.message;
+  console.log(error.message, errorObj);
 
   return (
     <div className="relative min-h-screen w-full">
