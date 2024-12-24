@@ -27,7 +27,7 @@ export function BookLocationRadioGroup() {
             <RadioCards.Item
               value={obj.value}
               key={i}
-              className={cn("hover:bg-secondary-300")}
+              className={cn("hover:cursor-pointer hover:bg-secondary-300")}
               title={`Add to '${obj.name}'`}
               checked={obj.value === location}
               onClick={() => setLocation(obj.value)}
