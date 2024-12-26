@@ -1,11 +1,13 @@
 import React from "react";
 import { cn } from "@/client/utils";
+import { indigo } from "tailwindcss/colors";
 
 export function CaretLeft({ className, onClick, ...props }: React.ComponentProps<"svg">) {
   return (
     <svg
-      fill="#000000"
-      viewBox="0 0 32 32"
+      fill={indigo[950]}
+      viewBox="7 -1 21 38"
+      // viewBox="0 0 32 32"
       xmlns="http://www.w3.org/2000/svg"
       className={cn("h-6 w-6 cursor-pointer", className)}
       onClick={onClick}
