@@ -37,6 +37,13 @@ export const fetchData = async function <T>(url: string, options?: RequestInit) 
   return data;
 };
 
+export const bookLocations = [
+  { name: "Currently Reading", value: "reading" },
+  { name: "Want To Read", value: "want-to-read" },
+  { name: "Finished", value: "finished" },
+  { name: "Did Not Finish", value: "did-not-finish" },
+];
+
 export const BTL_LOCAL_STORAGE_SEARCH_OBJECT = "btlSearchObject";
 
 export const getSearchObjectFromLocalStorage = function () {
