@@ -41,7 +41,7 @@ export default function LibraryLayout({
             <div
               className={cn({
                 "hidden": !showSidebar,
-                "block h-full border-r border-r-primary-100 pr-3": showSidebar,
+                "block h-full pr-3": showSidebar,
               })}
             >
               <Sidebar />
