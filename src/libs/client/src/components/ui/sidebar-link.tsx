@@ -8,7 +8,7 @@ export function SidebarLink({ currentPathname, name, href }: SidebarLinkProps) {
   return (
     <Link
       href={href}
-      className={cn("rounded-lg px-4 py-1", {
+      className={cn("px-4 py-1", {
         "bg-primary-100": currentPathname === href,
         "hover:bg-primary-50": currentPathname !== href,
       })}
