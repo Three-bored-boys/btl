@@ -9,12 +9,18 @@ import { cn } from "@/root/src/libs/client/src/utils";
 import { Sidebar } from "@/client/components/modules/library-page/sidebar";
 import { ToggleSidebar } from "@/client/components/ui/toggle-sidebar";
 
+export const SidebarContext = React.createContext<{
+  showSidebar: boolean;
+  setShowSidebar: React.Dispatch<React.SetStateAction<boolean>>;
+} | null>(null);
+
 export function LibraryLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>): ReactElement {
   const [showSidebar, setShowSidebar] = React.useState(true);
+  const sidebarContextValue = React.useMemo(() => ({ showSidebar, setShowSidebar }), [showSidebar]);
 
   return (
     <div className="h-full w-full">
@@ -46,7 +52,9 @@ export function LibraryLayout({
             >
               <Sidebar />
             </div>
-            <div>{children}</div>
+            <div>
+              <SidebarContext.Provider value={sidebarContextValue}>{children}</SidebarContext.Provider>
+            </div>
           </div>
         </div>
       </Container>
