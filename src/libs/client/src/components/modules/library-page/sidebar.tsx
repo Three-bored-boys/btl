@@ -10,6 +10,7 @@ export function Sidebar(props: React.ComponentProps<"nav">) {
   return (
     <nav {...props} className="flex h-full w-full flex-col gap-3">
       <SidebarLink href="/library" currentPathname={pathname} name="Overview" />
+      <h2 className="mt-5 text-2xl font-medium italic">Libraries</h2>
       {bookLocations.map((location, i) => (
         <SidebarLink href={`/library/${location.value}`} key={i} name={location.name} currentPathname={pathname} />
       ))}
