@@ -41,13 +41,14 @@ export function LibraryLayout({
           <div
             className={cn("relative grid gap-3", {
               "grid-cols-1": !showSidebar,
-              "grid-cols-[auto_1fr]": showSidebar,
+              "grid-cols-1 sm:grid-cols-[auto_1fr]": showSidebar,
             })}
           >
             <div
-              className={cn({
+              className={cn("overflow-y-auto scrollbar-thin", {
                 "hidden": !showSidebar,
-                "block h-full pr-3": showSidebar,
+                "absolute left-0 top-0 z-10 block h-full w-4/5 pr-3 backdrop-blur-lg sm:static sm:w-full sm:bg-white":
+                  showSidebar,
               })}
             >
               <Sidebar />
