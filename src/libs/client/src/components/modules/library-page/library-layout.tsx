@@ -51,7 +51,7 @@ export function LibraryLayout({
                   showSidebar,
               })}
             >
-              <Sidebar setShowSidebar={setShowSidebar} showSidebar={showSidebar} />
+              <Sidebar />
             </div>
             <div className={cn("py-3", { "opacity-10 md:opacity-100": showSidebar })}>
               <SidebarContext.Provider value={sidebarContextValue}>{children}</SidebarContext.Provider>
