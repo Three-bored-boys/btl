@@ -41,19 +41,19 @@ export function LibraryLayout({
           <div
             className={cn("relative grid gap-3", {
               "grid-cols-1": !showSidebar,
-              "grid-cols-1 sm:grid-cols-[auto_1fr]": showSidebar,
+              "grid-cols-1 md:grid-cols-[auto_1fr]": showSidebar,
             })}
           >
             <div
               className={cn("overflow-y-auto scrollbar-thin", {
                 "hidden": !showSidebar,
-                "absolute left-0 top-0 z-10 block h-full w-4/5 pr-3 backdrop-blur-lg sm:static sm:w-full sm:bg-white":
+                "absolute left-0 top-0 z-10 block h-full w-4/5 max-w-xs rounded-xl bg-secondary-50 px-3 py-3 md:static md:w-full md:max-w-full md:bg-white":
                   showSidebar,
               })}
             >
               <Sidebar />
             </div>
-            <div>
+            <div className={cn("py-3", { "opacity-10 md:opacity-100": showSidebar })}>
               <SidebarContext.Provider value={sidebarContextValue}>{children}</SidebarContext.Provider>
             </div>
           </div>
