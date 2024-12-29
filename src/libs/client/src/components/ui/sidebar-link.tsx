@@ -4,15 +4,16 @@ import { cn } from "../../utils";
 
 type SidebarLinkProps = { currentPathname: string; name: string } & LinkProps & React.ComponentProps<"a">;
 
-export function SidebarLink({ currentPathname, name, href }: SidebarLinkProps) {
+export function SidebarLink({ currentPathname, name, href, ...props }: SidebarLinkProps) {
   return (
     <Link
       href={href}
-      className={cn("px-4 py-1", {
-        "bg-primary-100": currentPathname === href,
-        "hover:bg-primary-50": currentPathname !== href,
+      className={cn("rounded-xl px-4 py-1", {
+        "bg-secondary-200": currentPathname === href,
+        "hover:bg-secondary-100": currentPathname !== href,
       })}
       title={name}
+      {...props}
     >
       {name}
     </Link>
