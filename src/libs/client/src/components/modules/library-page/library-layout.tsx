@@ -39,15 +39,15 @@ export function LibraryLayout({
             )}
           </div>
           <div
-            className={cn("relative grid gap-3", {
+            className={cn("relative grid h-full gap-3", {
               "grid-cols-1": !showSidebar,
-              "grid-cols-1 md:grid-cols-[auto_1fr]": showSidebar,
+              "md:grid-cols-[auto_1fr]": showSidebar,
             })}
           >
             <div
-              className={cn("overflow-y-auto scrollbar-thin", {
+              className={cn("h-full max-h-screen", {
                 "hidden": !showSidebar,
-                "absolute left-0 top-0 z-10 block h-full w-4/5 max-w-xs rounded-xl bg-secondary-50 px-3 py-3 md:static md:w-full md:max-w-full md:bg-white":
+                "absolute left-0 top-0 z-10 block h-full w-4/5 max-w-xs rounded-xl bg-secondary-50 px-3 py-3 md:static md:h-auto md:w-full md:max-w-full md:overflow-y-auto md:rounded-none md:bg-white md:scrollbar-thin":
                   showSidebar,
               })}
             >

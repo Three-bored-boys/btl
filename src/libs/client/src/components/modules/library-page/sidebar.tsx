@@ -8,7 +8,7 @@ export function Sidebar(props: React.ComponentProps<"nav">) {
   console.log(pathname);
 
   return (
-    <nav {...props} className="flex h-full w-full flex-col gap-3">
+    <nav {...props} className="flex h-full w-full flex-col gap-3 overflow-y-auto scrollbar-thin">
       <SidebarLink href="/library" currentPathname={pathname} name="Overview" />
       <h2 className="mt-5 text-2xl font-medium italic">Libraries</h2>
       {bookLocations.map((location, i) => (
