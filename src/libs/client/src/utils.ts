@@ -8,7 +8,9 @@ export function cn(...inputs: ClassValue[]): string {
   return twMerge(clsx(inputs));
 }
 
-export const containerStyleClasses = cn("mx-auto max-w-screen-2xl px-2 xs:px-2.5 sm:px-3 md:px-4 lg:px-5 xl:px-6");
+export const containerStyleClasses = cn(
+  "mx-auto h-full max-w-screen-2xl px-2 xs:px-2.5 sm:px-3 md:px-4 lg:px-5 xl:px-6",
+);
 
 export const button = cva(["h-auto", "rounded-3xl", "border-2", "border-transparent", "px-6", "py-1", "font-normal"], {
   variants: {
@@ -36,6 +38,13 @@ export const fetchData = async function <T>(url: string, options?: RequestInit) 
   const { data } = (await res.json()) as GoodResponse<T>;
   return data;
 };
+
+export const bookLocations = [
+  { name: "Currently Reading", value: "reading" },
+  { name: "Want To Read", value: "want-to-read" },
+  { name: "Finished", value: "finished" },
+  { name: "Did Not Finish", value: "did-not-finish" },
+];
 
 export const BTL_LOCAL_STORAGE_SEARCH_OBJECT = "btlSearchObject";
 

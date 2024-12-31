@@ -42,7 +42,7 @@ export function NavBar({ className, ...props }: React.ComponentProps<"nav">): Re
   }, [pathname]);
 
   return (
-    <nav className={cn("relative w-full shadow-lg", className)} {...props}>
+    <nav className={cn("relative w-full border-b border-b-secondary-100", className)} {...props}>
       <Container>
         <div
           className={cn("py-1", {
