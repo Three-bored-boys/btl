@@ -7,6 +7,13 @@ import { SearchPageQueryComponent } from "./search-page-query-component";
 export function SearchPageQueryComponentWrapper() {
   const searchParams = useSearchParams();
 
+  const searchParamsHasSearch = searchParams.has("search");
+  const searchParamsHasFilters = filterKeysArray.filter((val) => searchParams.has(val));
+
+  if (!searchParamsHasSearch && searchParamsHasFilters.length === 0) {
+    return <div>Please enter a search term or select a filter and click &quot;Submit&quot;</div>;
+  }
+
   const searchObject: SearchObjectType = {};
   const paginationObject: PaginationObjectType = {};
 

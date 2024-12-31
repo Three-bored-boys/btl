@@ -92,9 +92,9 @@ export function useSearchPage(): SearchPageHookReturnType {
 
     if (searchParams.toString() !== searchParamsObject.toString()) {
       router.replace(`/search?${searchParamsObject.toString()}`);
+    } else {
+      setRun(true);
     }
-
-    setRun(true);
   }, [router, searchParams]);
 
   return {
