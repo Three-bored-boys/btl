@@ -56,6 +56,7 @@ export function LibraryLayout({
             <div className={cn("py-3", { "relative opacity-10 md:static md:opacity-100": showSidebar })}>
               <div
                 className={cn({ "hidden": !showSidebar, "absolute z-[9] h-full w-full md:hidden": showSidebar })}
+                onClick={() => setShowSidebar(false)}
               ></div>
               <SidebarContext.Provider value={sidebarContextValue}>{children}</SidebarContext.Provider>
             </div>
