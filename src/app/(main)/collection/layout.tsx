@@ -1,10 +1,10 @@
 import React from "react";
-import { LibraryLayout } from "@/client/components/modules/library-page/library-layout";
+import { CollectionLayout } from "@/client/components/modules/collection-page/collection-layout";
 
-export default function CollectionLayout({
+export default function Layout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>): React.ReactElement {
-  return <LibraryLayout>{children}</LibraryLayout>;
+  return <CollectionLayout>{children}</CollectionLayout>;
 }
