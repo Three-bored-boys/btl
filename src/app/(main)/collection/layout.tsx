@@ -1,7 +1,7 @@
 import React from "react";
 import { LibraryLayout } from "@/client/components/modules/library-page/library-layout";
 
-export default function Layout({
+export default function CollectionLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;

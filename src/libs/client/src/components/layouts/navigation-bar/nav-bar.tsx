@@ -14,7 +14,7 @@ import { QuickSearch } from "../../modules/quick-search/quick-search";
 
 const navLinkArr = [
   { name: "Home", path: "/" },
-  { name: "Library", path: "/library" },
+  { name: "Collection", path: "/collection" },
   { name: "Search", path: "/search" },
 ] as const;
 
