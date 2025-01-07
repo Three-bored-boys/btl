@@ -6,8 +6,6 @@ import genericBookImage from "@/public/assets/images/generic-book.png";
 import { cn } from "@/client/utils";
 
 export function LibraryBooksPreview({ books, showSidebar }: { books: Book[]; showSidebar: boolean }) {
-  console.log(showSidebar);
-
   if (books.length === 0) {
     return (
       <div className={cn("w-full", { "h-18 xs:h-24 radix-xs:h-36 md:h-40 lg:h-52 xl:h-56": showSidebar })}>
