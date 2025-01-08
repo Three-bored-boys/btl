@@ -8,7 +8,12 @@ import { cn } from "@/client/utils";
 export function LibraryBooksPreview({ books, showSidebar }: { books: Book[]; showSidebar: boolean }) {
   if (books.length === 0) {
     return (
-      <div className={cn("w-full", { "h-18 xs:h-24 radix-xs:h-36 md:h-40 lg:h-52 xl:h-56": showSidebar })}>
+      <div
+        className={cn("w-full", {
+          "h-18 xs:h-20 radix-xs:h-28 sm:h-36 md:h-40 lg:h-52 xl:h-56": showSidebar,
+          "h-18 xs:h-20 radix-xs:h-28 sm:h-36 md:h-52 lg:h-64 xl:h-72": !showSidebar,
+        })}
+      >
         No books to show on this page. Please navigate to either the next or previous page
       </div>
     );
