@@ -29,6 +29,7 @@ export function LibraryBooksPreview({ books, showSidebar }: { books: Book[]; sho
               "md:w-24 min-[896px]:w-28 lg:w-32 xl:w-40": showSidebar,
               "md:w-28 min-[896px]:w-36 lg:w-40 xl:w-44": !showSidebar,
             })}
+            title={`"${book.title}" by ${book.author}`}
           >
             <div className="w-full">
               <Image
