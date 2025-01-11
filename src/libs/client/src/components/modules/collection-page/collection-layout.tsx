@@ -45,9 +45,9 @@ export function CollectionLayout({
             })}
           >
             <div
-              className={cn("h-full max-h-screen", {
+              className={cn("h-full", {
                 "hidden": !showSidebar,
-                "absolute left-0 top-0 z-10 block h-full w-4/5 max-w-xs rounded-xl bg-secondary-50 px-3 py-3 md:static md:h-auto md:w-full md:max-w-full md:overflow-y-auto md:rounded-none md:bg-white md:scrollbar-thin":
+                "absolute left-0 top-0 z-10 block w-4/5 max-w-xs rounded-xl bg-secondary-50 px-3 py-3 md:static md:h-auto md:w-full md:max-w-full md:overflow-y-auto md:rounded-none md:bg-white md:scrollbar-thin":
                   showSidebar,
               })}
             >
