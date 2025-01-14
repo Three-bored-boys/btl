@@ -40,6 +40,13 @@ export function LibraryBooksPreview({ books, showSidebar }: { books: Book[]; sho
                 className="aspect-[10/16] w-full rounded-lg object-cover"
               />
             </div>
+            <p
+              className={cn(
+                "text-wrap text-sm font-medium leading-none lg:text-base lg:leading-tight xl:text-lg xl:leading-snug",
+              )}
+            >
+              {book.title}
+            </p>
           </Link>
         </div>
       ))}
