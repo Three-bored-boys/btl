@@ -1,7 +1,7 @@
 import { SectionPreamble } from "@/client/components/modules/home-page/section-preamble";
 import { Container } from "@/client/components/layouts/container";
 import type { BestSeller } from "@/root/src/libs/shared/src/types";
-import { fetchData } from "@/libs/client/src/utils";
+import { CustomAPIError, fetchData } from "@/libs/client/src/utils";
 import { Suspense } from "react";
 import { SectionBooksShowcase } from "../section-books-showcase";
 import { LoadingSkeleton } from "../loading-skeleton";
@@ -17,9 +17,7 @@ export function NYTBestSellersSection() {
           Explore the latest books on the NYT Best Sellers List
         </SectionPreamble>
         <ErrorBoundary fallbackRender={ErrorBoundaryRender}>
-          <Suspense fallback={<LoadingSkeleton />}>
-            <GetBestSellersWrapper />
-          </Suspense>
+          <GetBestSellersWrapper />
         </ErrorBoundary>
       </Container>
     </section>
@@ -27,23 +25,38 @@ export function NYTBestSellersSection() {
 }
 
 async function GetBestSellersWrapper() {
-  const data = await fetchData<BestSeller[]>(`${process.env.API_URL}/books/best-sellers`);
+  try {
+    const data = await fetchData<BestSeller[]>(`${process.env.API_URL}/books/best-sellers`);
 
-  return (
-    <SectionBooksShowcase name="best-sellers" count={data.length} sessionStorageKey="best-sellers-index">
-      {data.map((val, i) => {
-        return (
-          <div className="w-full flex-[0_0_100%]" key={i}>
-            <h3 className="text-center font-normal lowercase scrollbar-none">{val.name}</h3>
-            <hr className="mb-5 h-1 w-full bg-primary scrollbar-none" />
-            <div className="flex w-full items-center justify-between gap-3 overflow-x-auto scrollbar-thin">
-              {val.books.map((book, i) => (
-                <BookCard key={i} book={book} />
-              ))}
-            </div>
-          </div>
-        );
-      })}
-    </SectionBooksShowcase>
-  );
+    return (
+      <Suspense fallback={<LoadingSkeleton />}>
+        <SectionBooksShowcase name="best-sellers" count={data.length} sessionStorageKey="best-sellers-index">
+          {data.map((val, i) => {
+            return (
+              <div className="w-full flex-[0_0_100%]" key={i}>
+                <h3 className="text-center font-normal lowercase scrollbar-none">{val.name}</h3>
+                <hr className="mb-5 h-1 w-full bg-primary scrollbar-none" />
+                <div className="flex w-full items-center justify-between gap-3 overflow-x-auto scrollbar-thin">
+                  {val.books.map((book, i) => (
+                    <BookCard key={i} book={book} />
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+        </SectionBooksShowcase>
+      </Suspense>
+    );
+  } catch (e) {
+    if (e instanceof CustomAPIError) {
+      return (
+        <div className="w-full">
+          <p>{e.status}</p>
+          <p>Something went wrong: {e.message}</p>
+        </div>
+      );
+    }
+
+    throw e;
+  }
 }
