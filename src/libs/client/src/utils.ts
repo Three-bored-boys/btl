@@ -40,7 +40,7 @@ export const fetchData = async function <T>(url: string, options?: RequestInit) 
 };
 
 export const bookLocations = [
-  { name: "Currently Reading", value: "reading" },
+  { name: "Currently Reading", value: "currently-reading" },
   { name: "Want To Read", value: "want-to-read" },
   { name: "Finished", value: "finished" },
   { name: "Did Not Finish", value: "did-not-finish" },
