@@ -40,8 +40,8 @@ export function OverviewLibraryPreviewSection({
   };
 
   return (
-    <section {...props} className={cn({ "mt-3 w-full sm:mt-5 md:mt-8 lg:mt-10": !showSidebar })}>
-      <h2 className={cn({ "mb-2 font-light sm:mb-3 md:mb-4 lg:mb-6": !showSidebar })}>{name}</h2>
+    <section {...props} className={cn("mt-5 w-full sm:mt-7 md:mt-8 lg:mt-10")}>
+      <h2 className={cn("mb-1.5 text-2xl font-light sm:mb-2 sm:text-3xl md:mb-3 lg:mb-4 lg:text-4xl")}>{name}</h2>
       <LibraryBooksPreview books={booksToRender()} showSidebar={showSidebar} />
       {showViewMore() && (
         <div className="mt-5 flex items-center justify-end">
