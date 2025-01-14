@@ -10,11 +10,13 @@ export function LibraryBooksPreview({ books, showSidebar }: { books: Book[]; sho
     return (
       <div
         className={cn("w-full", {
-          "h-18 xs:h-20 radix-xs:h-28 sm:h-36 md:h-40 lg:h-52 xl:h-56": showSidebar,
-          "h-18 xs:h-20 radix-xs:h-28 sm:h-36 md:h-52 lg:h-64 xl:h-72": !showSidebar,
+          "h-24 xs:h-28 radix-xs:h-32 sm:h-36 md:h-40 lg:h-52 xl:h-56": showSidebar,
+          "h-24 xs:h-28 radix-xs:h-32 sm:h-36 md:h-52 lg:h-64 xl:h-72": !showSidebar,
         })}
       >
-        No books to show on this page. Please navigate to either the next or previous page
+        <span className="text-base font-medium sm:text-xl lg:text-2xl">
+          You currently have no books in this library.
+        </span>
       </div>
     );
   }
@@ -31,7 +33,7 @@ export function LibraryBooksPreview({ books, showSidebar }: { books: Book[]; sho
             })}
             title={`"${book.title}" by ${book.author}`}
           >
-            <div className="w-full">
+            <div className="mb-1 w-full sm:mb-2">
               <Image
                 src={book.image || genericBookImage}
                 alt={`${book.title} by ${book.author}`}
