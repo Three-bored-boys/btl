@@ -28,7 +28,7 @@ async function GetGenresWrapper() {
   try {
     const { genres, count } = await fetchData<Genres>(`${process.env.API_URL}/books/genres`);
 
-    const getGenresBooksPromisesArray: Promise<Book[]>[] = genres.map((val, i) =>
+    const getGenresBooksPromisesArray: Promise<Book[]>[] = genres.map((val) =>
       fetchData<Book[]>(`${process.env.API_URL}/books/genres/${val.name}`),
     );
 
