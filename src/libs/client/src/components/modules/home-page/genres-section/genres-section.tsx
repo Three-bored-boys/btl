@@ -8,6 +8,7 @@ import { LoadingSkeleton } from "../loading-skeleton";
 import { BookCard } from "../book-card";
 import { ErrorBoundary } from "react-error-boundary";
 import { ErrorBoundaryRender } from "../error-boundary-render";
+import { ExclamationTriangle } from "@/client/components/ui/icons/exclamation-triangle";
 
 export function GenresSection() {
   return (
@@ -60,9 +61,10 @@ async function GetGenresWrapper() {
   } catch (e) {
     if (e instanceof CustomAPIError) {
       return (
-        <div className="w-full">
-          <p>{e.status}</p>
-          <p>Something went wrong: {e.message}</p>
+        <div className="my-2 flex w-full flex-col items-center justify-start gap-y-1">
+          <ExclamationTriangle />
+          <p className="text-xl font-semibold">Error {e.status}</p>
+          <p className="text-base font-normal">{e.message}</p>
         </div>
       );
     }
