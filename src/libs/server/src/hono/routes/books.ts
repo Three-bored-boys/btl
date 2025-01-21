@@ -96,7 +96,7 @@ books.get(
       data: returnedValue.books.filter((book) => book.isbn10 !== "" && book.isbn13 !== ""),
     };
 
-    return c.json(responseData, 404);
+    return c.json(responseData);
   },
 );
 
