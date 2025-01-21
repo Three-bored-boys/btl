@@ -82,8 +82,8 @@ books.get(
     },
     cacheControl: "max-age=172800, must-revalidate, public",
   }),
-  async (c) => {
-    const { genre } = c.req.valid("param");
+  (c) => {
+    /* const { genre } = c.req.valid("param");
 
     const googleBooksService = new GoogleBooksService(c.env.GOOGLE_BOOKS_API_KEY);
     const returnedValue = await googleBooksService.getBooksByAllParameters({
@@ -94,9 +94,14 @@ books.get(
     const responseData: GoodResponse<Book[]> = {
       success: true,
       data: returnedValue.books.filter((book) => book.isbn10 !== "" && book.isbn13 !== ""),
+    }; */
+
+    const responseData: BadResponse = {
+      success: false,
+      error: "Not implemented yet",
     };
 
-    return c.json(responseData);
+    return c.json(responseData, 404);
   },
 );
 
