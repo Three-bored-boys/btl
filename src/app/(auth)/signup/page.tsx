@@ -1,12 +1,12 @@
 import { ReactElement } from "react";
-import { RegisterForm } from "@/client/components/modules/auth/register/register-form";
+import { SignupForm } from "@/client/components/modules/auth/signup/signup-form";
 import Link from "next/link";
 import React from "react";
 
-export default function Register(): ReactElement {
+export default function Signup(): ReactElement {
   return (
     <>
-      <RegisterForm />
+      <SignupForm />
       <Link href={"/login"}>Go to Log In page</Link>
     </>
   );

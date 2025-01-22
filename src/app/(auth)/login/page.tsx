@@ -6,7 +6,7 @@ export default function Login(): ReactElement {
   return (
     <>
       <LogInForm />
-      <Link href={"/register"}>Go to Register page</Link>
+      <Link href={"/signup"}>Go to Sign Up page</Link>
     </>
   );
 }

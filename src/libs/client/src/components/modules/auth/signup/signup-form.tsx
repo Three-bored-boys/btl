@@ -5,10 +5,10 @@ import { Label } from "@/client/components/ui/label";
 import { Input } from "@/client/components/ui/input";
 import { Button } from "../../../ui/button";
 
-export function RegisterForm() {
+export function SignupForm() {
   const onFormSubmission = function (e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    console.log("Registered!");
+    console.log("Signed Up!");
   };
 
   return (
@@ -32,7 +32,7 @@ export function RegisterForm() {
       <Input id="password" type="password" className="mb-3" />
 
       <Button background={"light"} type="submit" disabled={false} textSize={"big"}>
-        Register
+        Sign Up
       </Button>
     </form>
   );

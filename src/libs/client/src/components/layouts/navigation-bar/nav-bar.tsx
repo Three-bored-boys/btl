@@ -20,7 +20,7 @@ const navLinkArr = [
 
 const navAuthLinkArr = [
   { name: "Log In", path: "/login" },
-  { name: "Register", path: "/register" },
+  { name: "Sign Up", path: "/signup" },
 ] as const;
 
 export type NavLinkArr = typeof navLinkArr;
