@@ -5,7 +5,7 @@ import { Label } from "@/client/components/ui/label";
 import { Input } from "@/client/components/ui/input";
 import { Button } from "../../../ui/button";
 
-export function LogInForm() {
+export function LoginForm() {
   const onFormSubmission = function (e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     console.log("Logged In!");
