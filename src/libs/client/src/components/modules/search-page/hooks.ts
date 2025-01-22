@@ -21,15 +21,8 @@ const getFullSearchResults = async function (searchObject: SearchObjectType, pag
 };
 
 export function useSearchPageResults(searchObject: SearchObjectType, paginationObject: PaginationObjectType) {
-  const searchQueryKey = searchObject.search ?? "";
-  const filtersQueryKeyArray = filterKeysArray.map((key) => {
-    return searchObject[key] ?? "";
-  });
-  const maxResultsQueryKey = paginationObject.maxResults ?? "";
-  const pageQueryKey = paginationObject.page ?? "";
-
   return useSuspenseQuery({
-    queryKey: ["full-search-results", searchQueryKey, ...filtersQueryKeyArray, maxResultsQueryKey, pageQueryKey],
+    queryKey: ["full-search-results", searchObject, paginationObject],
     queryFn: async () => {
       return await getFullSearchResults(searchObject, paginationObject);
     },
