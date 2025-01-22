@@ -301,19 +301,17 @@ books.get(
     },
     cacheControl: "max-age=172800, must-revalidate, public",
   }),
-  (c) => {
-    /* const { page, maxResults, ...search } = c.req.valid("query");
+  async (c) => {
+    const { page, maxResults, ...search } = c.req.valid("query");
     const googleBooksService = new GoogleBooksService(c.env.GOOGLE_BOOKS_API_KEY);
-    
+
     const allBooksResults = await googleBooksService.getBooksByAllParameters({
       searchInput: search,
       paginationFilter: { maxResults, page },
-      }); */
-    const { page, maxResults, ...search } = c.req.valid("query");
-    console.log(page, maxResults, search);
+    });
 
-    // const responseData: GoodResponse<{ books: Book[]; totalItems: number }> = { success: true, data: allBooksResults };
-    const responseData: BadResponse = { success: false, error: "Something has gone wrong!" };
-    return c.json(responseData, 400);
+    const responseData: GoodResponse<{ books: Book[]; totalItems: number }> = { success: true, data: allBooksResults };
+
+    return c.json(responseData);
   },
 );
