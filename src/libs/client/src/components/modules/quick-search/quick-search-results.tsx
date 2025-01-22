@@ -4,9 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { useQuickSearchResults } from "./useQuickSearchResults";
 import genericBookImage from "@/public/assets/images/generic-book.png";
-import { Button } from "../../ui/button";
-import { Close } from "../../ui/icons/close";
 import { DEFAULT_MAX_RESULTS, DEFAULT_PAGE_NUMBER } from "@/libs/shared/src/utils";
+import { CustomAPIError } from "@/client/utils";
+import { ExclamationTriangle } from "@/client/components/ui/icons/exclamation-triangle";
 
 export function QuickSearchResults({
   search,
@@ -15,9 +15,16 @@ export function QuickSearchResults({
   search: string;
   setSearchResultsVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-  const { error, data } = useQuickSearchResults({ search });
+  const { data } = useQuickSearchResults({ search });
 
-  if (error) return <div>Error: {error.message}</div>;
+  if (data instanceof CustomAPIError)
+    return (
+      <div className="my-2 flex w-full flex-col items-center justify-start gap-y-1">
+        <ExclamationTriangle />
+        <p className="text-xl font-semibold">Error {data.status}</p>
+        <p className="text-base font-normal">{data.message}</p>
+      </div>
+    );
 
   /* return Array.from({ length: 3 }, (_, i) => i).map((_, i) => (
     <Link
@@ -79,12 +86,6 @@ export function QuickSearchResults({
         >
           Go to search page
         </Link>
-        <div onClick={() => setSearchResultsVisible(false)} className="mt-2">
-          <Button background={"dark"} textSize={"small"} className="hidden xs:block">
-            Close
-          </Button>
-          <Close className="block rounded-full bg-primary hover:bg-primary-600 xs:hidden" stroke="#fff"></Close>
-        </div>
       </div>
     </div>
   );
