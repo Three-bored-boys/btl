@@ -1,5 +1,5 @@
 import { PaginationObjectType, SearchObjectType } from "@/root/src/libs/shared/src/schemas";
-import { fetchData, getSearchObjectFromLocalStorage, handleNumberSearchParam } from "../../../utils";
+import { CustomAPIError, fetchData, getSearchObjectFromLocalStorage, handleNumberSearchParam } from "../../../utils";
 import {
   DEFAULT_MAX_RESULTS,
   DEFAULT_PAGE_NUMBER,
@@ -14,22 +14,22 @@ import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 const getFullSearchResults = async function (searchObject: SearchObjectType, paginationObject: PaginationObjectType) {
-  const results = await fetchData<{ books: Book[]; totalItems: number }>(
-    `${process.env.NEXT_PUBLIC_API_URL}/books/full-search?${new URLSearchParams({ ...searchObject, ...paginationObject }).toString()}`,
-  );
-  return results;
+  try {
+    const results = await fetchData<{ books: Book[]; totalItems: number }>(
+      `${process.env.NEXT_PUBLIC_API_URL}/books/full-search?${new URLSearchParams({ ...searchObject, ...paginationObject }).toString()}`,
+    );
+    return results;
+  } catch (e) {
+    if (e instanceof CustomAPIError) {
+      return e;
+    }
+    throw e;
+  }
 };
 
 export function useSearchPageResults(searchObject: SearchObjectType, paginationObject: PaginationObjectType) {
-  const searchQueryKey = searchObject.search ?? "";
-  const filtersQueryKeyArray = filterKeysArray.map((key) => {
-    return searchObject[key] ?? "";
-  });
-  const maxResultsQueryKey = paginationObject.maxResults ?? "";
-  const pageQueryKey = paginationObject.page ?? "";
-
   return useSuspenseQuery({
-    queryKey: ["full-search-results", searchQueryKey, ...filtersQueryKeyArray, maxResultsQueryKey, pageQueryKey],
+    queryKey: ["full-search-results", searchObject, paginationObject],
     queryFn: async () => {
       return await getFullSearchResults(searchObject, paginationObject);
     },

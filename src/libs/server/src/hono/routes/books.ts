@@ -311,6 +311,7 @@ books.get(
     });
 
     const responseData: GoodResponse<{ books: Book[]; totalItems: number }> = { success: true, data: allBooksResults };
+
     return c.json(responseData);
   },
 );

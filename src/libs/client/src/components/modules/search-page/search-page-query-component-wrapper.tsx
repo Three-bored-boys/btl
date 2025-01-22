@@ -3,6 +3,8 @@ import { filterKeysArray } from "@/root/src/libs/shared/src/utils";
 import { useSearchParams } from "next/navigation";
 import React from "react";
 import { SearchPageQueryComponent } from "./search-page-query-component";
+import { ErrorBoundary } from "react-error-boundary";
+import { SearchPageErrorBoundary } from "./search-page-error-boundary";
 
 export function SearchPageQueryComponentWrapper() {
   const searchParams = useSearchParams();
@@ -39,5 +41,9 @@ export function SearchPageQueryComponentWrapper() {
     paginationObject.page = page;
   }
 
-  return <SearchPageQueryComponent searchObject={searchObject} paginationObject={paginationObject} />;
+  return (
+    <ErrorBoundary fallbackRender={SearchPageErrorBoundary}>
+      <SearchPageQueryComponent searchObject={searchObject} paginationObject={paginationObject} />
+    </ErrorBoundary>
+  );
 }

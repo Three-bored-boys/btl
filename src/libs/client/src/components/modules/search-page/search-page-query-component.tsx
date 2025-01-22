@@ -10,9 +10,13 @@ import {
 } from "@/root/src/libs/shared/src/utils";
 import { ArrowLeftCircle } from "../../ui/icons/arrow-left-circle";
 import { ArrowRightCircle } from "../../ui/icons/arrow-right-circle";
-import { cn, handleNumberSearchParam } from "@/libs/client/src/utils";
+import { CustomAPIError, cn, handleNumberSearchParam } from "@/libs/client/src/utils";
 import { SearchPageResults } from "./search-page-results";
 import { SearchPageResultsLoadingSkeleton } from "./search-page-results-loading-skeleton";
+import { Container } from "@/client/components/layouts/container";
+import { LinkButton } from "@/client/components/ui/link-button";
+import notFoundImage from "@/public/assets/images/not-found.webp";
+import Image from "next/image";
 
 export function SearchPageQueryComponent({
   searchObject,
@@ -21,10 +25,7 @@ export function SearchPageQueryComponent({
   searchObject: SearchObjectType;
   paginationObject: PaginationObjectType;
 }) {
-  const {
-    data: { books },
-    error,
-  } = useSearchPageResults(searchObject, paginationObject);
+  const { data } = useSearchPageResults(searchObject, paginationObject);
   const searchParams = useSearchParams();
   const router = useRouter();
   const newSearchParams = React.useRef<null | URLSearchParams>(null);
@@ -35,7 +36,25 @@ export function SearchPageQueryComponent({
     }
   }, [searchParams]);
 
-  if (error) return <div>{error.message}</div>;
+  if (data instanceof CustomAPIError) {
+    return (
+      <div className="relative min-h-screen w-full">
+        <Container>
+          <div className="flex flex-col items-center justify-start gap-y-3 py-5">
+            <p className="mb-3 text-8xl font-extralight md:mb-9 md:text-9xl">{data.status}</p>
+            <h2 className="mb-2 text-4xl radix-xs:text-5xl md:mb-5 md:text-7xl">Oops! Something has gone wrong!</h2>
+            <p className="mb-8 text-base radix-xs:text-xl md:mb-3 md:text-2xl">{data.message}</p>
+            <LinkButton href="/" background={"light"} textSize={"big"} className="mb-2">
+              Return Home
+            </LinkButton>
+            <div>
+              <Image src={notFoundImage} alt="Cartoon image of man sitting on floor and reading a book"></Image>
+            </div>
+          </div>
+        </Container>
+      </div>
+    );
+  }
 
   const maxResults = handleNumberSearchParam(
     searchParams.get("maxResults"),
@@ -44,7 +63,7 @@ export function SearchPageQueryComponent({
     MAX_MAX_RESULTS,
   );
   const pageNumber = handleNumberSearchParam(searchParams.get("page"), DEFAULT_PAGE_NUMBER, DEFAULT_PAGE_NUMBER);
-  const totalBooksThisSearch = books.length;
+  const totalBooksThisSearch = data.books.length;
 
   const handlePageNavigation = function (param: string) {
     setLoading(true);
@@ -80,7 +99,7 @@ export function SearchPageQueryComponent({
 
   return (
     <div className="flex flex-col items-center">
-      {loading ? <SearchPageResultsLoadingSkeleton /> : <SearchPageResults books={books} />}
+      {loading ? <SearchPageResultsLoadingSkeleton /> : <SearchPageResults books={data.books} />}
       <PageNavigation />
     </div>
   );

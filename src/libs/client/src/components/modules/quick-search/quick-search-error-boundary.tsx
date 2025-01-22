@@ -3,7 +3,13 @@
 import { Button } from "../../ui/button";
 import { ExclamationTriangle } from "../../ui/icons/exclamation-triangle";
 
-export function ErrorBoundaryRender({ error, resetErrorBoundary }: { error: Error; resetErrorBoundary: () => void }) {
+export function QuickSearchErrorBoundary({
+  error,
+  resetErrorBoundary,
+}: {
+  error: Error;
+  resetErrorBoundary: () => void;
+}) {
   return (
     <div className="my-2 flex w-full flex-col items-center justify-start gap-y-1">
       <ExclamationTriangle />

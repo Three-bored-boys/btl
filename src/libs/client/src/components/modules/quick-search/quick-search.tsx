@@ -5,11 +5,29 @@ import { QuickSearchResults } from "./quick-search-results";
 import { SearchInput } from "@/root/src/libs/client/src/components/ui/search-input";
 import { cn, getSearchObjectFromLocalStorage, setSearchObjectToLocalStorage } from "@/client/utils";
 import type { SearchObjectType } from "@/root/src/libs/shared/src/schemas";
+import { ErrorBoundary } from "react-error-boundary";
+import { QuickSearchErrorBoundary } from "./quick-search-error-boundary";
+import { Button } from "../../ui/button";
+import { Close } from "../../ui/icons/close";
 
-const QuickSearchResultsWrapper = function ({ className, children }: ComponentProps<"div">) {
+type QuickSearchResultsWrapperProps = {
+  setSearchResultsVisible: React.Dispatch<React.SetStateAction<boolean>>;
+} & ComponentProps<"div">;
+
+const QuickSearchResultsWrapper = function ({
+  className,
+  children,
+  setSearchResultsVisible,
+}: QuickSearchResultsWrapperProps) {
   return (
     <div className={cn("absolute left-0 top-full z-20 mt-2 block w-full bg-secondary-50 p-1", className)}>
       {children}
+      <div onClick={() => setSearchResultsVisible(false)} className="mt-2">
+        <Button background={"dark"} textSize={"small"} className="hidden xs:block">
+          Close
+        </Button>
+        <Close className="block rounded-full bg-primary hover:bg-primary-600 xs:hidden" stroke="#fff"></Close>
+      </div>
     </div>
   );
 };
@@ -63,8 +81,10 @@ export function QuickSearch({ className }: ComponentProps<"div">) {
         placeholder="Search by book title, author, ISBN..."
       />
       {searchResultsVisible && (
-        <QuickSearchResultsWrapper>
-          <QuickSearchResults search={searchInput} setSearchResultsVisible={setSearchResultsVisible} />
+        <QuickSearchResultsWrapper setSearchResultsVisible={setSearchResultsVisible}>
+          <ErrorBoundary fallbackRender={QuickSearchErrorBoundary}>
+            <QuickSearchResults search={searchInput} setSearchResultsVisible={setSearchResultsVisible} />
+          </ErrorBoundary>
         </QuickSearchResultsWrapper>
       )}
     </div>
