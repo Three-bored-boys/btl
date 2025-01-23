@@ -21,11 +21,11 @@ export default function AuthLayout({
   const bgImageClassName = authLayoutImagesArray[authLayoutImageIndex.current];
 
   return (
-    <div className="grid w-full grid-cols-2 grid-rows-[100vh]">
-      <div className={cn("relative bg-cover bg-center", bgImageClassName)}>
+    <div className="grid h-full w-full grid-cols-1 md:grid-cols-2 md:grid-rows-[100vh]">
+      <div className={cn("relative hidden bg-cover bg-center md:block", bgImageClassName)}>
         <Logo className={cn("absolute left-5 top-5 text-5xl", { "text-white": authLayoutImageIndex.current === 0 })} />
       </div>
-      <div className="overflow-y-auto px-40 py-20">{children}</div>
+      <div className="overflow-y-auto">{children}</div>
     </div>
   );
 }
