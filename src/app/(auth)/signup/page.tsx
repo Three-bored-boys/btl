@@ -1,14 +1,6 @@
-import { ReactElement } from "react";
-import { SignupForm } from "@/client/components/modules/auth/signup/signup-form";
-import Link from "next/link";
 import React from "react";
-import { AuthPage } from "@/client/components/modules/auth/auth-page";
+import { Signup } from "@/root/src/libs/client/src/components/modules/auth/signup/signup";
 
-export default function SignupPage(): ReactElement {
-  return (
-    <AuthPage>
-      <SignupForm />
-      <Link href={"/login"}>Go to Log In page</Link>
-    </AuthPage>
-  );
+export default function SignupPage() {
+  return <Signup />;
 }
