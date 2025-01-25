@@ -39,7 +39,7 @@ export default function AuthLayout({
           })}
         />
       </div>
-      <div className="overflow-y-auto">{children}</div>
+      <div className="h-screen overflow-y-auto">{children}</div>
     </div>
   );
 }
