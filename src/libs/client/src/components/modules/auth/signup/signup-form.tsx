@@ -9,6 +9,7 @@ import { signupSchema, SignupFormState } from "@/libs/shared/src/schemas";
 import { useRouter } from "next/navigation";
 import { FormStatus } from "@/libs/shared/src/types";
 import { fetchData, CustomAPIError } from "@/client/utils";
+import { Spinner } from "@radix-ui/themes";
 
 export function SignupForm() {
   const router = useRouter();
@@ -16,9 +17,9 @@ export function SignupForm() {
     fieldError: { userName: [], emailAddress: [], password: [] },
     formStatus: null,
   });
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   const updateSignupFormState = async function (event: React.FormEvent<HTMLFormElement>): Promise<SignupFormState> {
-    event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const signupObj = Object.fromEntries(formData);
 
@@ -70,14 +71,20 @@ export function SignupForm() {
   };
 
   const onSubmit = async function (e: React.FormEvent<HTMLFormElement>) {
+    setIsSubmitting(true);
+    e.preventDefault();
     const newFormState = await updateSignupFormState(e);
     setSignupFormState(newFormState);
 
     if (newFormState.formStatus !== null) {
       if (!newFormState.formStatus.success) {
+        setIsSubmitting(false);
         return;
       }
       router.push("/");
+    } else {
+      setIsSubmitting(false);
+      return;
     }
   };
 
@@ -128,8 +135,15 @@ export function SignupForm() {
       </div>
 
       <div>
-        <Button background={"light"} type="submit" disabled={false} textSize={"big"}>
-          Sign Up
+        <Button background={"light"} type="submit" disabled={isSubmitting} textSize={"small"}>
+          {isSubmitting ? (
+            <span className="flex items-center justify-start gap-2">
+              <span>Signing up...</span>
+              <Spinner size={"1"}></Spinner>
+            </span>
+          ) : (
+            <span>Sign up</span>
+          )}
         </Button>
       </div>
       {signupFormState.formStatus !== null && (
