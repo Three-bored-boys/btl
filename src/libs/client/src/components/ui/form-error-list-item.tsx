@@ -1,6 +1,6 @@
 import React from "react";
 
-export const FormFieldErrorListItem = function ({
+export const FormErrorListItem = function ({
   children,
   ...props
 }: { children: React.ReactNode } & React.ComponentProps<"li">) {
