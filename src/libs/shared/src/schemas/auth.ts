@@ -3,12 +3,12 @@ import { FormState } from "@/libs/shared/src/types";
 
 export const signupSchema = z.object({
   userName: z
-    .string()
+    .string({ required_error: "Username is required" })
     .min(3, "Username must be at least 3 characters")
     .max(20, "Username must be at most 20 characters"),
-  emailAddress: z.string().email("Invalid email address"),
+  emailAddress: z.string({ required_error: "Email address is required" }).email("Invalid email address"),
   password: z
-    .string()
+    .string({ required_error: "Password is required" })
     .min(8, "Password must be at least 8 characters")
     .max(80, "Password must be at most 80 characters")
     .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
