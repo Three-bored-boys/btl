@@ -3,11 +3,12 @@
 import React from "react";
 import { Label } from "@/client/components/ui/label";
 import { Input } from "@/client/components/ui/input";
-import { FormFieldErrorListItem } from "@/client/components/ui/form-field-error-list-item";
+import { FormErrorListItem } from "@/client/components/ui/form-error-list-item";
 import { Button } from "@/client/components/ui/button";
 import { signupSchema, SignupFormState } from "@/libs/shared/src/schemas";
 import { useRouter } from "next/navigation";
 import { FormStatus } from "@/libs/shared/src/types";
+import { fetchData, CustomAPIError } from "@/client/utils";
 
 export function SignupForm() {
   const router = useRouter();
@@ -16,7 +17,7 @@ export function SignupForm() {
     formStatus: null,
   });
 
-  const updateSignupFormState = function (event: React.FormEvent<HTMLFormElement>): SignupFormState {
+  const updateSignupFormState = async function (event: React.FormEvent<HTMLFormElement>): Promise<SignupFormState> {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const signupObj = Object.fromEntries(formData);
@@ -40,21 +41,44 @@ export function SignupForm() {
       };
     }
 
-    return {
-      fieldError: { userName: [], emailAddress: [], password: [] },
-      formStatus: { success: true, message: "Success!" },
-    };
+    try {
+      const data = await fetchData<string>(`${process.env.NEXT_PUBLIC_API_URL}/auth/signup`, {
+        method: "POST",
+        body: JSON.stringify(signupObj),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      return {
+        fieldError: { userName: [], emailAddress: [], password: [] },
+        formStatus: { success: true, message: data },
+      };
+    } catch (e) {
+      if (e instanceof CustomAPIError) {
+        return {
+          fieldError: { userName: [], emailAddress: [], password: [] },
+          formStatus: { success: false, errors: e.errors },
+        };
+      }
+
+      return {
+        fieldError: { userName: [], emailAddress: [], password: [] },
+        formStatus: { success: false, errors: ["Something went wrong. Please try again later."] },
+      };
+    }
   };
 
-  const onSubmit = function (e: React.FormEvent<HTMLFormElement>) {
-    const newFormState = updateSignupFormState(e);
+  const onSubmit = async function (e: React.FormEvent<HTMLFormElement>) {
+    const newFormState = await updateSignupFormState(e);
     setSignupFormState(newFormState);
 
-    if (!newFormState.formStatus?.success) {
-      return;
+    if (newFormState.formStatus !== null) {
+      if (!newFormState.formStatus.success) {
+        return;
+      }
+      router.push("/");
     }
-
-    router.push("/");
   };
 
   const FormStatusMessage = function ({ formStatus }: { formStatus: FormStatus }) {
@@ -64,7 +88,7 @@ export function SignupForm() {
       return (
         <ul style={{ listStyle: "disc", listStylePosition: "outside" }}>
           {formStatus.errors.map((error, i) => (
-            <li key={i}>{error}</li>
+            <FormErrorListItem key={i}>{error}</FormErrorListItem>
           ))}
         </ul>
       );
@@ -72,18 +96,13 @@ export function SignupForm() {
   };
 
   return (
-    <form
-      className="flex w-full flex-col"
-      id="logInForm"
-      onSubmit={onSubmit}
-      onChange={(e) => setSignupFormState(updateSignupFormState(e))}
-    >
+    <form className="flex w-full flex-col" id="logInForm" onSubmit={(e) => void onSubmit(e)}>
       <div className="mb-6 flex flex-col">
         <Label htmlFor="userName">Username:</Label>
         <Input id="userName" type="text" name="userName" />
         <ul style={{ listStyle: "disc", listStylePosition: "outside" }}>
           {signupFormState.fieldError.userName.map((error, i) => (
-            <FormFieldErrorListItem key={i}>{error}</FormFieldErrorListItem>
+            <FormErrorListItem key={i}>{error}</FormErrorListItem>
           ))}
         </ul>
       </div>
@@ -93,7 +112,7 @@ export function SignupForm() {
         <Input id="emailAddress" type="email" name="emailAddress" />
         <ul style={{ listStyle: "disc", listStylePosition: "outside" }}>
           {signupFormState.fieldError.emailAddress.map((error, i) => (
-            <FormFieldErrorListItem key={i}>{error}</FormFieldErrorListItem>
+            <FormErrorListItem key={i}>{error}</FormErrorListItem>
           ))}
         </ul>
       </div>
@@ -103,7 +122,7 @@ export function SignupForm() {
         <Input id="password" type="password" name="password" />
         <ul style={{ listStyle: "disc", listStylePosition: "outside" }}>
           {signupFormState.fieldError.password.map((error, i) => (
-            <FormFieldErrorListItem key={i}>{error}</FormFieldErrorListItem>
+            <FormErrorListItem key={i}>{error}</FormErrorListItem>
           ))}
         </ul>
       </div>
