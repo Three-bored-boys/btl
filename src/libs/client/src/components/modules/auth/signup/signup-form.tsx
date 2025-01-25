@@ -7,6 +7,7 @@ import { FormFieldErrorListItem } from "@/client/components/ui/form-field-error-
 import { Button } from "@/client/components/ui/button";
 import { signupSchema, SignupFormState } from "@/libs/shared/src/schemas";
 import { useRouter } from "next/navigation";
+import { FormStatus } from "@/libs/shared/src/types";
 
 export function SignupForm() {
   const router = useRouter();
@@ -56,15 +57,17 @@ export function SignupForm() {
     router.push("/");
   };
 
-  const FormStatusMessage = function ({
-    formStatus,
-  }: {
-    formStatus: { success: false; error: string } | { success: true; message: string };
-  }) {
+  const FormStatusMessage = function ({ formStatus }: { formStatus: FormStatus }) {
     if (formStatus.success) {
       return <p>{formStatus.message}</p>;
     } else {
-      return <p>{formStatus.error}</p>;
+      return (
+        <ul style={{ listStyle: "disc", listStylePosition: "outside" }}>
+          {formStatus.errors.map((error, i) => (
+            <li key={i}>{error}</li>
+          ))}
+        </ul>
+      );
     }
   };
 
