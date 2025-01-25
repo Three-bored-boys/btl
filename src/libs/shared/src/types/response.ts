@@ -3,4 +3,4 @@ export type GoodResponse<T = NonNullable<unknown>> = {
   data: T;
 };
 
-export type BadResponse = { success: false; error: string };
+export type BadResponse = { success: false; errors: string[] };

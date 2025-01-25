@@ -31,9 +31,11 @@ export class CustomAPIError extends Error {
   constructor(
     message: string,
     public status: number,
+    public errors: string[],
   ) {
     super(message);
     this.status = status;
+    this.errors = errors;
   }
 }
 
@@ -42,7 +44,7 @@ export const fetchData = async function <T>(url: string, options?: RequestInit) 
 
   if (!res.ok) {
     const errorObj = (await res.json()) as BadResponse;
-    throw new CustomAPIError(errorObj.error, res.status);
+    throw new CustomAPIError("", res.status, errorObj.errors);
   }
 
   const { data } = (await res.json()) as GoodResponse<T>;
