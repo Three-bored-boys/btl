@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { FormStatus } from "@/libs/shared/src/types";
 import { fetchData, CustomAPIError } from "@/client/utils";
 import { Spinner } from "@radix-ui/themes";
+import { Check } from "@/client/components/ui/icons/check";
 
 export function SignupForm() {
   const router = useRouter();
@@ -90,7 +91,12 @@ export function SignupForm() {
 
   const FormStatusMessage = function ({ formStatus }: { formStatus: FormStatus }) {
     if (formStatus.success) {
-      return <p>{formStatus.message}</p>;
+      return (
+        <p className="flex items-center gap-x-0 text-success">
+          <Check className="text-success" fill="#4ade80"></Check>
+          {formStatus.message}
+        </p>
+      );
     } else {
       return (
         <ul style={{ listStyle: "disc", listStylePosition: "outside" }}>
