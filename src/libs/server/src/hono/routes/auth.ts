@@ -13,7 +13,7 @@ auth.post(
   zValidator("json", signupSchema, (result, c) => {
     if (!result.success) {
       console.log(result.error);
-      const responseData: BadResponse = { success: false, errors: ["Invalid entry", "Please try again"] };
+      const responseData: BadResponse = { success: false, errors: result.error.issues.map((issue) => issue.message) };
       return c.json(responseData, 400);
     }
   }),
