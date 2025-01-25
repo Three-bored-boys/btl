@@ -1,9 +1,27 @@
 import { Hono } from "hono";
-import type { GoodResponse } from "../../../../shared/src/types";
+import type { GoodResponse } from "@/libs/shared/src/types";
+import type { BadResponse } from "@/libs/shared/src/types";
+import { zValidator } from "@hono/zod-validator";
+import { signupSchema } from "@/libs/shared/src/schemas";
 import { Environment } from "@/root/bindings";
 import { getCookie, setCookie, deleteCookie } from "hono/cookie";
 
 export const auth = new Hono<Environment>();
+
+auth.post(
+  "/signup",
+  zValidator("json", signupSchema, (result, c) => {
+    if (!result.success) {
+      console.log(result.error);
+      const responseData: BadResponse = { success: false, errors: ["Invalid entry", "Please try again"] };
+      return c.json(responseData, 400);
+    }
+  }),
+  (c) => {
+    const data: GoodResponse<string> = { success: true, data: "Success!" };
+    return c.json(data);
+  },
+);
 
 auth.get("/login", (c) => {
   const dateNow = new Date();
