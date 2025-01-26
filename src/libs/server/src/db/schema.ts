@@ -1,4 +1,4 @@
-import { boolean, pgTable, serial, text, timestamp, pgEnum } from "drizzle-orm/pg-core";
+import { boolean, pgTable, serial, text, timestamp, pgEnum, integer } from "drizzle-orm/pg-core";
 import { bookLibraries } from "@/libs/shared/src/utils";
 
 export const users = pgTable("users", {
@@ -13,7 +13,7 @@ export const users = pgTable("users", {
 
 export const sessions = pgTable("sessions", {
   id: text("id").primaryKey(),
-  userId: text("user_id")
+  userId: integer("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   expiresAt: timestamp("expires_at", { mode: "date", withTimezone: true }).notNull(),
