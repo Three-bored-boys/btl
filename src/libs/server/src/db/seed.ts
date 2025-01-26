@@ -1,9 +1,12 @@
 import { db } from "./index";
 import { libraries } from "./schema";
+import { bookLibraries } from "@/libs/shared/src/utils";
 
 const main = async function () {
   try {
-    await db.delete(libraries);
+    const librariesTableEntry = bookLibraries.map((lib) => ({ libraryName: lib.name, libraryValue: lib.value }));
+    await db.insert(libraries).values(librariesTableEntry);
+    console.log("Seed complete");
   } catch (e) {
     console.log(e);
   }
