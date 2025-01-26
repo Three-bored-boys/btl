@@ -28,7 +28,6 @@ jobs:
                 - "src/libs/client/**"
                 - "next.config.mjs"
             database:
-                - "src/libs/server/src/db/schema.ts"
                 - "drizzle.config.ts"
                 - "drizzle/*"
 
@@ -58,7 +57,7 @@ jobs:
           file_name: .dev.vars
 
       - name: Database Schema Generation and Migration
-        run: pnpm run db:generate && pnpm run db:migrate
+        run: pnpm run db:migrate
 
       - name: Edit wrangler.toml file
         run: echo 'name = "btl-nextjs-api-prod"' >> wrangler.toml
@@ -144,7 +143,7 @@ jobs:
           file_name: .dev.vars
 
       - name: Database Schema Generation and Migration
-        run: pnpm run db:generate && pnpm run db:migrate
+        run: pnpm run db:migrate
 
       - name: Edit wrangler.toml file
         run: echo 'name = "btl-nextjs-api-prod"' >> wrangler.toml
@@ -206,7 +205,7 @@ jobs:
           file_name: .dev.vars
 
       - name: Database Schema Generation and Migration
-        run: pnpm run db:generate && pnpm run db:migrate
+        run: pnpm run db:migrate
 
       - name: Install Vercel CLI
         run: pnpm install --global vercel@latest
@@ -274,4 +273,4 @@ jobs:
           file_name: .dev.vars
 
       - name: Database Schema Generation and Migration
-        run: pnpm run db:generate && pnpm run db:migrate
+        run: pnpm run db:migrate
