@@ -22,9 +22,9 @@ export function SignupForm() {
 
   const updateSignupFormState = async function (event: React.FormEvent<HTMLFormElement>): Promise<SignupFormState> {
     const formData = new FormData(event.currentTarget);
-    const signupObj = Object.fromEntries(formData);
+    const signupObjRaw = Object.fromEntries(formData);
 
-    const validation = signupSchema.safeParse(signupObj);
+    const validation = signupSchema.safeParse(signupObjRaw);
 
     if (!validation.success) {
       return {
@@ -42,6 +42,8 @@ export function SignupForm() {
         formStatus: null,
       };
     }
+
+    const signupObj = validation.data;
 
     try {
       const data = await fetchData<string>(`${process.env.NEXT_PUBLIC_API_URL}/auth/signup`, {
