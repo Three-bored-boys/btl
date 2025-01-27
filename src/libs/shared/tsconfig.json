@@ -1,0 +1,15 @@
+{
+  "extends": "../../../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@/root/*": ["../../../*"],
+      "@/*": ["../../../src/*"],
+      "@/server/*": ["../server/src/*"],
+      "@/client/*": ["../client/src/*"],
+      "@/shared/*": ["../shared/src/*"],
+      "@/public/*": ["../../../public/*"]
+    }
+  },
+  "include": ["./src/**/*.ts"]
+}
