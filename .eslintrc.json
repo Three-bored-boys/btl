@@ -1,12 +1,7 @@
 {
   "root": true,
-  "env": { "browser": true, "es6": true },
-  "extends": [
-    "plugin:@typescript-eslint/strict-type-checked",
-    "plugin:@typescript-eslint/stylistic-type-checked",
-    "next/core-web-vitals",
-    "next"
-  ],
+  "env": { "browser": true, "es6": true, "node": true },
+  "extends": ["plugin:@typescript-eslint/strict-type-checked", "plugin:@typescript-eslint/stylistic-type-checked"],
   "plugins": ["@typescript-eslint"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
