@@ -5,7 +5,7 @@ import { Label } from "@/client/components/ui/label";
 import { Input } from "@/client/components/ui/input";
 import { FormErrorListItem } from "@/client/components/ui/form-error-list-item";
 import { Button } from "@/client/components/ui/button";
-import { signupSchema, SignupFormState } from "@/libs/shared/src/schemas";
+import { signupSchema, SignupFormState } from "@/root/src/libs/shared/src/validators";
 import { useRouter } from "next/navigation";
 import { FormStatus } from "@/libs/shared/src/types";
 import { fetchData, CustomAPIError } from "@/client/utils";

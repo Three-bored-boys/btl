@@ -11,7 +11,7 @@ import {
   type BestSeller,
   type Book,
 } from "../../../../shared/src/types";
-import { fullSearchObjectSchema } from "../../../../shared/src/schemas";
+import { fullSearchObjectSchema } from "../../../../shared/src/validators";
 import { Environment } from "@/root/bindings";
 import { cache } from "hono/cache";
 import { filterKeysArray } from "@/libs/shared/src/utils";

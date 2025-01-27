@@ -1,4 +1,4 @@
-import { PaginationObjectType, SearchObjectType } from "@/root/src/libs/shared/src/schemas";
+import { PaginationObjectType, SearchObjectType } from "@/root/src/libs/shared/src/validators";
 import { CustomAPIError, fetchData, getSearchObjectFromLocalStorage, handleNumberSearchParam } from "../../../utils";
 import {
   DEFAULT_MAX_RESULTS,

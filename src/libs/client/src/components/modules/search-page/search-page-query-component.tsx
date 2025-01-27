@@ -1,6 +1,6 @@
 import React from "react";
 import { useSearchPageResults } from "./hooks";
-import { PaginationObjectType, SearchObjectType } from "@/root/src/libs/shared/src/schemas";
+import { PaginationObjectType, SearchObjectType } from "@/root/src/libs/shared/src/validators";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   DEFAULT_MAX_RESULTS,

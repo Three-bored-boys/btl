@@ -1,5 +1,5 @@
 import { genres as genresList } from "@/root/src/libs/shared/src/data/genres";
-import { SearchObjectType } from "@/root/src/libs/shared/src/schemas";
+import { SearchObjectType } from "@/root/src/libs/shared/src/validators";
 
 const genre = [
   ...genresList.map((val) => val.name),

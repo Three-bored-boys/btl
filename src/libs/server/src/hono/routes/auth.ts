@@ -2,7 +2,7 @@ import { Hono } from "hono";
 import type { GoodResponse } from "@/libs/shared/src/types";
 import type { BadResponse } from "@/libs/shared/src/types";
 import { zValidator } from "@hono/zod-validator";
-import { signupSchema } from "@/libs/shared/src/schemas";
+import { signupSchema } from "@/root/src/libs/shared/src/validators";
 import { Environment } from "@/root/bindings";
 import { getCookie, setCookie, deleteCookie } from "hono/cookie";
 

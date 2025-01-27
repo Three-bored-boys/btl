@@ -1,4 +1,4 @@
-import { SearchObjectType } from "./schemas";
+import { SearchObjectType } from "./validators";
 
 export const filterKeysArray: (keyof SearchObjectType)[] = ["genre", "publisher"];
 
