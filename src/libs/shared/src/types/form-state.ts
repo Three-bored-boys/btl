@@ -2,7 +2,7 @@ export type FormState<T> = {
   fieldError: {
     [key in keyof T]: string[];
   };
-  formStatus: FormStatus | null;
+  formResult: FormResult | null;
 };
 
-export type FormStatus = { success: false; errors: string[] } | { success: true; message: string };
+export type FormResult = { success: false; errors: string[] } | { success: true; message: string };
