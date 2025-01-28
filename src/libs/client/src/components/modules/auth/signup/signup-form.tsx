@@ -7,7 +7,7 @@ import { FormErrorListItem } from "@/client/components/ui/form-error-list-item";
 import { Button } from "@/client/components/ui/button";
 import { signupSchema, SignupFormState } from "@/root/src/libs/shared/src/validators";
 import { useRouter } from "next/navigation";
-import { FormStatus } from "@/libs/shared/src/types";
+import { FormResult } from "@/libs/shared/src/types";
 import { fetchData, CustomAPIError } from "@/client/utils";
 import { Spinner } from "@radix-ui/themes";
 import { Check } from "@/client/components/ui/icons/check";
@@ -16,7 +16,7 @@ export function SignupForm() {
   const router = useRouter();
   const [signupFormState, setSignupFormState] = React.useState<SignupFormState>({
     fieldError: { userName: [], emailAddress: [], password: [] },
-    formStatus: null,
+    formResult: null,
   });
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
@@ -39,7 +39,7 @@ export function SignupForm() {
             .filter((issue) => issue.path[0] === "password")
             .map((issue) => issue.message),
         },
-        formStatus: null,
+        formResult: null,
       };
     }
 
@@ -56,53 +56,50 @@ export function SignupForm() {
 
       return {
         fieldError: { userName: [], emailAddress: [], password: [] },
-        formStatus: { success: true, message: data },
+        formResult: { success: true, message: data },
       };
     } catch (e) {
       if (e instanceof CustomAPIError) {
         return {
           fieldError: { userName: [], emailAddress: [], password: [] },
-          formStatus: { success: false, errors: e.errors },
+          formResult: { success: false, errors: e.errors },
         };
       }
 
       return {
         fieldError: { userName: [], emailAddress: [], password: [] },
-        formStatus: { success: false, errors: ["Something went wrong. Please try again later."] },
+        formResult: { success: false, errors: ["Something went wrong. Please try again later."] },
       };
     }
   };
 
   const onSubmit = async function (e: React.FormEvent<HTMLFormElement>) {
-    setIsSubmitting(true);
     e.preventDefault();
+    setIsSubmitting(true);
+
     const newFormState = await updateSignupFormState(e);
     setSignupFormState(newFormState);
 
-    if (newFormState.formStatus !== null) {
-      if (!newFormState.formStatus.success) {
-        setIsSubmitting(false);
-        return;
+    if (newFormState.formResult !== null) {
+      if (newFormState.formResult.success) {
+        router.push("/");
       }
-      router.push("/");
-    } else {
-      setIsSubmitting(false);
-      return;
     }
+    setIsSubmitting(false);
   };
 
-  const FormStatusMessage = function ({ formStatus }: { formStatus: FormStatus }) {
-    if (formStatus.success) {
+  const FormResultMessage = function ({ formResult }: { formResult: FormResult }) {
+    if (formResult.success) {
       return (
         <p className="flex items-center gap-x-0 text-success">
           <Check className="text-success" fill="#4ade80"></Check>
-          {formStatus.message}
+          {formResult.message}
         </p>
       );
     } else {
       return (
         <ul style={{ listStyle: "disc", listStylePosition: "outside" }}>
-          {formStatus.errors.map((error, i) => (
+          {formResult.errors.map((error, i) => (
             <FormErrorListItem key={i}>{error}</FormErrorListItem>
           ))}
         </ul>
@@ -154,8 +151,8 @@ export function SignupForm() {
           )}
         </Button>
       </div>
-      {signupFormState.formStatus !== null && (
-        <FormStatusMessage formStatus={signupFormState.formStatus}></FormStatusMessage>
+      {signupFormState.formResult !== null && (
+        <FormResultMessage formResult={signupFormState.formResult}></FormResultMessage>
       )}
     </form>
   );
