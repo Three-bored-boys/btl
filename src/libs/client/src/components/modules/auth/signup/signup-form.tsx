@@ -4,13 +4,12 @@ import React from "react";
 import { Label } from "@/client/components/ui/label";
 import { Input } from "@/client/components/ui/input";
 import { FormErrorListItem } from "@/client/components/ui/form-error-list-item";
-import { Button } from "@/client/components/ui/button";
 import { signupSchema, SignupFormState } from "@/root/src/libs/shared/src/validators";
 import { useRouter } from "next/navigation";
 import { FormResult } from "@/libs/shared/src/types";
 import { fetchData, CustomAPIError } from "@/client/utils";
-import { Spinner } from "@radix-ui/themes";
 import { Check } from "@/client/components/ui/icons/check";
+import { SubmitButton } from "@/client/components/ui/submit-button";
 
 export function SignupForm() {
   const router = useRouter();
@@ -77,6 +76,13 @@ export function SignupForm() {
     e.preventDefault();
     setIsSubmitting(true);
 
+    const delay = (durationMs: number) => {
+      return new Promise((resolve) => setTimeout(resolve, durationMs));
+    };
+
+    // ... elsewhere
+    await delay(1000);
+
     const newFormState = await updateSignupFormState(e);
     setSignupFormState(newFormState);
 
@@ -140,16 +146,7 @@ export function SignupForm() {
       </div>
 
       <div>
-        <Button background={"light"} type="submit" disabled={isSubmitting} textSize={"small"}>
-          {isSubmitting ? (
-            <span className="flex items-center justify-start gap-2">
-              <span>Signing up...</span>
-              <Spinner size={"1"}></Spinner>
-            </span>
-          ) : (
-            <span>Sign up</span>
-          )}
-        </Button>
+        <SubmitButton isSubmitting={isSubmitting} defaultText={"Sign up"} submittingText={"Signing up..."} />
       </div>
       {signupFormState.formResult !== null && (
         <FormResultMessage formResult={signupFormState.formResult}></FormResultMessage>
