@@ -1,17 +1,14 @@
 import { db } from "./index";
-import { libraries } from "./schema";
-import { bookLibraries } from "@/libs/shared/src/utils";
+import { users } from "./schema";
 
 const main = async function () {
   try {
-    const librariesTableEntry = bookLibraries.map((lib) => ({ libraryName: lib.name, libraryValue: lib.value }));
-    await db.insert(libraries).values(librariesTableEntry);
+    await db.insert(users).values([{ emailAddress: "goat@goat.com", userName: "goat", hashedPassword: "goat" }]);
     console.log("Seed complete");
   } catch (e) {
     console.log(e);
   }
   process.exit(0);
-  // const librariesTableEntry = bookLibraries.map((lib) => ({ libraryName: lib.name, libraryValue: lib.value }));
 };
 
 void main();
