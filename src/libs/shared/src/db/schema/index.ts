@@ -1,5 +1,6 @@
 import { boolean, pgTable, serial, text, timestamp, pgEnum, integer } from "drizzle-orm/pg-core";
 import { bookLibraries } from "@/libs/shared/src/utils";
+import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
@@ -14,6 +15,9 @@ export const users = pgTable("users", {
     .$onUpdate(() => new Date()),
 });
 
+export type User = InferSelectModel<typeof users>;
+export type NewUser = InferInsertModel<typeof users>;
+
 export const sessions = pgTable("sessions", {
   id: text("id").primaryKey(),
   userId: integer("user_id")
@@ -21,6 +25,9 @@ export const sessions = pgTable("sessions", {
     .references(() => users.id, { onDelete: "cascade" }),
   expiresAt: timestamp("expires_at", { mode: "date", withTimezone: true }).notNull(),
 });
+
+export type Session = InferSelectModel<typeof sessions>;
+export type NewSession = InferInsertModel<typeof sessions>;
 
 const libraryNames = bookLibraries.map((lib) => lib.name) as [string, ...string[]];
 const libraryValues = bookLibraries.map((lib) => lib.value) as [string, ...string[]];
