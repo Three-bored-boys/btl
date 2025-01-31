@@ -53,15 +53,7 @@ export async function validateSessionToken(token: string): Promise<SessionValida
     await invalidateSession(session.id);
     return { session: null, user: null };
   }
-  if (Date.now() >= session.expiresAt.getTime() - 1000 * 60 * 60 * 24 * 15) {
-    session.expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 30);
-    await db
-      .update(sessions)
-      .set({
-        expiresAt: session.expiresAt,
-      })
-      .where(eq(sessions.id, session.id));
-  }
+
   return { session, user: sanitizedUser(user) };
 }
 
