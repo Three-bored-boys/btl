@@ -1,4 +1,4 @@
-import type { NYTimesBestSellersResponse, BestSeller } from "../../../shared/src/types";
+import type { NYTimesBestSellersResponse, BestSeller } from "@/shared/types";
 import { fetchServiceData } from "@/server/utils";
 
 export class NYTimesService {

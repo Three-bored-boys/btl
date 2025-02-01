@@ -1,6 +1,6 @@
-import type { Book, GoogleBooksResponse } from "../../../shared/src/types";
-import type { SearchObjectType, PaginationObjectType } from "../../../shared/src/validators";
-import { DEFAULT_MAX_RESULTS, DEFAULT_PAGE_NUMBER } from "@/root/src/libs/shared/src/utils";
+import type { Book, GoogleBooksResponse } from "@/shared/types";
+import type { SearchObjectType, PaginationObjectType } from "@/shared/validators";
+import { DEFAULT_MAX_RESULTS, DEFAULT_PAGE_NUMBER } from "@/shared/utils";
 import { fetchServiceData } from "@/server/utils";
 
 type Item = GoogleBooksResponse["items"][number];
