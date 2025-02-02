@@ -1,6 +1,5 @@
 import { Hono } from "hono";
-import type { GoodResponse } from "@/libs/shared/src/types";
-import type { BadResponse } from "@/libs/shared/src/types";
+import type { GoodResponse, BadResponse } from "@/shared/types";
 import { zValidator } from "@hono/zod-validator";
 import { signupSchema } from "@/shared/validators";
 import { Environment } from "@/root/bindings";
