@@ -76,13 +76,6 @@ export function SignupForm() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    const delay = (durationMs: number) => {
-      return new Promise((resolve) => setTimeout(resolve, durationMs));
-    };
-
-    // ... elsewhere
-    await delay(1000);
-
     const newFormState = await updateSignupFormState(e);
     setSignupFormState(newFormState);
 
