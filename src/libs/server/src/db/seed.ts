@@ -1,5 +1,12 @@
-import { db } from "./index";
 import { users } from "./schema";
+import postgres from "postgres";
+import { drizzle } from "drizzle-orm/postgres-js";
+import { config } from "dotenv";
+
+config({ path: ".dev.vars" });
+
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+const db = drizzle(postgres(process.env.DATABASE_URL!));
 
 const main = async function () {
   try {
