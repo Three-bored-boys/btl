@@ -4,6 +4,12 @@ import { zValidator } from "@hono/zod-validator";
 import { signupSchema } from "@/shared/validators";
 import { Environment } from "@/root/bindings";
 import { getCookie, setCookie, deleteCookie } from "hono/cookie";
+import { useDB } from "@/server/db/db";
+import { users } from "@/server/db/schema";
+import { eq, or } from "drizzle-orm";
+import { hashPassword } from "@/server/auth/password";
+import { generateSessionToken, createSession } from "@/server/auth/sessions";
+import { setSessionCookie } from "@/server/auth/cookies";
 
 export const auth = new Hono<Environment>();
 
@@ -16,8 +22,45 @@ auth.post(
       return c.json(responseData, 400);
     }
   }),
-  (c) => {
-    const data: GoodResponse<string> = { success: true, data: "Success!" };
+  async (c) => {
+    let message = "";
+    const { userName, emailAddress, password } = c.req.valid("json");
+    const resultExistingUser = await useDB(c, async (db) => {
+      return db
+        .select()
+        .from(users)
+        .where(or(eq(users.emailAddress, emailAddress), eq(users.userName, userName)))
+        .limit(1);
+    });
+    if (resultExistingUser !== undefined && resultExistingUser.length > 0) {
+      const existingUser = resultExistingUser[0];
+      message =
+        existingUser.emailAddress === emailAddress
+          ? "An account with this email already exists"
+          : "This user name is taken";
+      const responseData: BadResponse = { success: false, errors: [message] };
+      return c.json(responseData, 404);
+    }
+    const hashedPassword = await hashPassword(password);
+    const resultNewUser = await useDB(c, async (db) => {
+      return await db.insert(users).values([{ emailAddress, hashedPassword, userName }]).returning();
+    });
+
+    if (!resultNewUser) {
+      const responseData: BadResponse = {
+        success: false,
+        errors: ["Something went wrong while trying to create account"],
+      };
+      return c.json(responseData, 404);
+    }
+
+    const newUser = resultNewUser[0];
+
+    const sessionToken = generateSessionToken();
+    const session = await createSession(sessionToken, newUser.id, c);
+    setSessionCookie(c, sessionToken, session.expiresAt);
+
+    const data: GoodResponse<string> = { success: true, data: "Account successfully created!" };
     return c.json(data);
   },
 );
