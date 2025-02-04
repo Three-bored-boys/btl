@@ -1,9 +1,10 @@
-import { encodeBase32LowerCaseNoPadding, encodeHexLowerCase } from "@oslojs/encoding";
-import { db } from "@/server/db";
+import { useDB } from "@/server/db/db";
 import { eq } from "drizzle-orm";
 import { users, sessions, Session, User } from "@/server/db/schema";
-import { sha256 } from "@oslojs/crypto/sha2";
 import { sanitizedUser } from "@/server/utils";
+import { generateAuthSessionToken, encryptAuthSessionToken } from "@/server/utils";
+import { Context } from "hono";
+import { Environment } from "@/root/bindings";
 
 export type SanitizedUser = Omit<User, "hashedPassword">;
 export type SessionValidationResult =
@@ -17,31 +18,36 @@ export type SessionValidationResult =
     };
 
 export function generateSessionToken() {
-  const bytes = new Uint8Array(20);
-  crypto.getRandomValues(bytes);
-  const token = encodeBase32LowerCaseNoPadding(bytes);
-  return token;
+  return generateAuthSessionToken();
 }
 
-export async function createSession(token: string, userId: number) {
-  const sessionId = encodeBase32LowerCaseNoPadding(sha256(new TextEncoder().encode(token)));
+export async function createSession(token: string, userId: number, c: Context<Environment>) {
+  const sessionId = await encryptAuthSessionToken(token);
   const session: Session = {
     id: sessionId,
     userId,
     expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
   };
-  await db.insert(sessions).values(session);
+  await useDB(c, async (db) => {
+    return db.insert(sessions).values(session);
+  });
   return session;
 }
 
-export async function validateSessionToken(token: string): Promise<SessionValidationResult> {
-  const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
+export async function validateSessionToken(token: string, c: Context<Environment>): Promise<SessionValidationResult> {
+  const sessionId = await encryptAuthSessionToken(token);
 
-  const result = await db
-    .select({ user: users, session: sessions })
-    .from(sessions)
-    .innerJoin(users, eq(sessions.userId, users.id))
-    .where(eq(sessions.id, sessionId));
+  const result = await useDB(c, async (db) => {
+    return db
+      .select({ user: users, session: sessions })
+      .from(sessions)
+      .innerJoin(users, eq(sessions.userId, users.id))
+      .where(eq(sessions.id, sessionId));
+  });
+
+  if (!result) {
+    return { session: null, user: null };
+  }
 
   if (result.length < 1) {
     return { session: null, user: null };
@@ -50,13 +56,15 @@ export async function validateSessionToken(token: string): Promise<SessionValida
   const { user, session } = result[0];
 
   if (Date.now() >= session.expiresAt.getTime()) {
-    await invalidateSession(session.id);
+    await invalidateSession(session.id, c);
     return { session: null, user: null };
   }
 
   return { session, user: sanitizedUser(user) };
 }
 
-export async function invalidateSession(sessionId: string) {
-  await db.delete(sessions).where(eq(sessions.id, sessionId));
+export async function invalidateSession(sessionId: string, c: Context<Environment>) {
+  await useDB(c, async (db) => {
+    await db.delete(sessions).where(eq(sessions.id, sessionId));
+  });
 }
