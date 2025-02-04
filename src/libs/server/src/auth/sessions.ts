@@ -2,7 +2,7 @@ import { useDB } from "@/server/db/db";
 import { eq } from "drizzle-orm";
 import { users, sessions, Session, User } from "@/server/db/schema";
 import { sanitizedUser } from "@/server/utils";
-import { generateAuthSessionToken, encryptAuthSessionToken } from "@/server/utils";
+import { generateAuthSessionToken, encryptAuthSessionToken } from "./utils";
 import { Context } from "hono";
 import { Environment } from "@/root/bindings";
 
