@@ -15,7 +15,8 @@
     "deploy": "wrangler deploy",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx src/libs/server/src/db/migrate.ts",
-    "db:seed": "tsx src/libs/server/src/db/seed.ts"
+    "db:seed": "tsx src/libs/server/src/db/seed.ts",
+    "db:test-conn": "tsx src/libs/server/src/db/test-conn.ts"
   },
   "dependencies": {
     "@hono/zod-validator": "^0.2.1",
