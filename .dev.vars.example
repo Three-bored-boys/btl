@@ -1,3 +1,5 @@
 DATABASE_URL=
 GOOGLE_BOOKS_API_KEY=
 NY_TIMES_BOOKS_API_KEY=
+ENVIRONMENT=development /** This should only be set in the local dev setup **/
+DATABASE_URL_DEV= /** This is the database connection string for local dev, using Neon driver in Workers environment. Replace hostname (eg localhost) with 'db.localtest.me' **/
