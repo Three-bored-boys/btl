@@ -1,0 +1,7 @@
+services:
+  neon-proxy:
+    image: ghcr.io/timowilhelm/local-neon-http-proxy:main
+    env_file:
+      - docker.env
+    ports:
+      - "4444:4444"
