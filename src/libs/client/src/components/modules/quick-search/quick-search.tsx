@@ -4,7 +4,7 @@ import React, { ComponentProps, useRef, useState, useEffect } from "react";
 import { QuickSearchResults } from "./quick-search-results";
 import { SearchInput } from "@/root/src/libs/client/src/components/ui/search-input";
 import { cn, getSearchObjectFromLocalStorage, setSearchObjectToLocalStorage } from "@/client/utils";
-import type { SearchObjectType } from "@/root/src/libs/shared/src/schemas";
+import type { SearchObjectType } from "@/root/src/libs/shared/src/validators";
 import { ErrorBoundary } from "react-error-boundary";
 import { QuickSearchErrorBoundary } from "./quick-search-error-boundary";
 import { Button } from "../../ui/button";

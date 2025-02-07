@@ -1,6 +1,6 @@
 import React from "react";
 import { useSearchPageResults } from "./hooks";
-import { PaginationObjectType, SearchObjectType } from "@/root/src/libs/shared/src/schemas";
+import { PaginationObjectType, SearchObjectType } from "@/root/src/libs/shared/src/validators";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   DEFAULT_MAX_RESULTS,
@@ -43,7 +43,7 @@ export function SearchPageQueryComponent({
           <div className="flex flex-col items-center justify-start gap-y-3 py-5">
             <p className="mb-3 text-8xl font-extralight md:mb-9 md:text-9xl">{data.status}</p>
             <h2 className="mb-2 text-4xl radix-xs:text-5xl md:mb-5 md:text-7xl">Oops! Something has gone wrong!</h2>
-            <p className="mb-8 text-base radix-xs:text-xl md:mb-3 md:text-2xl">{data.message}</p>
+            <p className="mb-8 text-base radix-xs:text-xl md:mb-3 md:text-2xl">{data.errors[0]}</p>
             <LinkButton href="/" background={"light"} textSize={"big"} className="mb-2">
               Return Home
             </LinkButton>

@@ -2,7 +2,7 @@ import type { Config } from "tailwindcss";
 import * as defaultTheme from "tailwindcss/defaultTheme";
 import * as colors from "tailwindcss/colors";
 
-const { indigo, orange } = colors;
+const { indigo, orange, green, red } = colors;
 const {
   fontFamily: { sans },
 } = defaultTheme;
@@ -33,6 +33,8 @@ const config: Config = {
           DEFAULT: orange[500],
         },
         "primary-selected": indigo[400],
+        "success": green[400],
+        "error": red[500],
       },
       animation: {
         "spin-slow": "spin 3s linear infinite",

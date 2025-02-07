@@ -1,7 +1,7 @@
 import { Context, Hono } from "hono";
 import { genres as genresList } from "@/root/src/libs/shared/src/data/genres";
-import { GoogleBooksService } from "../../services/google.service";
-import { NYTimesService } from "../../services/ny-times.service";
+import { GoogleBooksService } from "@/server/services/google.service";
+import { NYTimesService } from "@/server/services/ny-times.service";
 import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
 import {
@@ -11,7 +11,7 @@ import {
   type BestSeller,
   type Book,
 } from "../../../../shared/src/types";
-import { fullSearchObjectSchema } from "../../../../shared/src/schemas";
+import { fullSearchObjectSchema } from "../../../../shared/src/validators";
 import { Environment } from "@/root/bindings";
 import { cache } from "hono/cache";
 import { filterKeysArray } from "@/libs/shared/src/utils";
@@ -29,7 +29,7 @@ books.get(
     const bestSellers = await nytService.getBestSellers();
 
     if (bestSellers.length === 0) {
-      const responseData: BadResponse = { success: false, error: "Trouble getting NYT Best Sellers List" };
+      const responseData: BadResponse = { success: false, errors: ["Trouble getting NYT Best Sellers List"] };
       return c.json(responseData, 400);
     }
 
@@ -53,7 +53,7 @@ books.get(
     }),
     (result, c) => {
       if (!result.success) {
-        const responseData: BadResponse = { success: false, error: "Invalid Input" };
+        const responseData: BadResponse = { success: false, errors: ["Invalid Input"] };
         return c.json(responseData, 404);
       }
     },
@@ -120,7 +120,7 @@ books.get(
       if (!result.success) {
         const responseData: BadResponse = {
           success: false,
-          error: "Invalid ISBN. Please enter a valid ISBN and try again",
+          errors: ["Invalid ISBN. Please enter a valid ISBN and try again"],
         };
         return c.json(responseData, 400);
       }
@@ -156,7 +156,7 @@ books.get(
     if (!isbn) {
       const responseData: BadResponse = {
         success: false,
-        error: "A valid ISBN is required. Please enter one and try again.",
+        errors: ["A valid ISBN is required. Please enter one and try again."],
       };
       return c.json(responseData, 400);
     }
@@ -193,7 +193,7 @@ books.get(
     if (book.length === 0) {
       const responseData: BadResponse = {
         success: false,
-        error: "The book you are currently looking for could not be found.",
+        errors: ["The book you are currently looking for could not be found."],
       };
       return c.json(responseData, 404);
     }
@@ -214,7 +214,7 @@ books.get(
     const books = await googleBooksService.getLatestBooks();
 
     if (books.length === 0) {
-      const responseData: BadResponse = { success: false, error: "Trouble getting books" };
+      const responseData: BadResponse = { success: false, errors: ["Trouble getting books"] };
       return c.json(responseData, 400);
     }
 
@@ -243,7 +243,7 @@ books.get(
   zValidator("query", fullSearchObjectSchema, (result, c) => {
     if (!result.success) {
       console.log(result.error);
-      const responseData: BadResponse = { success: false, error: "Invalid entry" };
+      const responseData: BadResponse = { success: false, errors: ["Invalid entry"] };
       return c.json(responseData, 400);
     }
   }),

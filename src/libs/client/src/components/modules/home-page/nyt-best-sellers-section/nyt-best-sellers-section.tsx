@@ -54,7 +54,7 @@ async function GetBestSellersWrapper() {
         <div className="my-2 flex w-full flex-col items-center justify-start gap-y-1">
           <ExclamationTriangle />
           <p className="text-xl font-semibold">Error {e.status}</p>
-          <p className="text-base font-normal">{e.message}</p>
+          <p className="text-base font-normal">{e.errors[0]}</p>
         </div>
       );
     }

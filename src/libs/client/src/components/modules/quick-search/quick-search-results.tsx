@@ -22,7 +22,7 @@ export function QuickSearchResults({
       <div className="my-2 flex w-full flex-col items-center justify-start gap-y-1">
         <ExclamationTriangle />
         <p className="text-xl font-semibold">Error {data.status}</p>
-        <p className="text-base font-normal">{data.message}</p>
+        <p className="text-base font-normal">{data.errors[0]}</p>
       </div>
     );
 

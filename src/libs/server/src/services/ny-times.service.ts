@@ -1,15 +1,15 @@
-import type { NYTimesBestSellersResponse, BestSeller } from "../../../shared/src/types";
+import type { NYTimesBestSellersResponse, BestSeller } from "@/shared/types";
+import { fetchServiceData } from "@/server/utils";
 
 export class NYTimesService {
   constructor(private apiKey: string) {}
 
   async getBestSellers(): Promise<BestSeller[]> {
     try {
-      const response = await fetch(`https://api.nytimes.com/svc/books/v3/lists/overview.json?api-key=${this.apiKey}`);
-      if (!response.ok) {
-        throw new Error(response.statusText);
-      }
-      const data = (await response.json()) as NYTimesBestSellersResponse;
+      const data = await fetchServiceData<NYTimesBestSellersResponse>(
+        `https://api.nytimes.com/svc/books/v3/lists/overview.json?api-key=${this.apiKey}`,
+      );
+
       const bestSellers = data.results.lists.map((list) => {
         return {
           id: list.list_id,

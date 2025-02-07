@@ -1,8 +1,14 @@
+import { config } from "dotenv";
 import { migrate } from "drizzle-orm/postgres-js/migrator";
-import { migrationClient } from "./index";
+import { drizzle } from "drizzle-orm/postgres-js";
+import postgres from "postgres";
+
+config({ path: ".dev.vars" });
 
 const main = async () => {
   try {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const migrationClient = drizzle(postgres(process.env.DATABASE_URL!, { max: 1 }));
     await migrate(migrationClient, { migrationsFolder: "drizzle" });
     console.log("Migration complete");
   } catch (error) {
@@ -11,5 +17,4 @@ const main = async () => {
   process.exit(0);
 };
 
-// eslint-disable-next-line @typescript-eslint/no-floating-promises
-main();
+void main();

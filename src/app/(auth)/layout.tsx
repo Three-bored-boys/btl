@@ -9,23 +9,37 @@ export default function AuthLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>): React.ReactElement {
-  const authLayoutImagesArray = [
+  const authLayoutImagesArray = React.useRef([
     "bg-auth-image-1",
     "bg-auth-image-2",
     "bg-auth-image-3",
     "bg-auth-image-4",
     "bg-auth-image-5",
-  ];
+  ]);
+  const [authLayoutImageIndex, setAuthLayoutImageIndex] = React.useState<number | null>(null);
+  const [bgImageClassName, setBgImageClassName] = React.useState<string>("");
 
-  const authLayoutImageIndex = React.useRef(Math.floor(Math.random() * authLayoutImagesArray.length));
-  const bgImageClassName = authLayoutImagesArray[authLayoutImageIndex.current];
+  React.useEffect(() => {
+    const initialAuthLayoutImageIndex = Math.floor(Math.random() * authLayoutImagesArray.current.length);
+    setAuthLayoutImageIndex(initialAuthLayoutImageIndex);
+    setBgImageClassName(authLayoutImagesArray.current[initialAuthLayoutImageIndex]);
+  }, []);
 
   return (
-    <div className="grid w-full grid-cols-2 grid-rows-[100vh]">
-      <div className={cn("relative bg-cover bg-center", bgImageClassName)}>
-        <Logo className={cn("absolute left-5 top-5 text-5xl", { "text-white": authLayoutImageIndex.current === 0 })} />
+    <div className="grid h-full w-full grid-cols-1 md:grid-cols-2 md:grid-rows-[100vh]">
+      <div
+        className={cn("relative hidden bg-cover bg-center md:block", {
+          "bg-gradient-to-b from-primary-50 to-secondary-50": bgImageClassName === "",
+          [bgImageClassName]: bgImageClassName !== "",
+        })}
+      >
+        <Logo
+          className={cn("absolute left-5 top-5 text-5xl", {
+            "text-white": authLayoutImageIndex === 0,
+          })}
+        />
       </div>
-      <div className="overflow-y-auto px-40 py-20">{children}</div>
+      <div className="h-screen overflow-y-auto">{children}</div>
     </div>
   );
 }

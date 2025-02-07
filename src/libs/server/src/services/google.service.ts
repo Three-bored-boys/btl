@@ -1,6 +1,7 @@
-import type { Book, GoogleBooksResponse } from "../../../shared/src/types";
-import type { SearchObjectType, PaginationObjectType } from "../../../shared/src/schemas";
-import { DEFAULT_MAX_RESULTS, DEFAULT_PAGE_NUMBER } from "@/root/src/libs/shared/src/utils";
+import type { Book, GoogleBooksResponse } from "@/shared/types";
+import type { SearchObjectType, PaginationObjectType } from "@/shared/validators";
+import { DEFAULT_MAX_RESULTS, DEFAULT_PAGE_NUMBER } from "@/shared/utils";
+import { fetchServiceData } from "@/server/utils";
 
 type Item = GoogleBooksResponse["items"][number];
 
@@ -10,12 +11,7 @@ export class GoogleBooksService {
   private async fetchBooks(url: string): Promise<{ books: Book[]; totalItems: number }> {
     try {
       console.log(url);
-      const response = await fetch(url);
-      console.log(response.ok, response.status, response.statusText);
-      if (!response.ok) {
-        throw new Error(response.statusText);
-      }
-      const data = (await response.json()) as GoogleBooksResponse;
+      const data = await fetchServiceData<GoogleBooksResponse>(url);
       return { books: data.items.map((item) => this.mapBook(item)), totalItems: data.totalItems };
     } catch (error) {
       console.error("Problem getting books:", JSON.stringify(error, null, 2));

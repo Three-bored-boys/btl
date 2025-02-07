@@ -1,7 +1,7 @@
 import React from "react";
 import { testBook } from "./data";
 import { OverviewLibraryPreviewSection } from "./overview-library-preview-section";
-import { bookLocations } from "@/client/utils";
+import { bookLibraries } from "@/shared/utils";
 import { Book } from "@/root/src/libs/shared/src/types";
 
 export function OverviewPage() {
@@ -14,8 +14,8 @@ export function OverviewPage() {
   return (
     <div>
       <h1 className="font-semibold">Overview</h1>
-      {bookLocations.map((location, i) => (
-        <OverviewLibraryPreviewSection name={location.name} slug={location.value} books={books[i]} key={i} />
+      {bookLibraries.map((library, i) => (
+        <OverviewLibraryPreviewSection name={library.name} slug={library.value} books={books[i]} key={i} />
       ))}
     </div>
   );

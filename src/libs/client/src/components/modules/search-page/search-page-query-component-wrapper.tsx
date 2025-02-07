@@ -1,4 +1,4 @@
-import { PaginationObjectType, SearchObjectType } from "@/root/src/libs/shared/src/schemas";
+import { PaginationObjectType, SearchObjectType } from "@/root/src/libs/shared/src/validators";
 import { filterKeysArray } from "@/root/src/libs/shared/src/utils";
 import { useSearchParams } from "next/navigation";
 import React from "react";
