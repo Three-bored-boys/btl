@@ -3,9 +3,8 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import React from "react";
-import { Theme } from "@radix-ui/themes";
 
-export default function Providers({ children }: { children: React.ReactNode }): React.ReactNode {
+export function ReactQueryProvider({ children }: { children: React.ReactNode }): React.ReactNode {
   const [queryClient] = React.useState(
     () =>
       new QueryClient({
@@ -15,7 +14,7 @@ export default function Providers({ children }: { children: React.ReactNode }): 
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Theme>{children}</Theme>
+      {children}
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );

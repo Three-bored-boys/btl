@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import "@radix-ui/themes/styles.css";
 import { ReactElement } from "react";
-import Providers from "./providers";
+import { ReactQueryProvider } from "./providers/react-query-provider";
+import { RadixProvider } from "./providers/radix-provider";
 
 export const metadata: Metadata = {
   title: "BTL (Book Tracker Library)",
@@ -17,9 +18,11 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning={true}>
       <body suppressHydrationWarning={true}>
-        <Providers>
-          <main>{children}</main>
-        </Providers>
+        <ReactQueryProvider>
+          <RadixProvider>
+            <main>{children}</main>
+          </RadixProvider>
+        </ReactQueryProvider>
       </body>
     </html>
   );
