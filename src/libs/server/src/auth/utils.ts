@@ -17,12 +17,23 @@ const uint8ArrayToBase64 = function (array: Uint8Array): string {
   return bytes;
 }; */
 
-export const encryptAuthSessionToken = async function (token: string) {
-  const key = await crypto.subtle.generateKey({ name: "AES-GCM", length: 256 }, true, ["encrypt", "decrypt"]);
-  const iv = crypto.getRandomValues(new Uint8Array(12));
+const getEncryptedIV = async function (token: string) {
+  const tokenBytes = new TextEncoder().encode(token);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", tokenBytes);
+  return new Uint8Array(hashBuffer.slice(0, 12));
+};
+
+const getEncryptedKey = async function (secretKey: string) {
+  const secretKeyBytes = new TextEncoder().encode(secretKey);
+  const secretKeyBuffer = await crypto.subtle.digest("SHA-256", secretKeyBytes);
+  return await crypto.subtle.importKey("raw", secretKeyBuffer, { name: "AES-GCM" }, false, ["encrypt", "decrypt"]);
+};
+
+export const encryptAuthSessionToken = async function (token: string, secretKey: string) {
+  const key = await getEncryptedKey(secretKey);
+  const iv = await getEncryptedIV(token);
   const encodedToken = new TextEncoder().encode(token);
   const encryptedToken = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, encodedToken);
-  const ivBase64 = uint8ArrayToBase64(iv);
   const encryptedTokenBase64 = uint8ArrayToBase64(new Uint8Array(encryptedToken));
-  return `${ivBase64}:${encryptedTokenBase64}`;
+  return encryptedTokenBase64;
 };
