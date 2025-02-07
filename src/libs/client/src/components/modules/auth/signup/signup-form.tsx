@@ -21,6 +21,7 @@ export function SignupForm() {
 
   const updateSignupFormState = async function (event: React.FormEvent<HTMLFormElement>): Promise<SignupFormState> {
     const formData = new FormData(event.currentTarget);
+    console.log(formData);
     const signupObjRaw = Object.fromEntries(formData);
 
     const validation = signupSchema.safeParse(signupObjRaw);
