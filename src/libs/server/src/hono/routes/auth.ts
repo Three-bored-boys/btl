@@ -4,7 +4,7 @@ import { zValidator } from "@hono/zod-validator";
 import { signupSchema } from "@/shared/validators";
 import { Environment } from "@/root/bindings";
 import { getCookie, setCookie, deleteCookie } from "hono/cookie";
-import { useDB } from "@/server/db/db";
+import { db } from "@/server/db/db";
 import { users } from "@/server/db/schema";
 import { eq, or } from "drizzle-orm";
 import { hashPassword } from "@/server/auth/password";
@@ -17,7 +17,6 @@ auth.post(
   "/signup",
   zValidator("json", signupSchema, (result, c) => {
     if (!result.success) {
-      console.log(result.error);
       const responseData: BadResponse = { success: false, errors: result.error.issues.map((issue) => issue.message) };
       return c.json(responseData, 400);
     }
@@ -25,14 +24,13 @@ auth.post(
   async (c) => {
     let message = "";
     const { userName, emailAddress, password } = c.req.valid("json");
-    const resultExistingUser = await useDB(c, async (db) => {
-      return db
-        .select()
-        .from(users)
-        .where(or(eq(users.emailAddress, emailAddress), eq(users.userName, userName)))
-        .limit(1);
-    });
-    if (resultExistingUser !== undefined && resultExistingUser.length > 0) {
+    const resultExistingUser = await db(c)
+      .select()
+      .from(users)
+      .where(or(eq(users.emailAddress, emailAddress), eq(users.userName, userName)))
+      .limit(1);
+
+    if (resultExistingUser.length > 0) {
       const existingUser = resultExistingUser[0];
       message =
         existingUser.emailAddress === emailAddress
@@ -42,14 +40,13 @@ auth.post(
       return c.json(responseData, 404);
     }
     const hashedPassword = await hashPassword(password);
-    const resultNewUser = await useDB(c, async (db) => {
-      return await db.insert(users).values([{ emailAddress, hashedPassword, userName }]).returning();
-    });
+    const resultNewUser = await db(c).insert(users).values([{ emailAddress, hashedPassword, userName }]).returning();
 
     if (!resultNewUser) {
+      message = "Something went wrong while trying to create account";
       const responseData: BadResponse = {
         success: false,
-        errors: ["Something went wrong while trying to create account"],
+        errors: [message],
       };
       return c.json(responseData, 404);
     }
@@ -60,7 +57,9 @@ auth.post(
     const session = await createSession(sessionToken, newUser.id, c);
     setSessionCookie(c, sessionToken, session.expiresAt);
 
-    const data: GoodResponse<string> = { success: true, data: "Account successfully created!" };
+    message = "Account successfully created!";
+
+    const data: GoodResponse<string> = { success: true, data: message };
     return c.json(data);
   },
 );
