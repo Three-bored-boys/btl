@@ -5,5 +5,6 @@ export type Environment = {
     GOOGLE_BOOKS_API_KEY: string;
     NY_TIMES_BOOKS_API_KEY: string;
     SESSION_SECRET_KEY: string;
+    ENVIRONMENT: "development" | "production";
   };
 };
