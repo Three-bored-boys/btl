@@ -8,7 +8,7 @@ export const setSessionCookie = function (c: Context<Environment>, token: string
     expires: expiresAt,
     secure: true,
     httpOnly: true,
-    sameSite: "lax",
+    sameSite: "none",
     path: "/",
   });
 };
