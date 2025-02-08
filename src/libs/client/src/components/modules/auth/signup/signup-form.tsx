@@ -10,6 +10,7 @@ import { FormResult } from "@/libs/shared/src/types";
 import { fetchData, CustomAPIError } from "@/client/utils";
 import { Check } from "@/client/components/ui/icons/check";
 import { SubmitButton } from "@/client/components/ui/submit-button";
+import { SanitizedUser } from "@/shared/db/schema";
 
 export function SignupForm() {
   const router = useRouter();
@@ -45,17 +46,21 @@ export function SignupForm() {
     const signupObj = validation.data;
 
     try {
-      const data = await fetchData<string>(`${process.env.NEXT_PUBLIC_API_URL}/auth/signup`, {
-        method: "POST",
-        body: JSON.stringify(signupObj),
-        headers: {
-          "Content-Type": "application/json",
+      const data = await fetchData<{ message: string; user: SanitizedUser }>(
+        `${process.env.NEXT_PUBLIC_API_URL}/auth/signup`,
+        {
+          method: "POST",
+          body: JSON.stringify(signupObj),
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
         },
-      });
+      );
 
       return {
         fieldError: { userName: [], emailAddress: [], password: [] },
-        formResult: { success: true, message: data },
+        formResult: { success: true, message: data.message },
       };
     } catch (e) {
       if (e instanceof CustomAPIError) {

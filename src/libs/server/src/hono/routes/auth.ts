@@ -1,4 +1,4 @@
-import { Hono } from "hono";
+import { Context, Hono } from "hono";
 import type { GoodResponse, BadResponse } from "@/shared/types";
 import { zValidator } from "@hono/zod-validator";
 import { signupSchema } from "@/shared/validators";
@@ -12,6 +12,7 @@ import { generateSessionToken, createSession, validateSessionToken, invalidateSe
 import { setSessionCookie, deleteSessionCookie, getSessionCookieToken } from "@/server/auth/cookies";
 import { encryptAuthSessionToken } from "@/server/auth/utils";
 import { cache } from "hono/cache";
+import { sanitizedUser } from "@/server/utils";
 
 export const auth = new Hono<Environment>();
 
@@ -61,7 +62,13 @@ auth.post(
 
     message = "Account successfully created!";
 
-    const data: GoodResponse<string> = { success: true, data: message };
+    const responseData = { user: sanitizedUser(newUser), message };
+    console.log("responseData", responseData);
+
+    const data: GoodResponse<{ user: SanitizedUser; message: string }> = {
+      success: true,
+      data: responseData,
+    };
     return c.json(data);
   },
 );
@@ -110,7 +117,7 @@ auth.get("/logout", async (c) => {
 auth.get(
   "/validate-session",
   cache({
-    cacheName: (c) => {
+    cacheName: (c: Context<Environment>) => {
       const sessionToken = getSessionCookieToken(c);
       return sessionToken ?? "no-token";
     },
