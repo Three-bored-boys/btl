@@ -17,6 +17,7 @@ export const users = pgTable("users", {
 
 export type User = InferSelectModel<typeof users>;
 export type NewUser = InferInsertModel<typeof users>;
+export type SanitizedUser = Omit<User, "hashedPassword">;
 
 export const sessions = pgTable("sessions", {
   id: text("id").primaryKey(),

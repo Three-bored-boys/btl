@@ -1,5 +1,5 @@
 import { type User } from "@/server/db/schema";
-import { SanitizedUser } from "./auth/sessions";
+import { SanitizedUser } from "@/shared/db/schema";
 
 export const sanitizedUser = function (user: User): SanitizedUser {
   const { hashedPassword, ...rest } = user;

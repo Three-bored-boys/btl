@@ -1,12 +1,11 @@
 import { db } from "@/server/db/db";
 import { eq } from "drizzle-orm";
-import { users, sessions, Session, User } from "@/server/db/schema";
+import { users, sessions, Session, SanitizedUser } from "@/server/db/schema";
 import { sanitizedUser } from "@/server/utils";
 import { generateAuthSessionToken, encryptAuthSessionToken } from "./utils";
 import { Context } from "hono";
 import { Environment } from "@/root/bindings";
 
-export type SanitizedUser = Omit<User, "hashedPassword">;
 export type SessionValidationResult =
   | {
       user: SanitizedUser;
