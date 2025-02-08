@@ -40,7 +40,7 @@ export class CustomAPIError extends Error {
 }
 
 export const fetchData = async function <T>(url: string, options?: RequestInit) {
-  const res = await fetch(url, options);
+  const res = await fetch(url, { credentials: "include", ...options });
 
   if (!res.ok) {
     const errorObj = (await res.json()) as BadResponse;
