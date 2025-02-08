@@ -3,7 +3,7 @@ import type { GoodResponse, BadResponse } from "@/shared/types";
 import { zValidator } from "@hono/zod-validator";
 import { signupSchema } from "@/shared/validators";
 import { Environment } from "@/root/bindings";
-import { getCookie, setCookie, deleteCookie } from "hono/cookie";
+import { getCookie, setCookie } from "hono/cookie";
 import { db } from "@/server/db/db";
 import { SanitizedUser, users } from "@/server/db/schema";
 import { eq, or } from "drizzle-orm";
@@ -90,13 +90,20 @@ auth.get("/login", (c) => {
   return c.json(responseData);
 });
 
-auth.get("/logout", (c) => {
-  const authCookie = getCookie(c, "session_id");
-  console.log(authCookie);
+auth.get("/logout", async (c) => {
+  const token = getSessionCookieToken(c);
+  if (!token) {
+    deleteSessionCookie(c);
+    const responseData: BadResponse = { success: false, errors: ["No session token found"] };
+    return c.json(responseData, 401);
+  }
 
-  deleteCookie(c, "session_id");
+  const sessionId = await encryptAuthSessionToken(token, c.env.SESSION_SECRET_KEY);
 
-  const responseData: GoodResponse<string> = { success: true, data: "Cookie deleted!" };
+  await invalidateSession(sessionId, c);
+  deleteSessionCookie(c);
+
+  const responseData: GoodResponse<string> = { success: true, data: "Successfully logged out!" };
   return c.json(responseData);
 });
 
