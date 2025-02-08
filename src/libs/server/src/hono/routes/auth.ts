@@ -5,11 +5,13 @@ import { signupSchema } from "@/shared/validators";
 import { Environment } from "@/root/bindings";
 import { getCookie, setCookie, deleteCookie } from "hono/cookie";
 import { db } from "@/server/db/db";
-import { users } from "@/server/db/schema";
+import { SanitizedUser, users } from "@/server/db/schema";
 import { eq, or } from "drizzle-orm";
 import { hashPassword } from "@/server/auth/password";
-import { generateSessionToken, createSession } from "@/server/auth/sessions";
-import { setSessionCookie } from "@/server/auth/cookies";
+import { generateSessionToken, createSession, validateSessionToken, invalidateSession } from "@/server/auth/sessions";
+import { setSessionCookie, deleteSessionCookie, getSessionCookieToken } from "@/server/auth/cookies";
+import { encryptAuthSessionToken } from "@/server/auth/utils";
+import { cache } from "hono/cache";
 
 export const auth = new Hono<Environment>();
 
@@ -98,7 +100,32 @@ auth.get("/logout", (c) => {
   return c.json(responseData);
 });
 
-auth.get("/check-cookie", (c) => {
-  const responseData: GoodResponse<string> = { success: true, data: "Just checking if cookie still exists!" };
-  return c.json(responseData);
-});
+auth.get(
+  "/validate-session",
+  cache({
+    cacheName: (c) => {
+      const sessionToken = getSessionCookieToken(c);
+      return sessionToken ?? "no-token";
+    },
+    cacheControl: "no-cache, private",
+  }),
+  async (c) => {
+    const sessionToken = getSessionCookieToken(c);
+    if (!sessionToken) {
+      deleteSessionCookie(c);
+      const responseData: BadResponse = { success: false, errors: ["No session token found"] };
+      return c.json(responseData, 401);
+    }
+
+    const { session, user } = await validateSessionToken(sessionToken, c);
+
+    if (!session || !user) {
+      deleteSessionCookie(c);
+      const responseData: BadResponse = { success: false, errors: ["Invalid session token"] };
+      return c.json(responseData, 401);
+    }
+
+    const responseData: GoodResponse<SanitizedUser> = { success: true, data: user };
+    return c.json(responseData);
+  },
+);
