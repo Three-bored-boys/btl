@@ -5,8 +5,8 @@ import { Button } from "@/libs/client/src/components/ui/button";
 import Image from "next/image";
 import notFoundImage from "@/public/assets/images/not-found.webp";
 
-export default function Error({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
-  error.digest = error.message;
+export default function GlobalError({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
+  console.log(error);
 
   return (
     <>
