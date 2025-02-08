@@ -4,14 +4,8 @@ import { GoogleBooksService } from "@/server/services/google.service";
 import { NYTimesService } from "@/server/services/ny-times.service";
 import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
-import {
-  type BadResponse,
-  type GoodResponse,
-  type Genres,
-  type BestSeller,
-  type Book,
-} from "../../../../shared/src/types";
-import { fullSearchObjectSchema } from "../../../../shared/src/validators";
+import { type BadResponse, type GoodResponse, type Genres, type BestSeller, type Book } from "@/shared/types";
+import { fullSearchObjectSchema } from "@/shared/validators";
 import { Environment } from "@/root/bindings";
 import { cache } from "hono/cache";
 import { filterKeysArray } from "@/libs/shared/src/utils";
