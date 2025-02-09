@@ -1,11 +1,12 @@
 import { CustomAPIError, fetchData } from "@/root/src/libs/client/src/utils";
 import { SanitizedUser } from "@/root/src/libs/shared/src/db/schema";
 import type { SignupInput } from "@/root/src/libs/shared/src/validators";
-import { FormResult } from "@/root/src/libs/shared/src/types";
 import { type NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { HandlerResult } from "@/shared/types/form-state";
+import { SignupResult } from "@/shared/validators/auth";
 
-export async function POST(req: NextRequest): Promise<NextResponse<FormResult>> {
+export async function POST(req: NextRequest): Promise<NextResponse<HandlerResult<SignupResult>>> {
   try {
     const signupInput = (await req.json()) as SignupInput;
     console.log("signupInput", signupInput);
@@ -18,7 +19,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<FormResult>> 
     });
     console.log(cookies().getAll());
 
-    return NextResponse.json({ formResult: { success: true, message: data.message } });
+    return NextResponse.json({ formResult: { success: true, data } });
   } catch (e) {
     if (e instanceof CustomAPIError) {
       return NextResponse.json(

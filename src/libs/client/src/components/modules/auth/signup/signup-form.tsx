@@ -6,9 +6,11 @@ import { Input } from "@/client/components/ui/input";
 import { FormErrorListItem } from "@/client/components/ui/form-error-list-item";
 import { signupSchema, SignupFormState, SignupInput } from "@/root/src/libs/shared/src/validators";
 import { useRouter } from "next/navigation";
-import { FieldError, FormResult } from "@/libs/shared/src/types";
+import { FieldError } from "@/libs/shared/src/types";
 import { Check } from "@/client/components/ui/icons/check";
 import { SubmitButton } from "@/client/components/ui/submit-button";
+import { HandlerResult } from "@/shared/types/form-state";
+import { SignupResult } from "@/shared/validators/auth";
 
 export function SignupForm() {
   const router = useRouter();
@@ -17,7 +19,7 @@ export function SignupForm() {
   });
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
-  const updateSignupFormState = async function (event: React.FormEvent<HTMLFormElement>): Promise<FormResult> {
+  const updateSignupFormState = async function (event: React.FormEvent<HTMLFormElement>): Promise<SignupFormState> {
     const formData = new FormData(event.currentTarget);
     const signupObjRaw = Object.fromEntries(formData);
 
@@ -49,14 +51,13 @@ export function SignupForm() {
         "Content-Type": "application/json",
       },
     });
+    const result = (await res.json()) as HandlerResult<SignupResult>;
 
     if (!res.ok) {
-      const errorObj = (await res.json()) as FormResult;
-      throw errorObj;
+      throw result;
     }
 
-    const { formResult } = (await res.json()) as FormResult;
-    return { formResult };
+    return result;
   };
 
   const onSubmit = async function (e: React.FormEvent<HTMLFormElement>) {
@@ -64,28 +65,30 @@ export function SignupForm() {
     setIsSubmitting(true);
     try {
       const newFormResult = await updateSignupFormState(e);
-      setSignupFormState((prev) => ({ prev, ...newFormResult }));
+      setSignupFormState(newFormResult);
       setIsSubmitting(false);
       router.push("/");
     } catch (e) {
       const newFormState = e as SignupFormState;
-      setSignupFormState((prev) => ({ prev, ...newFormState }));
+      setSignupFormState(newFormState);
       setIsSubmitting(false);
     }
   };
 
-  const FormResultMessage = function ({ formResult }: { formResult: FormResult }) {
-    if (formResult.formResult?.success) {
+  const FormResultMessage = function ({ formResult }: { formResult: HandlerResult<SignupResult> }) {
+    if (formResult.formResult.success) {
       return (
         <p className="flex items-center gap-x-0 text-success">
           <Check className="text-success" fill="#4ade80"></Check>
-          {formResult.formResult.message}
+          {formResult.formResult.data.message}
         </p>
       );
     } else {
       return (
         <ul style={{ listStyle: "disc", listStylePosition: "outside" }}>
-          {formResult.formResult?.errors.map((error, i) => <FormErrorListItem key={i}>{error}</FormErrorListItem>)}
+          {formResult.formResult.errors.map((error, i) => (
+            <FormErrorListItem key={i}>{error}</FormErrorListItem>
+          ))}
         </ul>
       );
     }
@@ -97,7 +100,8 @@ export function SignupForm() {
         <Label htmlFor="userName">Username:</Label>
         <Input id="userName" type="text" name="userName" />
         <ul style={{ listStyle: "disc", listStylePosition: "outside" }}>
-          {signupFormState.fieldError?.userName.map((error, i) => (
+          {"fieldError" in signupFormState &&
+            signupFormState.fieldError.userName.map((error, i) => (
               <FormErrorListItem key={i}>{error}</FormErrorListItem>
             ))}
         </ul>
@@ -107,9 +111,10 @@ export function SignupForm() {
         <Label htmlFor="emailAddress">Email address:</Label>
         <Input id="emailAddress" type="email" name="emailAddress" />
         <ul style={{ listStyle: "disc", listStylePosition: "outside" }}>
-          {signupFormState.fieldError?.emailAddress.map((error, i) => (
-            <FormErrorListItem key={i}>{error}</FormErrorListItem>
-          ))}
+          {"fieldError" in signupFormState &&
+            signupFormState.fieldError.emailAddress.map((error, i) => (
+              <FormErrorListItem key={i}>{error}</FormErrorListItem>
+            ))}
         </ul>
       </div>
 
@@ -117,16 +122,17 @@ export function SignupForm() {
         <Label htmlFor="password">Password:</Label>
         <Input id="password" type="password" name="password" />
         <ul style={{ listStyle: "disc", listStylePosition: "outside" }}>
-          {signupFormState.fieldError?.password.map((error, i) => (
-            <FormErrorListItem key={i}>{error}</FormErrorListItem>
-          ))}
+          {"fieldError" in signupFormState &&
+            signupFormState.fieldError.password.map((error, i) => (
+              <FormErrorListItem key={i}>{error}</FormErrorListItem>
+            ))}
         </ul>
       </div>
 
       <div>
         <SubmitButton isSubmitting={isSubmitting} defaultText={"Sign up"} submittingText={"Signing up..."} />
       </div>
-      {signupFormState.formResult && <FormResultMessage formResult={signupFormState}></FormResultMessage>}
+      {"formResult" in signupFormState && <FormResultMessage formResult={signupFormState}></FormResultMessage>}
     </form>
   );
 }
