@@ -13,6 +13,7 @@ import { setSessionCookie, deleteSessionCookie, getSessionCookieToken } from "@/
 import { encryptAuthSessionToken } from "@/server/auth/utils";
 import { cache } from "hono/cache";
 import { sanitizedUser } from "@/server/utils";
+import { SignupResult } from "@/shared/validators/auth";
 
 export const auth = new Hono<Environment>();
 
@@ -65,7 +66,7 @@ auth.post(
     const responseData = { user: sanitizedUser(newUser), message };
     console.log("responseData", responseData);
 
-    const data: GoodResponse<{ user: SanitizedUser; message: string }> = {
+    const data: GoodResponse<SignupResult> = {
       success: true,
       data: responseData,
     };
