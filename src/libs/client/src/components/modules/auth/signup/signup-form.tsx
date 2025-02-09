@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { FieldError } from "@/libs/shared/src/types";
 import { Check } from "@/client/components/ui/icons/check";
 import { SubmitButton } from "@/client/components/ui/submit-button";
-import { HandlerResult } from "@/shared/types/form-state";
+import { HandlerResult } from "@/shared/types";
 import { SignupResult } from "@/shared/validators/auth";
 
 export function SignupForm() {
@@ -64,8 +64,8 @@ export function SignupForm() {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      const newFormResult = await updateSignupFormState(e);
-      setSignupFormState(newFormResult);
+      const newFormState = await updateSignupFormState(e);
+      setSignupFormState(newFormState);
       setIsSubmitting(false);
       router.push("/");
     } catch (e) {
@@ -75,18 +75,18 @@ export function SignupForm() {
     }
   };
 
-  const FormResultMessage = function ({ formResult }: { formResult: HandlerResult<SignupResult> }) {
-    if (formResult.formResult.success) {
+  const HandlerResultMessage = function ({ handlerResult }: { handlerResult: HandlerResult<SignupResult> }) {
+    if (handlerResult.handlerResult.success) {
       return (
         <p className="flex items-center gap-x-0 text-success">
           <Check className="text-success" fill="#4ade80"></Check>
-          {formResult.formResult.data.message}
+          {handlerResult.handlerResult.data.message}
         </p>
       );
     } else {
       return (
         <ul style={{ listStyle: "disc", listStylePosition: "outside" }}>
-          {formResult.formResult.errors.map((error, i) => (
+          {handlerResult.handlerResult.errors.map((error, i) => (
             <FormErrorListItem key={i}>{error}</FormErrorListItem>
           ))}
         </ul>
@@ -132,7 +132,9 @@ export function SignupForm() {
       <div>
         <SubmitButton isSubmitting={isSubmitting} defaultText={"Sign up"} submittingText={"Signing up..."} />
       </div>
-      {"formResult" in signupFormState && <FormResultMessage formResult={signupFormState}></FormResultMessage>}
+      {"handlerResult" in signupFormState && (
+        <HandlerResultMessage handlerResult={signupFormState}></HandlerResultMessage>
+      )}
     </form>
   );
 }

@@ -2,7 +2,7 @@ import { CustomAPIError, fetchData } from "@/root/src/libs/client/src/utils";
 import { SanitizedUser } from "@/root/src/libs/shared/src/db/schema";
 import type { SignupInput } from "@/root/src/libs/shared/src/validators";
 import { type NextRequest, NextResponse } from "next/server";
-import { HandlerResult } from "@/shared/types/form-state";
+import { HandlerResult } from "@/shared/types";
 import { SignupResult } from "@/shared/validators/auth";
 
 export async function POST(req: NextRequest): Promise<NextResponse<HandlerResult<SignupResult>>> {
@@ -16,11 +16,11 @@ export async function POST(req: NextRequest): Promise<NextResponse<HandlerResult
       },
     });
 
-    return NextResponse.json({ formResult: { success: true, data } });
+    return NextResponse.json({ handlerResult: { success: true, data } });
   } catch (e) {
     if (e instanceof CustomAPIError) {
       return NextResponse.json(
-        { formResult: { success: false, errors: e.errors } },
+        { handlerResult: { success: false, errors: e.errors } },
         {
           status: e.status,
         },
@@ -28,7 +28,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<HandlerResult
     }
 
     return NextResponse.json(
-      { formResult: { success: false, errors: ["Something went wrong. Please try again later."] } },
+      { handlerResult: { success: false, errors: ["Something went wrong. Please try again later."] } },
       {
         status: 500,
       },
