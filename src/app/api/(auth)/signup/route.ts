@@ -2,14 +2,12 @@ import { CustomAPIError, fetchData } from "@/root/src/libs/client/src/utils";
 import { SanitizedUser } from "@/root/src/libs/shared/src/db/schema";
 import type { SignupInput } from "@/root/src/libs/shared/src/validators";
 import { type NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
 import { HandlerResult } from "@/shared/types/form-state";
 import { SignupResult } from "@/shared/validators/auth";
 
 export async function POST(req: NextRequest): Promise<NextResponse<HandlerResult<SignupResult>>> {
   try {
     const signupInput = (await req.json()) as SignupInput;
-    console.log("signupInput", signupInput);
     const data = await fetchData<{ message: string; user: SanitizedUser }>(`${process.env.API_URL}/auth/signup`, {
       method: "POST",
       body: JSON.stringify(signupInput),
@@ -17,7 +15,6 @@ export async function POST(req: NextRequest): Promise<NextResponse<HandlerResult
         "Content-Type": "application/json",
       },
     });
-    console.log(cookies().getAll());
 
     return NextResponse.json({ formResult: { success: true, data } });
   } catch (e) {

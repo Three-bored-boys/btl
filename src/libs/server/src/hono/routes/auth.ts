@@ -63,8 +63,7 @@ auth.post(
 
     message = "Account successfully created!";
 
-    const responseData = { user: sanitizedUser(newUser), message };
-    console.log("responseData", responseData);
+    const responseData: SignupResult = { user: sanitizedUser(newUser), message };
 
     const data: GoodResponse<SignupResult> = {
       success: true,
