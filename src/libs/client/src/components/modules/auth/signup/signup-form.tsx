@@ -26,7 +26,7 @@ export function SignupForm() {
     const validation = signupSchema.safeParse(signupObjRaw);
 
     if (!validation.success) {
-      const errorObj: FieldError<SignupInput> = {
+      const fieldErrorObj: FieldError<SignupInput> = {
         fieldError: {
           userName: validation.error.issues
             .filter((issue) => issue.path[0] === "userName")
@@ -39,7 +39,7 @@ export function SignupForm() {
             .map((issue) => issue.message),
         },
       };
-      throw errorObj;
+      return fieldErrorObj;
     }
 
     const signupObj = validation.data;
@@ -50,12 +50,9 @@ export function SignupForm() {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
     });
     const result = (await res.json()) as HandlerResult<SignupResult>;
-
-    if (!res.ok) {
-      throw result;
-    }
 
     return result;
   };
@@ -63,15 +60,11 @@ export function SignupForm() {
   const onSubmit = async function (e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setIsSubmitting(true);
-    try {
-      const newFormState = await updateSignupFormState(e);
-      setSignupFormState(newFormState);
-      setIsSubmitting(false);
+    const newFormState = await updateSignupFormState(e);
+    setSignupFormState(newFormState);
+    setIsSubmitting(false);
+    if ("handlerResult" in newFormState && newFormState.handlerResult.success) {
       router.push("/");
-    } catch (e) {
-      const newFormState = e as SignupFormState;
-      setSignupFormState(newFormState);
-      setIsSubmitting(false);
     }
   };
 
