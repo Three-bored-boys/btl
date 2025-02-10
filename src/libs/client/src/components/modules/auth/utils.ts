@@ -5,5 +5,9 @@ export const getUser = async function () {
   const apiURL = process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL;
 
   const { fetchDataResult } = await fetchData<SanitizedUser>(`${apiURL}/auth/validate-session`);
-  return fetchDataResult;
+
+  if (!fetchDataResult.success) {
+    return null;
+  }
+  return fetchDataResult.data;
 };
