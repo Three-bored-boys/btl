@@ -1,8 +1,7 @@
-export type FormState<T> = {
-  fieldError: {
-    [key in keyof T]: string[];
-  };
-  formResult: FormResult | null;
-};
+import { HandlerResult } from "./response";
 
-export type FormResult = { success: false; errors: string[] } | { success: true; message: string };
+export type FormState<T, P = unknown> = FieldError<T> | HandlerResult<P>;
+
+export type FieldError<T> = {
+  fieldError: { [key in keyof T]: string[] };
+};
