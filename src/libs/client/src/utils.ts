@@ -46,11 +46,11 @@ export const fetchData = async function <T>(url: string, options?: RequestInit):
 
   if (!res.ok) {
     const data = (await res.json()) as BadResponse;
-    return { fetchDataResult: { ...data, status } };
+    return { fetchDataResult: { ...data, status }, res };
   }
 
   const data = (await res.json()) as GoodResponse<T>;
-  return { fetchDataResult: data };
+  return { fetchDataResult: data, res };
 };
 
 export const BTL_LOCAL_STORAGE_SEARCH_OBJECT = "btlSearchObject";

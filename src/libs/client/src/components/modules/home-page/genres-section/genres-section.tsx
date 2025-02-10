@@ -55,7 +55,7 @@ async function GetGenresWrapper() {
     return { genre: genres[i].name, books: val };
   });
 
-  const BooksOrError = function ({ fetchDataResult }: FetchDataResult<Book[]>) {
+  const BooksOrError = function ({ fetchDataResult }: Omit<FetchDataResult<Book[]>, "res">) {
     if (!fetchDataResult.success) {
       const { status, errors } = fetchDataResult;
       return (
