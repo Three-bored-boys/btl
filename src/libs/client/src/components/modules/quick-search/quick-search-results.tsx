@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useQuickSearchResults } from "./useQuickSearchResults";
 import genericBookImage from "@/public/assets/images/generic-book.png";
 import { DEFAULT_MAX_RESULTS, DEFAULT_PAGE_NUMBER } from "@/libs/shared/src/utils";
-import { CustomAPIError } from "@/client/utils";
 import { ExclamationTriangle } from "@/client/components/ui/icons/exclamation-triangle";
 
 export function QuickSearchResults({
@@ -15,41 +14,25 @@ export function QuickSearchResults({
   search: string;
   setSearchResultsVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-  const { data } = useQuickSearchResults({ search });
+  const { data: result, error } = useQuickSearchResults({ search });
 
-  if (data instanceof CustomAPIError)
+  if (error) {
+    throw error;
+  }
+
+  if (!result.success) {
+    const { status, errors } = result;
     return (
       <div className="my-2 flex w-full flex-col items-center justify-start gap-y-1">
         <ExclamationTriangle />
-        <p className="text-xl font-semibold">Error {data.status}</p>
-        <p className="text-base font-normal">{data.errors[0]}</p>
+        <p className="text-xl font-semibold">Error {status}</p>
+        <p className="text-base font-normal">{errors[0]}</p>
       </div>
     );
+  }
 
-  /* return Array.from({ length: 3 }, (_, i) => i).map((_, i) => (
-    <Link
-      className="grid w-full grid-cols-[40px_1fr] grid-rows-[auto] gap-1 rounded-xl py-2 hover:bg-secondary-100 xs:grid-cols-[45px_1fr] max-lg:md:grid-cols-[40px_1fr]"
-      href={`/book/${book.isbn13}`}
-      key={i}
-    >
-      <div className="aspect-square">
-        <Image
-          width={500}
-          height={500}
-          src={book.image ?? genericBookImage}
-          alt={`${book.title} by ${book.author}`}
-          className="mx-auto h-full w-full rounded-lg object-cover"
-        />
-      </div>
-      <div className="truncate text-sm">
-        <p className="mb-1 truncate font-medium leading-4">{book.title}</p>
-        <p className="truncate font-light leading-4">{book.author}</p>
-      </div>
-    </Link>
-  )); */
-
+  const { data } = result;
   const booksWithISBN = data.filter((book) => book.isbn10 !== "" || book.isbn13 !== "");
-
   if (data.length === 0 || booksWithISBN.length === 0) {
     return <div>No books found from search :(</div>;
   }
@@ -90,3 +73,25 @@ export function QuickSearchResults({
     </div>
   );
 }
+
+/* return Array.from({ length: 3 }, (_, i) => i).map((_, i) => (
+    <Link
+      className="grid w-full grid-cols-[40px_1fr] grid-rows-[auto] gap-1 rounded-xl py-2 hover:bg-secondary-100 xs:grid-cols-[45px_1fr] max-lg:md:grid-cols-[40px_1fr]"
+      href={`/book/${book.isbn13}`}
+      key={i}
+    >
+      <div className="aspect-square">
+        <Image
+          width={500}
+          height={500}
+          src={book.image ?? genericBookImage}
+          alt={`${book.title} by ${book.author}`}
+          className="mx-auto h-full w-full rounded-lg object-cover"
+        />
+      </div>
+      <div className="truncate text-sm">
+        <p className="mb-1 truncate font-medium leading-4">{book.title}</p>
+        <p className="truncate font-light leading-4">{book.author}</p>
+      </div>
+    </Link>
+  )); */
