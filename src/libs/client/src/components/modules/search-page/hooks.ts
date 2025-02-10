@@ -1,5 +1,5 @@
 import { PaginationObjectType, SearchObjectType } from "@/root/src/libs/shared/src/validators";
-import { CustomAPIError, fetchData, getSearchObjectFromLocalStorage, handleNumberSearchParam } from "../../../utils";
+import { fetchData, getSearchObjectFromLocalStorage, handleNumberSearchParam } from "../../../utils";
 import {
   DEFAULT_MAX_RESULTS,
   DEFAULT_PAGE_NUMBER,
@@ -14,17 +14,10 @@ import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 const getFullSearchResults = async function (searchObject: SearchObjectType, paginationObject: PaginationObjectType) {
-  try {
-    const results = await fetchData<{ books: Book[]; totalItems: number }>(
-      `${process.env.NEXT_PUBLIC_API_URL}/books/full-search?${new URLSearchParams({ ...searchObject, ...paginationObject }).toString()}`,
-    );
-    return results;
-  } catch (e) {
-    if (e instanceof CustomAPIError) {
-      return e;
-    }
-    throw e;
-  }
+  const { fetchDataResult } = await fetchData<{ books: Book[]; totalItems: number }>(
+    `${process.env.NEXT_PUBLIC_API_URL}/books/full-search?${new URLSearchParams({ ...searchObject, ...paginationObject }).toString()}`,
+  );
+  return fetchDataResult;
 };
 
 export function useSearchPageResults(searchObject: SearchObjectType, paginationObject: PaginationObjectType) {
