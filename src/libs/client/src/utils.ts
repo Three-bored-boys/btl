@@ -42,11 +42,10 @@ export class CustomAPIError extends Error {
 
 export const fetchData = async function <T>(url: string, options?: RequestInit): Promise<FetchDataResult<T>> {
   const res = await fetch(url, options);
-  const status = res.status;
 
   if (!res.ok) {
     const data = (await res.json()) as BadResponse;
-    return { fetchDataResult: { ...data, status }, res };
+    return { fetchDataResult: data, res };
   }
 
   const data = (await res.json()) as GoodResponse<T>;
