@@ -44,7 +44,7 @@ export function SignupForm() {
 
     const signupObj = validation.data;
 
-    const res = await fetch("/api/signup", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/signup`, {
       method: "POST",
       body: JSON.stringify(signupObj),
       headers: {
