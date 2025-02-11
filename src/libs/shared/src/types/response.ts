@@ -7,5 +7,4 @@ export type BadResponse = { success: false; errors: string[] };
 
 export type HandlerResult<P> = { handlerResult: BadResponse | GoodResponse<P> }; // For the fetch route handler custom functon in app api utils
 
-export type FetchDataResult<T> = { fetchDataResult: BadResponseWithStatus | GoodResponse<T>; res: Response }; // For the fetch data custom function in client utils
-export type BadResponseWithStatus = BadResponse & { status: number };
+export type FetchDataResult<T> = { fetchDataResult: BadResponse | GoodResponse<T>; res: Response }; // For the fetch data custom function in client utils
