@@ -28,18 +28,6 @@ export const button = cva(["h-auto", "rounded-3xl", "border-2", "border-transpar
 
 export type ButtonVariants = VariantProps<typeof button>;
 
-export class CustomAPIError extends Error {
-  constructor(
-    message: string,
-    public status: number,
-    public errors: string[],
-  ) {
-    super(message);
-    this.status = status;
-    this.errors = errors;
-  }
-}
-
 export const fetchData = async function <T>(url: string, options?: RequestInit): Promise<FetchDataResult<T>> {
   const res = await fetch(url, options);
 
