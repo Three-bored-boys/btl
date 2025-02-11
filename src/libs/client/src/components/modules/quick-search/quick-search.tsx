@@ -1,14 +1,15 @@
 "use client";
 
-import React, { ComponentProps, useRef, useState, useEffect } from "react";
+import React, { ComponentProps, useRef, useState, useEffect, Suspense } from "react";
 import { QuickSearchResults } from "./quick-search-results";
-import { SearchInput } from "@/root/src/libs/client/src/components/ui/search-input";
+import { SearchInput } from "@/client/components/ui/search-input";
 import { cn, getSearchObjectFromLocalStorage, setSearchObjectToLocalStorage } from "@/client/utils";
-import type { SearchObjectType } from "@/root/src/libs/shared/src/validators";
+import type { SearchObjectType } from "@/shared/validators";
+import { Button } from "@/client/components/ui/button";
+import { Close } from "@/client/components/ui/icons/close";
+import { LoadingSkeleton } from "./loading-skeleton";
 import { ErrorBoundary } from "react-error-boundary";
 import { QuickSearchErrorBoundary } from "./quick-search-error-boundary";
-import { Button } from "../../ui/button";
-import { Close } from "../../ui/icons/close";
 
 type QuickSearchResultsWrapperProps = {
   setSearchResultsVisible: React.Dispatch<React.SetStateAction<boolean>>;
@@ -83,7 +84,9 @@ export function QuickSearch({ className }: ComponentProps<"div">) {
       {searchResultsVisible && (
         <QuickSearchResultsWrapper setSearchResultsVisible={setSearchResultsVisible}>
           <ErrorBoundary fallbackRender={QuickSearchErrorBoundary}>
-            <QuickSearchResults search={searchInput} setSearchResultsVisible={setSearchResultsVisible} />
+            <Suspense fallback={<LoadingSkeleton />}>
+              <QuickSearchResults search={searchInput} setSearchResultsVisible={setSearchResultsVisible} />
+            </Suspense>
           </ErrorBoundary>
         </QuickSearchResultsWrapper>
       )}
