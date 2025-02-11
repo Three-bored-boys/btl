@@ -14,24 +14,27 @@ export function QuickSearchResults({
   search: string;
   setSearchResultsVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-  const { data: result, error } = useQuickSearchResults({ search });
+  const {
+    data: { fetchDataResult, res },
+    error,
+  } = useQuickSearchResults({ search });
 
   if (error) {
     throw error;
   }
 
-  if (!result.success) {
-    const { status, errors } = result;
+  if (!fetchDataResult.success) {
+    const { errors } = fetchDataResult;
     return (
       <div className="my-2 flex w-full flex-col items-center justify-start gap-y-1">
         <ExclamationTriangle />
-        <p className="text-xl font-semibold">Error {status}</p>
+        <p className="text-xl font-semibold">Error {res.status}</p>
         <p className="text-base font-normal">{errors[0]}</p>
       </div>
     );
   }
 
-  const { data } = result;
+  const { data } = fetchDataResult;
   const booksWithISBN = data.filter((book) => book.isbn10 !== "" || book.isbn13 !== "");
   if (data.length === 0 || booksWithISBN.length === 0) {
     return <div>No books found from search :(</div>;

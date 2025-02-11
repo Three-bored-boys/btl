@@ -28,14 +28,14 @@ export function NYTBestSellersSection() {
 }
 
 async function GetBestSellersWrapper() {
-  const { fetchDataResult } = await fetchData<BestSeller[]>(`${process.env.API_URL}/books/best-sellers`);
+  const { fetchDataResult, res } = await fetchData<BestSeller[]>(`${process.env.API_URL}/books/best-sellers`);
 
   if (!fetchDataResult.success) {
-    const { status, errors } = fetchDataResult;
+    const { errors } = fetchDataResult;
     return (
       <div className="my-2 flex w-full flex-col items-center justify-start gap-y-1">
         <ExclamationTriangle />
-        <p className="text-xl font-semibold">Error {status}</p>
+        <p className="text-xl font-semibold">Error {res.status}</p>
         <p className="text-base font-normal">{errors[0]}</p>
       </div>
     );

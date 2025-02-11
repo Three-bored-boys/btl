@@ -28,11 +28,11 @@ export async function POST(req: NextRequest) {
     }
 
     if (!fetchDataResult.success) {
-      const { status, errors } = fetchDataResult;
+      const { errors } = fetchDataResult;
       response = NextResponse.json(
         { handlerResult: { success: false, errors } },
         {
-          status,
+          status: externalResponse.status,
         },
       );
 

@@ -20,7 +20,9 @@ export function SearchPageQueryComponent({
   searchObject: SearchObjectType;
   paginationObject: PaginationObjectType;
 }) {
-  const { data: result } = useSearchPageResults(searchObject, paginationObject);
+  const {
+    data: { fetchDataResult, res },
+  } = useSearchPageResults(searchObject, paginationObject);
   const searchParams = useSearchParams();
   const router = useRouter();
   const newSearchParams = React.useRef<null | URLSearchParams>(null);
@@ -31,13 +33,13 @@ export function SearchPageQueryComponent({
     }
   }, [searchParams]);
 
-  if (!result.success) {
-    const { errors, status } = result;
+  if (!fetchDataResult.success) {
+    const { errors } = fetchDataResult;
     return (
       <div className="relative min-h-screen w-full">
         <Container>
           <div className="flex flex-col items-center justify-start gap-y-3 py-5">
-            <p className="mb-3 text-8xl font-extralight md:mb-9 md:text-9xl">{status}</p>
+            <p className="mb-3 text-8xl font-extralight md:mb-9 md:text-9xl">{res.status}</p>
             <h2 className="mb-2 text-4xl radix-xs:text-5xl md:mb-5 md:text-7xl">Oops! Something has gone wrong!</h2>
             <p className="mb-8 text-base radix-xs:text-xl md:mb-3 md:text-2xl">{errors[0]}</p>
             <LinkButton href="/" background={"light"} textSize={"big"} className="mb-2">
@@ -52,7 +54,7 @@ export function SearchPageQueryComponent({
     );
   }
 
-  const { data } = result;
+  const { data } = fetchDataResult;
 
   const maxResults = handleNumberSearchParam(
     searchParams.get("maxResults"),

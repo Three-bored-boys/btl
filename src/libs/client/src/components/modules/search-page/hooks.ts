@@ -14,10 +14,10 @@ import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 const getFullSearchResults = async function (searchObject: SearchObjectType, paginationObject: PaginationObjectType) {
-  const { fetchDataResult } = await fetchData<{ books: Book[]; totalItems: number }>(
+  const { fetchDataResult, res } = await fetchData<{ books: Book[]; totalItems: number }>(
     `${process.env.NEXT_PUBLIC_API_URL}/books/full-search?${new URLSearchParams({ ...searchObject, ...paginationObject }).toString()}`,
   );
-  return fetchDataResult;
+  return { fetchDataResult, res };
 };
 
 export function useSearchPageResults(searchObject: SearchObjectType, paginationObject: PaginationObjectType) {

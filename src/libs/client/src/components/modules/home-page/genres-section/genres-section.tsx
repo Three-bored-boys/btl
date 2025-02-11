@@ -28,14 +28,14 @@ export function GenresSection() {
 }
 
 async function GetGenresWrapper() {
-  const { fetchDataResult } = await fetchData<Genres>(`${process.env.API_URL}/books/genres`);
+  const { fetchDataResult, res } = await fetchData<Genres>(`${process.env.API_URL}/books/genres`);
 
   if (!fetchDataResult.success) {
-    const { status, errors } = fetchDataResult;
+    const { errors } = fetchDataResult;
     return (
       <div className="my-2 flex w-full flex-col items-center justify-start gap-y-1">
         <ExclamationTriangle />
-        <p className="text-xl font-semibold">Error {status}</p>
+        <p className="text-xl font-semibold">Error {res.status}</p>
         <p className="text-base font-normal">{errors[0]}</p>
       </div>
     );
@@ -57,11 +57,11 @@ async function GetGenresWrapper() {
 
   const BooksOrError = function ({ fetchDataResult }: Omit<FetchDataResult<Book[]>, "res">) {
     if (!fetchDataResult.success) {
-      const { status, errors } = fetchDataResult;
+      const { errors } = fetchDataResult;
       return (
         <div className="my-2 flex w-full flex-col items-center justify-start gap-y-1">
           <ExclamationTriangle />
-          <p className="text-xl font-semibold">Error {status}</p>
+          <p className="text-xl font-semibold">Error {res.status}</p>
           <p className="text-base font-normal">{errors[0]}</p>
         </div>
       );
