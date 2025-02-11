@@ -5,7 +5,7 @@ import { ReactElement } from "react";
 import { ReactQueryProvider } from "./providers/react-query-provider";
 import { RadixProvider } from "./providers/radix-provider";
 import { AuthContextProvider } from "./providers/auth-context-provider";
-import { getUser } from "@/client/components/modules/auth/utils";
+import { validateUser } from "./api/(auth)/utils";
 
 export const metadata: Metadata = {
   title: "BTL (Book Tracker Library)",
@@ -17,7 +17,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>): Promise<ReactElement> {
-  const user = await getUser();
+  const user = await validateUser();
 
   return (
     <html lang="en" suppressHydrationWarning={true}>
