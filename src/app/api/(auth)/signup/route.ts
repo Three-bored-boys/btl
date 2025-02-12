@@ -18,12 +18,6 @@ export async function POST(req: NextRequest) {
       credentials: "include",
     });
 
-    if (!fetchDataResult.success) {
-      response = NextResponse.json({ handlerResult: fetchDataResult }, { status: res.status });
-      setCookieForBrowser(res);
-      return response;
-    }
-
     response = NextResponse.json({ handlerResult: fetchDataResult });
     setCookieForBrowser(res);
     return response;
