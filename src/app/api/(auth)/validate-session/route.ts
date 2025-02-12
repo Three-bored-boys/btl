@@ -1,34 +1,33 @@
-import { fetchData } from "@/root/src/libs/client/src/utils";
 import { SanitizedUser } from "@/root/src/libs/shared/src/db/schema";
-import { HandlerResult } from "@/root/src/libs/shared/src/types";
-import { NextResponse } from "next/server";
+import { BadResponse, GoodResponse, HandlerResult } from "@/root/src/libs/shared/src/types";
+import { NextResponse, type NextRequest } from "next/server";
+import { setCookieForBrowser } from "../utils";
 
-export async function GET() {
-  let response = new NextResponse<HandlerResult<SanitizedUser | null>>();
-  let setCookie: string | null = null;
+export async function GET(req: NextRequest) {
+  console.log(req.cookies.get("btl_auth_session"));
+  let response = new NextResponse<HandlerResult<SanitizedUser>>();
 
   try {
-    const { fetchDataResult, res: externalResponse } = await fetchData<SanitizedUser>(
-      `${process.env.API_URL}/auth/validate-session`,
-      { credentials: "include" },
-    );
+    const res = await fetch(`${process.env.API_URL}/auth/validate-session`, { credentials: "include" });
 
-    setCookie = externalResponse.headers.get("set-cookie");
-
-    if (setCookie) {
-      response.headers.set("Set-Cookie", setCookie);
-    }
-
-    if (!fetchDataResult.success) {
-      response = NextResponse.json({ handlerResult: { success: true, data: null } });
+    if (!res.ok) {
+      const result = (await res.json()) as BadResponse;
+      response = NextResponse.json({ handlerResult: result }, { status: res.status });
+      setCookieForBrowser(res);
       return response;
     }
 
-    const { data } = fetchDataResult;
-    response = NextResponse.json({ handlerResult: { success: true, data } });
+    const data = (await res.json()) as GoodResponse<SanitizedUser>;
+    response = NextResponse.json({ handlerResult: data });
+    setCookieForBrowser(res);
     return response;
   } catch (e) {
-    response = NextResponse.json({ handlerResult: { success: true, data: null } });
+    response = NextResponse.json(
+      {
+        handlerResult: { success: false, errors: ["Something went wrong. Please try again."] },
+      },
+      { status: 500 },
+    );
     return response;
   }
 }

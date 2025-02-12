@@ -20,12 +20,12 @@ export async function POST(req: NextRequest) {
 
     if (!fetchDataResult.success) {
       response = NextResponse.json({ handlerResult: fetchDataResult }, { status: res.status });
-      setCookieForBrowser(res, response);
+      setCookieForBrowser(res);
       return response;
     }
 
     response = NextResponse.json({ handlerResult: fetchDataResult });
-    setCookieForBrowser(res, response);
+    setCookieForBrowser(res);
     return response;
   } catch (e) {
     response = NextResponse.json(
