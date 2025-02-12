@@ -17,5 +17,3 @@ export const fetchServiceData = async function <T>(url: string, options?: Reques
   const data = (await res.json()) as T;
   return data;
 };
-
-export const BTL_AUTH_SESSION = "btl_auth_session";
