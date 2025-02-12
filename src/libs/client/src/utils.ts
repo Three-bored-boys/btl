@@ -101,6 +101,3 @@ export const handleNumberSearchParam = function (
 
   return defaultValue.toString();
 };
-
-export const URL = process.env.URL ?? process.env.VERCEL_URL; // Deployment URL for fetch in server
-export const NEXT_PUBLIC_URL = process.env.NEXT_PUBLIC_URL ?? process.env.VERCEL_URL; // Deployment URL for fetch in client
