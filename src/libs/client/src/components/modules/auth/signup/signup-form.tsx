@@ -11,6 +11,7 @@ import { Check } from "@/client/components/ui/icons/check";
 import { SubmitButton } from "@/client/components/ui/submit-button";
 import { HandlerResult } from "@/shared/types";
 import { SignupResult } from "@/shared/validators/auth";
+import { NEXT_PUBLIC_URL } from "@/client/utils";
 
 export function SignupForm() {
   const router = useRouter();
@@ -44,7 +45,7 @@ export function SignupForm() {
 
     const signupObj = validation.data;
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/signup`, {
+    const res = await fetch(`${NEXT_PUBLIC_URL}/api/signup`, {
       method: "POST",
       body: JSON.stringify(signupObj),
       headers: {
