@@ -11,7 +11,7 @@ import { Check } from "@/client/components/ui/icons/check";
 import { SubmitButton } from "@/client/components/ui/submit-button";
 import { HandlerResult } from "@/shared/types";
 import { SignupResult } from "@/shared/validators/auth";
-import { NEXT_PUBLIC_URL } from "@/client/utils";
+import { fetchData } from "@/client/utils";
 
 export function SignupForm() {
   const router = useRouter();
@@ -45,17 +45,23 @@ export function SignupForm() {
 
     const signupObj = validation.data;
 
-    const res = await fetch(`${NEXT_PUBLIC_URL}/api/signup`, {
-      method: "POST",
-      body: JSON.stringify(signupObj),
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    });
-    const result = (await res.json()) as HandlerResult<SignupResult>;
+    try {
+      const { fetchDataResult } = await fetchData<SignupResult>(`${process.env.NEXT_PUBLIC_API_URL}/auth/signup`, {
+        method: "POST",
+        body: JSON.stringify(signupObj),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+      if (!fetchDataResult.success) {
+        return { handlerResult: fetchDataResult };
+      }
 
-    return result;
+      return { handlerResult: fetchDataResult };
+    } catch (e) {
+      return { handlerResult: { success: false, errors: ["Something went wrong. Please try again."] } };
+    }
   };
 
   const onSubmit = async function (e: React.FormEvent<HTMLFormElement>) {
