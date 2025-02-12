@@ -1,24 +1,4 @@
-import { SanitizedUser } from "@/root/src/libs/shared/src/db/schema";
-import { HandlerResult } from "@/root/src/libs/shared/src/types";
 import { cookies } from "next/headers";
-import { URL } from "@/client/utils";
-
-export const validateUser = async function () {
-  const res = await fetch(`${URL}/api/validate-session`, {
-    credentials: "include",
-    headers: {},
-  });
-
-  const { handlerResult } = (await res.json()) as HandlerResult<SanitizedUser>;
-
-  if (!handlerResult.success) {
-    return null;
-  }
-
-  const { data } = handlerResult;
-  console.log(data);
-  return data;
-};
 
 const getSetCookeOptionsEntry = function (key: string, val: string) {
   if (key.includes("Expires")) return { expires: Date.parse(val) };
