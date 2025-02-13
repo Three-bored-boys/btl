@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { FieldError } from "@/libs/shared/src/types";
 import { Check } from "@/client/components/ui/icons/check";
 import { SubmitButton } from "@/client/components/ui/submit-button";
-import { HandlerResult } from "@/shared/types";
+import { ServerResult } from "@/shared/types";
 import { SignupResult } from "@/shared/validators/auth";
 import { fetchData } from "@/client/utils";
 import { useAuthContext } from "@/client/providers/auth-context-provider";
@@ -57,9 +57,9 @@ export function SignupForm() {
         credentials: "include",
       });
 
-      return { handlerResult: fetchDataResult };
+      return { serverResult: fetchDataResult };
     } catch (e) {
-      return { handlerResult: { success: false, errors: ["Something went wrong. Please try again."] } };
+      return { serverResult: { success: false, errors: ["Something went wrong. Please try again."] } };
     }
   };
 
@@ -69,24 +69,28 @@ export function SignupForm() {
     const newFormState = await updateSignupFormState(e);
     setSignupFormState(newFormState);
     setIsSubmitting(false);
-    if ("handlerResult" in newFormState && newFormState.handlerResult.success) {
-      setUser(newFormState.handlerResult.data.user);
+    if ("serverResult" in newFormState && newFormState.serverResult.success) {
+      setUser(newFormState.serverResult.data.user);
       router.push("/");
     }
   };
 
-  const HandlerResultMessage = function ({ handlerResult }: { handlerResult: HandlerResult<SignupResult> }) {
-    if (handlerResult.handlerResult.success) {
+  const ServerResultMessage = function ({
+    serverResult: { serverResult },
+  }: {
+    serverResult: ServerResult<SignupResult>;
+  }) {
+    if (serverResult.success) {
       return (
         <p className="flex items-center gap-x-0 text-success">
           <Check className="text-success" fill="#4ade80"></Check>
-          {handlerResult.handlerResult.data.message}
+          {serverResult.data.message}
         </p>
       );
     } else {
       return (
         <ul style={{ listStyle: "disc", listStylePosition: "outside" }}>
-          {handlerResult.handlerResult.errors.map((error, i) => (
+          {serverResult.errors.map((error, i) => (
             <FormErrorListItem key={i}>{error}</FormErrorListItem>
           ))}
         </ul>
@@ -132,9 +136,7 @@ export function SignupForm() {
       <div>
         <SubmitButton isSubmitting={isSubmitting} defaultText={"Sign up"} submittingText={"Signing up..."} />
       </div>
-      {"handlerResult" in signupFormState && (
-        <HandlerResultMessage handlerResult={signupFormState}></HandlerResultMessage>
-      )}
+      {"serverResult" in signupFormState && <ServerResultMessage serverResult={signupFormState}></ServerResultMessage>}
     </form>
   );
 }
