@@ -12,6 +12,7 @@ import { SubmitButton } from "@/client/components/ui/submit-button";
 import { HandlerResult } from "@/shared/types";
 import { SignupResult } from "@/shared/validators/auth";
 import { fetchData } from "@/client/utils";
+import { useAuthContext } from "@/client/providers/auth-context-provider";
 
 export function SignupForm() {
   const router = useRouter();
@@ -19,6 +20,7 @@ export function SignupForm() {
     fieldError: { userName: [], emailAddress: [], password: [] },
   });
   const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const { setUser } = useAuthContext();
 
   const updateSignupFormState = async function (event: React.FormEvent<HTMLFormElement>): Promise<SignupFormState> {
     const formData = new FormData(event.currentTarget);
@@ -54,9 +56,6 @@ export function SignupForm() {
         },
         credentials: "include",
       });
-      if (!fetchDataResult.success) {
-        return { handlerResult: fetchDataResult };
-      }
 
       return { handlerResult: fetchDataResult };
     } catch (e) {
@@ -71,6 +70,7 @@ export function SignupForm() {
     setSignupFormState(newFormState);
     setIsSubmitting(false);
     if ("handlerResult" in newFormState && newFormState.handlerResult.success) {
+      setUser(newFormState.handlerResult.data.user);
       router.push("/");
     }
   };
