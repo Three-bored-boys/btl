@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 import "@radix-ui/themes/styles.css";
 import { ReactElement } from "react";
-import { ReactQueryProvider } from "./providers/react-query-provider";
-import { RadixProvider } from "./providers/radix-provider";
-import { AuthContextProvider } from "./providers/auth-context-provider";
+import { ReactQueryProvider } from "@/client/providers/react-query-provider";
+import { RadixProvider } from "@/client/providers/radix-provider";
+import { AuthContextProvider } from "@/client/providers/auth-context-provider";
 
 export const metadata: Metadata = {
   title: "BTL (Book Tracker Library)",
