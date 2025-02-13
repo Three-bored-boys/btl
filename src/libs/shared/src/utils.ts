@@ -13,3 +13,5 @@ export const bookLibraries = [
   { name: "Finished", value: "finished" },
   { name: "Did Not Finish", value: "did-not-finish" },
 ];
+
+export const BTL_AUTH_SESSION_COOKIE_NAME = "btl_auth_session";

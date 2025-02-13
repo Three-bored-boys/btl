@@ -7,7 +7,25 @@ import { auth } from "@/libs/server/src/hono/routes/auth";
 
 const app = new Hono<Environment>();
 app.use(logger());
-app.use("*", cors());
+app.use(
+  "*",
+  cors({
+    origin: (origin, _) => {
+      if (
+        origin.includes("-kosidinnas-projects.vercel.app") ||
+        origin === "https://b-t-l.vercel.app" ||
+        origin === "https://btl-nextjs-api-preview.kosiumeigbo.workers.dev" ||
+        origin === "https://btl-nextjs-api-prod.kosiumeigbo.workers.dev" ||
+        origin === "http://localhost:3000"
+      ) {
+        return origin;
+      } else {
+        return "http://localhost:8787";
+      }
+    },
+    credentials: true,
+  }),
+);
 
 app.get("/", (c) => {
   return c.text("Welcome to the BTL API! 🚀");

@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { FormState } from "@/libs/shared/src/types";
+import { SanitizedUser } from "@/shared/db/schema";
 
 export const signupSchema = z.object({
   userName: z
@@ -23,4 +24,5 @@ export const signupSchema = z.object({
 });
 
 export type SignupInput = z.infer<typeof signupSchema>;
-export type SignupFormState = FormState<SignupInput>;
+export type SignupResult = { message: string; user: SanitizedUser };
+export type SignupFormState = FormState<SignupInput, SignupResult>;

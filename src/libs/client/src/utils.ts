@@ -3,6 +3,7 @@ import { clsx, ClassValue } from "clsx";
 import { cva, VariantProps } from "class-variance-authority";
 import type { GoodResponse, BadResponse } from "@/root/src/libs/shared/src/types";
 import type { SearchObjectType } from "@/root/src/libs/shared/src/validators";
+import { FetchDataResult } from "@/shared/types/response";
 
 export function cn(...inputs: ClassValue[]): string {
   return twMerge(clsx(inputs));
@@ -27,28 +28,16 @@ export const button = cva(["h-auto", "rounded-3xl", "border-2", "border-transpar
 
 export type ButtonVariants = VariantProps<typeof button>;
 
-export class CustomAPIError extends Error {
-  constructor(
-    message: string,
-    public status: number,
-    public errors: string[],
-  ) {
-    super(message);
-    this.status = status;
-    this.errors = errors;
-  }
-}
-
-export const fetchData = async function <T>(url: string, options?: RequestInit) {
+export const fetchData = async function <T>(url: string, options?: RequestInit): Promise<FetchDataResult<T>> {
   const res = await fetch(url, options);
 
   if (!res.ok) {
-    const errorObj = (await res.json()) as BadResponse;
-    throw new CustomAPIError("", res.status, errorObj.errors);
+    const data = (await res.json()) as BadResponse;
+    return { fetchDataResult: data, res };
   }
 
-  const { data } = (await res.json()) as GoodResponse<T>;
-  return data;
+  const data = (await res.json()) as GoodResponse<T>;
+  return { fetchDataResult: data, res };
 };
 
 export const BTL_LOCAL_STORAGE_SEARCH_OBJECT = "btlSearchObject";

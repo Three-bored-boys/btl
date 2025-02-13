@@ -1,7 +1,7 @@
 import { SectionPreamble } from "@/client/components/modules/home-page/section-preamble";
 import { Container } from "@/client/components/layouts/container";
-import type { Book, Genres } from "@/root/src/libs/shared/src/types";
-import { CustomAPIError, fetchData } from "@/libs/client/src/utils";
+import type { Book, FetchDataResult, Genres } from "@/root/src/libs/shared/src/types";
+import { fetchData } from "@/libs/client/src/utils";
 import { SectionBooksShowcase } from "../section-books-showcase";
 import { Suspense } from "react";
 import { LoadingSkeleton } from "../loading-skeleton";
@@ -18,7 +18,9 @@ export function GenresSection() {
           Explore some more older books below according to a select list of popular genres
         </SectionPreamble>
         <ErrorBoundary fallbackRender={ErrorBoundaryRender}>
-          <GetGenresWrapper />
+          <Suspense fallback={<LoadingSkeleton />}>
+            <GetGenresWrapper />
+          </Suspense>
         </ErrorBoundary>
       </Container>
     </section>
@@ -26,49 +28,65 @@ export function GenresSection() {
 }
 
 async function GetGenresWrapper() {
-  try {
-    const { genres, count } = await fetchData<Genres>(`${process.env.API_URL}/books/genres`);
+  const { fetchDataResult, res } = await fetchData<Genres>(`${process.env.API_URL}/books/genres`);
 
-    const getGenresBooksPromisesArray: Promise<Book[]>[] = genres.map((val) =>
-      fetchData<Book[]>(`${process.env.API_URL}/books/genres/${val.name}`),
-    );
-
-    const allGenresBooksArray = await Promise.all(getGenresBooksPromisesArray);
-
-    const data = allGenresBooksArray.map((val, i) => {
-      return { genre: genres[i].name, books: val };
-    });
-
+  if (!fetchDataResult.success) {
+    const { errors } = fetchDataResult;
     return (
-      <Suspense fallback={<LoadingSkeleton />}>
-        <SectionBooksShowcase name="genres" count={count} sessionStorageKey="genres-index">
-          {data.map((val, i) => {
-            return (
-              <div className="w-full flex-[0_0_100%]" key={i}>
-                <h3 className="text-center font-normal lowercase scrollbar-none">{val.genre}</h3>
-                <hr className="mb-5 h-1 w-full bg-primary scrollbar-none" />
-                <div className="flex w-full items-center justify-between gap-3 overflow-x-auto scrollbar-thin">
-                  {val.books.map((book, i) => (
-                    <BookCard key={i} book={book} />
-                  ))}
-                </div>
-              </div>
-            );
-          })}
-        </SectionBooksShowcase>
-      </Suspense>
+      <div className="my-2 flex w-full flex-col items-center justify-start gap-y-1">
+        <ExclamationTriangle />
+        <p className="text-xl font-semibold">Error {res.status}</p>
+        <p className="text-base font-normal">{errors[0]}</p>
+      </div>
     );
-  } catch (e) {
-    if (e instanceof CustomAPIError) {
+  }
+
+  const {
+    data: { genres, count },
+  } = fetchDataResult;
+
+  const getGenresBooksPromisesArray: Promise<FetchDataResult<Book[]>>[] = genres.map((val) =>
+    fetchData<Book[]>(`${process.env.API_URL}/books/genres/${val.name}`),
+  );
+
+  const allGenresBooksArray = await Promise.all(getGenresBooksPromisesArray);
+
+  const data = allGenresBooksArray.map((val, i) => {
+    return { genre: genres[i].name, books: val };
+  });
+
+  const BooksOrError = function ({ fetchDataResult }: Omit<FetchDataResult<Book[]>, "res">) {
+    if (!fetchDataResult.success) {
+      const { errors } = fetchDataResult;
       return (
         <div className="my-2 flex w-full flex-col items-center justify-start gap-y-1">
           <ExclamationTriangle />
-          <p className="text-xl font-semibold">Error {e.status}</p>
-          <p className="text-base font-normal">{e.errors[0]}</p>
+          <p className="text-xl font-semibold">Error {res.status}</p>
+          <p className="text-base font-normal">{errors[0]}</p>
         </div>
       );
     }
 
-    throw e;
-  }
+    const { data } = fetchDataResult;
+
+    return data.map((book, i) => <BookCard key={i} book={book} />);
+  };
+
+  return (
+    <Suspense fallback={<LoadingSkeleton />}>
+      <SectionBooksShowcase name="genres" count={count} sessionStorageKey="genres-index">
+        {data.map(({ genre, books: { fetchDataResult } }, i) => {
+          return (
+            <div className="w-full flex-[0_0_100%]" key={i}>
+              <h3 className="text-center font-normal lowercase scrollbar-none">{genre}</h3>
+              <hr className="mb-5 h-1 w-full bg-primary scrollbar-none" />
+              <div className="flex w-full items-center justify-between gap-3 overflow-x-auto scrollbar-thin">
+                {<BooksOrError fetchDataResult={fetchDataResult} />}
+              </div>
+            </div>
+          );
+        })}
+      </SectionBooksShowcase>
+    </Suspense>
+  );
 }

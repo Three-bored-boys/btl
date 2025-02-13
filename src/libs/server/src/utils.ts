@@ -1,5 +1,5 @@
 import { type User } from "@/server/db/schema";
-import { SanitizedUser } from "./auth/sessions";
+import { SanitizedUser } from "@/shared/db/schema";
 
 export const sanitizedUser = function (user: User): SanitizedUser {
   const { hashedPassword, ...rest } = user;
@@ -17,5 +17,3 @@ export const fetchServiceData = async function <T>(url: string, options?: Reques
   const data = (await res.json()) as T;
   return data;
 };
-
-export const BTL_AUTH_SESSION = "btl_auth_session";

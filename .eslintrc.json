@@ -17,6 +17,7 @@
         "ignoreArrowShorthand": true
       }
     ],
-    "@typescript-eslint/no-unnecessary-condition": "off"
+    "@typescript-eslint/no-unnecessary-condition": "off",
+    "@typescript-eslint/only-throw-error": "off"
   }
 }
