@@ -37,7 +37,7 @@ export const useValidateUser = function () {
 
 export const AuthContextProvider = function ({ children }: { children: React.ReactNode }) {
   const [user, setUser] = React.useState<SanitizedUser | null>(null);
-  const { data, error, isLoading } = useValidateUser();
+  const { data, isLoading } = useValidateUser();
   const value = React.useMemo(() => ({ user, setUser }), [user]);
   React.useEffect(() => {
     if (data !== undefined) {
@@ -48,11 +48,6 @@ export const AuthContextProvider = function ({ children }: { children: React.Rea
   if (isLoading) {
     return <div>Loading...</div>;
   }
-
-  if (error) {
-    return <div>ERROR!!!</div>;
-  }
-  console.log(data);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
