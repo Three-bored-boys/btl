@@ -38,5 +38,5 @@ export type SignupFormState = FormState<SignupInput, SignupResult>;
 export const loginSchema = z.object({ userName: userNameSchema, password: passwordSchema });
 
 export type LoginInput = z.infer<typeof loginSchema>;
-export type LoginResult = { message: string; user: SanitizedUser };
+export type LoginResult = SignupResult;
 export type LoginFormState = FormState<LoginInput, LoginResult>;
