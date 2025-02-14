@@ -1,8 +1,10 @@
 "use client";
 
 import React from "react";
-import { Logo } from "../../libs/client/src/components/ui/logo";
-import { cn } from "../../libs/client/src/utils";
+import { Logo } from "@/client/components/ui/logo";
+import { cn } from "@/client/utils";
+import { useAuthContext } from "@/client/providers/auth-context-provider";
+import { useRouter } from "next/navigation";
 
 export default function AuthLayout({
   children,
@@ -18,12 +20,18 @@ export default function AuthLayout({
   ]);
   const [authLayoutImageIndex, setAuthLayoutImageIndex] = React.useState<number | null>(null);
   const [bgImageClassName, setBgImageClassName] = React.useState<string>("");
+  const { user } = useAuthContext();
+  const router = useRouter();
 
   React.useEffect(() => {
     const initialAuthLayoutImageIndex = Math.floor(Math.random() * authLayoutImagesArray.current.length);
     setAuthLayoutImageIndex(initialAuthLayoutImageIndex);
     setBgImageClassName(authLayoutImagesArray.current[initialAuthLayoutImageIndex]);
   }, []);
+
+  if (user) {
+    router.replace("/");
+  }
 
   return (
     <div className="grid h-full w-full grid-cols-1 md:grid-cols-2 md:grid-rows-[100vh]">
