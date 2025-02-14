@@ -1,19 +1,18 @@
 import { Context, Hono } from "hono";
 import type { GoodResponse, BadResponse } from "@/shared/types";
 import { zValidator } from "@hono/zod-validator";
-import { signupSchema } from "@/shared/validators";
+import { signupSchema, loginSchema } from "@/shared/validators";
 import { Environment } from "@/root/bindings";
-import { getCookie, setCookie } from "hono/cookie";
 import { db } from "@/server/db/db";
 import { SanitizedUser, users } from "@/server/db/schema";
 import { eq, or } from "drizzle-orm";
-import { hashPassword } from "@/server/auth/password";
+import { hashPassword, verifyHashedPassword } from "@/server/auth/password";
 import { generateSessionToken, createSession, validateSessionToken, invalidateSession } from "@/server/auth/sessions";
 import { setSessionCookie, deleteSessionCookie, getSessionCookieToken } from "@/server/auth/cookies";
 import { encryptAuthSessionToken } from "@/server/auth/utils";
 import { cache } from "hono/cache";
 import { sanitizedUser } from "@/server/utils";
-import { SignupResult } from "@/shared/validators/auth";
+import { SignupResult, LoginResult } from "@/shared/validators/auth";
 
 export const auth = new Hono<Environment>();
 
@@ -73,29 +72,80 @@ auth.post(
   },
 );
 
-auth.get("/login", (c) => {
-  const dateNow = new Date();
-  const authCookie = getCookie(c, "session_id");
-  console.log(authCookie);
+auth.post(
+  "/login",
+  zValidator("json", loginSchema, (result, c) => {
+    if (!result.success) {
+      const responseData: BadResponse = { success: false, errors: result.error.issues.map((issue) => issue.message) };
+      return c.json(responseData, 400);
+    }
+  }),
+  async (c) => {
+    let message = "";
+    const { userName, password } = c.req.valid("json");
+    const resultExistingUser = await db(c).select().from(users).where(eq(users.userName, userName)).limit(1);
 
-  if (authCookie) {
-    const responseData: GoodResponse<string> = { success: true, data: "Cookie already exists!" };
-    return c.json(responseData);
-  }
+    if (!resultExistingUser) {
+      message = "Incorrect Username or Password";
+      const responseData: BadResponse = {
+        success: false,
+        errors: [message],
+      };
+      console.log(message);
+      return c.json(responseData, 404);
+    }
 
-  setCookie(c, "session_id", "jxfhnfjdjfjnxn", {
-    expires: new Date(
-      dateNow.getFullYear() + 1,
-      dateNow.getMonth(),
-      dateNow.getDate(),
-      dateNow.getHours(),
-      dateNow.getMinutes(),
-      dateNow.getSeconds(),
-    ),
-  });
-  const responseData: GoodResponse<string> = { success: true, data: "New cookie set!" };
-  return c.json(responseData);
-});
+    if (resultExistingUser.length < 1) {
+      message = "Incorrect Username or Password";
+      const responseData: BadResponse = {
+        success: false,
+        errors: [message],
+      };
+      console.log(message);
+      return c.json(responseData, 404);
+    }
+
+    const [existingUser] = resultExistingUser;
+
+    if (existingUser && !existingUser.hashedPassword) {
+      message = "Incorrect Username or Password";
+      const responseData: BadResponse = {
+        success: false,
+        errors: [message],
+      };
+      console.log(message);
+      return c.json(responseData, 404);
+    }
+
+    const validPassword = await verifyHashedPassword(password, existingUser.hashedPassword);
+
+    if (!validPassword) {
+      message = "Incorrect Username or Password";
+      const responseData: BadResponse = {
+        success: false,
+        errors: [message],
+      };
+      console.log(message);
+      return c.json(responseData, 404);
+    }
+
+    const sessionToken = generateSessionToken();
+    const session = await createSession(sessionToken, existingUser.id, c);
+    setSessionCookie(c, sessionToken, session.expiresAt);
+
+    message = "Successfully logged in!";
+
+    const responseData: LoginResult = { user: sanitizedUser(existingUser), message };
+
+    const data: GoodResponse<LoginResult> = {
+      success: true,
+      data: responseData,
+    };
+    console.log(message);
+
+    return c.json(data);
+  },
+);
 
 auth.get("/logout", async (c) => {
   const token = getSessionCookieToken(c);
