@@ -6,8 +6,6 @@ import Image from "next/image";
 import notFoundImage from "@/public/assets/images/not-found.webp";
 
 export default function GlobalError({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
-  console.log(error);
-
   return (
     <>
       <div className="relative min-h-screen w-full">

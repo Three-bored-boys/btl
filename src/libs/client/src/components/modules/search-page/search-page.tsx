@@ -70,8 +70,6 @@ export const SearchPage = function (): ReactElement {
       }
     });
 
-    console.log(searchParamsObject);
-
     if (searchParamsObject.toString() !== searchParams.toString()) {
       router.push(`/search?${searchParamsObject.toString()}`);
     } else {
