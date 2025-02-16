@@ -46,7 +46,7 @@ export const AuthContextProvider = function ({ children }: { children: React.Rea
   }, [data]);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <CheckingUserValidation />;
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
@@ -60,4 +60,8 @@ export const useAuthContext = function () {
   }
 
   return context;
+};
+
+export const CheckingUserValidation = function () {
+  return <div>Loading babes...</div>;
 };
