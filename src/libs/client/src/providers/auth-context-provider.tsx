@@ -5,6 +5,8 @@ import { SanitizedUser } from "@/shared/db/schema";
 import React from "react";
 import { fetchData } from "@/client/utils";
 import { useQuery } from "@tanstack/react-query";
+import { Spinner } from "@radix-ui/themes";
+import { Logo } from "@/client/components/ui/logo";
 
 const AuthContext = createContext<{
   user: SanitizedUser | null;
@@ -46,7 +48,7 @@ export const AuthContextProvider = function ({ children }: { children: React.Rea
   }, [data]);
 
   if (isLoading) {
-    return <CheckingUserValidation />;
+    return <CheckingUserSession />;
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
@@ -62,6 +64,15 @@ export const useAuthContext = function () {
   return context;
 };
 
-export const CheckingUserValidation = function () {
-  return <div>Loading babes...</div>;
+export const CheckingUserSession = function () {
+  return (
+    <div className="flex min-h-screen items-center justify-center">
+      <div className="flex max-w-96 flex-col items-center justify-center gap-2 px-3">
+        <Spinner size={"3"} />
+        <div className="flex h-1 w-full items-center justify-center bg-primary"></div>
+        <Logo className="w-full text-7xl sm:text-9xl" />
+        <div className="flex h-1 w-full items-center justify-center bg-secondary"></div>
+      </div>
+    </div>
+  );
 };
