@@ -91,7 +91,7 @@ auth.post(
         success: false,
         errors: [message],
       };
-      console.log(message);
+
       return c.json(responseData, 404);
     }
 
@@ -101,7 +101,7 @@ auth.post(
         success: false,
         errors: [message],
       };
-      console.log(message);
+
       return c.json(responseData, 404);
     }
 
@@ -113,7 +113,7 @@ auth.post(
         success: false,
         errors: [message],
       };
-      console.log(message);
+
       return c.json(responseData, 404);
     }
 
@@ -125,7 +125,7 @@ auth.post(
         success: false,
         errors: [message],
       };
-      console.log(message);
+
       return c.json(responseData, 404);
     }
 
@@ -141,7 +141,6 @@ auth.post(
       success: true,
       data: responseData,
     };
-    console.log(message);
 
     return c.json(data);
   },

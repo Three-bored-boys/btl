@@ -5,7 +5,6 @@ import { SidebarLink } from "@/client/components/ui/sidebar-link";
 
 export function Sidebar(props: React.ComponentProps<"nav">) {
   const pathname = usePathname();
-  console.log(pathname);
 
   return (
     <nav {...props} className="flex h-full w-full flex-col gap-3 overflow-y-auto scrollbar-thin">
