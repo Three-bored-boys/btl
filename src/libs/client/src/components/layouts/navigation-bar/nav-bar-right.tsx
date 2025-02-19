@@ -3,6 +3,7 @@ import type { NavAuthLinkArr } from "./nav-bar";
 import { LinkButton } from "@/client/components/ui/link-button";
 import { cn } from "@/client/utils";
 import { useAuthContext } from "@/client/providers/auth-context-provider";
+import { Avatar } from "@radix-ui/themes";
 
 type NavBarRightProps = {
   routesArr: NavAuthLinkArr;
