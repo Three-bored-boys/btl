@@ -30,5 +30,5 @@ export function NavBarRight({ routesArr, className }: NavBarRightProps): React.R
     );
   }
 
-  return <div className="ml-20">Hi, {user.userName}</div>;
+  return <Avatar fallback>Hi, {user.userName}</Avatar>;
 }
