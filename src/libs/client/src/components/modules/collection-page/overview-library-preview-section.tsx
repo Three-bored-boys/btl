@@ -1,5 +1,3 @@
-"use client";
-
 import { Book } from "@/root/src/libs/shared/src/types";
 import React from "react";
 import { SidebarContext } from "./collection-layout";
