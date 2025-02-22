@@ -15,16 +15,16 @@ export function OverviewPage() {
   const books = [books1, books2, books3, books4];
   const { user } = useAuthContext();
 
-  if (!user) {
-    return <div className="flex w-full items-center justify-center">Login babes</div>;
-  }
-
   return (
     <div>
       <h1 className="font-semibold">Overview</h1>
-      {bookLibraries.map((library, i) => (
-        <OverviewLibraryPreviewSection name={library.name} slug={library.value} books={books[i]} key={i} />
-      ))}
+      {!user ? (
+        <div className="flex w-full items-center justify-center">Login babes</div>
+      ) : (
+        bookLibraries.map((library, i) => (
+          <OverviewLibraryPreviewSection name={library.name} slug={library.value} books={books[i]} key={i} />
+        ))
+      )}
     </div>
   );
 }
