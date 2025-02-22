@@ -51,7 +51,7 @@ export function NavBar({ className, ...props }: React.ComponentProps<"nav">): Re
             "flex items-center justify-between": rootPathname === "/search",
           })}
         >
-          <div>
+          <div className="flex items-center justify-center">
             <Logo className="hidden md:block" onClick={() => setShowMobileMenu(false)} />
             {showMobileMenu ? (
               <Close className="block md:hidden" onClick={() => setShowMobileMenu(false)} />
