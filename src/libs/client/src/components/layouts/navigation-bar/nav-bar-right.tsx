@@ -4,6 +4,8 @@ import { LinkButton } from "@/client/components/ui/link-button";
 import { cn } from "@/client/utils";
 import { useAuthContext } from "@/client/providers/auth-context-provider";
 import { Avatar, DropdownMenu } from "@radix-ui/themes";
+import avatarImage from "@/public/assets/images/avatar.png";
+import { Button } from "@/client/components/ui/button";
 
 type NavBarRightProps = {
   routesArr: NavAuthLinkArr;
@@ -34,13 +36,17 @@ export function NavBarRight({ routesArr, className }: NavBarRightProps): React.R
     <div className="ml-1 cursor-pointer md:ml-10 xl:ml-20">
       <DropdownMenu.Root>
         <DropdownMenu.Trigger>
-          <div className="flex items-center">
-            <span className="mx-auto my-auto inline-block w-24 truncate xs:w-28">Hi, {user.userName}</span>
-            <Avatar fallback src="" radius="full" className="ml-2"></Avatar>
+          <div className="flex items-center" title={`Hi ${user.userName}`}>
+            <span className="mx-auto my-auto inline-block w-24 truncate text-base xs:w-28 lg:text-lg">
+              Hi, <span className="font-medium">{user.userName}</span>
+            </span>
+            <Avatar fallback="" src={avatarImage.src} radius="full" className="ml-2"></Avatar>
           </div>
         </DropdownMenu.Trigger>
-        <DropdownMenu.Content>
-          <DropdownMenu.Item>Hello</DropdownMenu.Item>
+        <DropdownMenu.Content className="w-40 sm:w-48">
+          <Button background={"light"} textSize={"big"} className="mt-1">
+            Log out
+          </Button>
         </DropdownMenu.Content>
       </DropdownMenu.Root>
     </div>
