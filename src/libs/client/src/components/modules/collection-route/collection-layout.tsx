@@ -6,7 +6,7 @@ import { CaretRight } from "@/root/src/libs/client/src/components/ui/icons/caret
 import { CaretLeft } from "@/root/src/libs/client/src/components/ui/icons/caret-left";
 import React from "react";
 import { cn } from "@/root/src/libs/client/src/utils";
-import { Sidebar } from "@/root/src/libs/client/src/components/modules/collection-page/sidebar";
+import { Sidebar } from "@/root/src/libs/client/src/components/modules/collection-route/sidebar";
 import { ToggleSidebar } from "@/client/components/ui/toggle-sidebar";
 
 export const SidebarContext = React.createContext<{
