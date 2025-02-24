@@ -19,7 +19,7 @@ export function OverviewPage() {
     <div>
       <h1 className="font-semibold">Overview</h1>
       {!user ? (
-        <div className="flex w-full items-center justify-center">Login babes</div>
+        <div className="flex w-full items-center justify-center">Login now!</div>
       ) : (
         bookLibraries.map((library, i) => (
           <OverviewLibraryPreviewSection name={library.name} slug={library.value} books={books[i]} key={i} />
