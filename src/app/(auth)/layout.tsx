@@ -3,7 +3,7 @@
 import React from "react";
 import { Logo } from "@/client/components/ui/logo";
 import { cn } from "@/client/utils";
-import { useAuthContext } from "@/client/providers/auth-context-provider";
+import { useAuthContext } from "@/client/hooks";
 import { useRouter } from "next/navigation";
 
 export default function AuthLayout({
@@ -47,7 +47,14 @@ export default function AuthLayout({
           })}
         />
       </div>
-      <div className="h-screen overflow-y-auto">{children}</div>
+      <div className="h-screen overflow-y-auto">
+        <div className="flex h-full w-full flex-col justify-between">
+          <div className="px-10 py-20 xs:px-16 sm:px-28 md:px-10 lg:px-24 xl:px-40">{children}</div>
+          <div className="block pb-5 pl-5 md:hidden">
+            <Logo className={cn("text-5xl md:hidden")} />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
