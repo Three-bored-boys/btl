@@ -6,7 +6,7 @@ import { fetchData } from "@/client/utils";
 import { useQuery } from "@tanstack/react-query";
 import { AuthContext } from "@/client/providers/auth-context-provider";
 
-export const validateUser = async function () {
+export const getUser = async function () {
   try {
     const { fetchDataResult } = await fetchData<SanitizedUser>(
       `${process.env.NEXT_PUBLIC_API_URL}/auth/validate-session`,
@@ -36,15 +36,14 @@ export const useAuthContext = function () {
   return context;
 };
 
-export const useValidateUserSession = function (initialUser?: SanitizedUser | null) {
-  const { data, isLoading } = useQuery({ queryKey: ["btl_session_user"], queryFn: () => validateUser(), staleTime: 0 });
-  const [user, setUser] = React.useState<SanitizedUser | null>(initialUser ?? null);
-  const value = React.useMemo(() => ({ user, setUser }), [user]);
+export const useValidateUserSession = function () {
+  const query = useQuery({ queryKey: ["btl_session_user"], queryFn: () => getUser(), staleTime: 0 });
+  const { user, setUser } = useAuthContext();
   React.useEffect(() => {
-    if (data !== undefined) {
-      setUser(data);
+    if (query.data !== undefined) {
+      setUser(query.data);
     }
-  }, [data]);
+  }, [query.data]);
 
-  return { data, isLoading, value, user, setUser };
+  return { query, user, setUser };
 };
