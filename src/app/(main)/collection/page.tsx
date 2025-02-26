@@ -1,6 +1,6 @@
 import { ReactElement } from "react";
-import { OverviewPage } from "@/root/src/libs/client/src/components/modules/collection-route/overview-page";
+import { CollectionOverview } from "@/root/src/libs/client/src/components/modules/collection-route/collection-overview";
 
 export default function Overview(): ReactElement {
-  return <OverviewPage />;
+  return <CollectionOverview />;
 }

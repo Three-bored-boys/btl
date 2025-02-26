@@ -6,7 +6,7 @@ import { OverviewLibraryPreviewSection } from "./overview-library-preview-sectio
 import { bookLibraries } from "@/shared/utils";
 import { Book } from "@/root/src/libs/shared/src/types";
 
-export function OverviewPage() {
+export function CollectionOverview() {
   const books1 = [testBook, testBook, testBook, testBook, testBook, testBook, testBook, testBook, testBook, testBook];
   const books2: Book[] = [];
   const books3 = [testBook, testBook, testBook, testBook, testBook];
