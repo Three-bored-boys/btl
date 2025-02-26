@@ -2,7 +2,7 @@ import React, { ComponentProps } from "react";
 import type { NavAuthLinkArr } from "./nav-bar";
 import { LinkButton } from "@/client/components/ui/link-button";
 import { cn } from "@/client/utils";
-import { useAuthContext } from "@/client/providers/auth-context-provider";
+import { useAuthContext } from "@/client/hooks";
 import { Avatar, DropdownMenu } from "@radix-ui/themes";
 import avatarImage from "@/public/assets/images/avatar.png";
 import { Button } from "@/client/components/ui/button";

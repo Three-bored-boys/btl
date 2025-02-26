@@ -1,4 +1,4 @@
-import { BookPage } from "@/root/src/libs/client/src/components/modules/book-page/book-page";
+import { BookPage } from "@/root/src/libs/client/src/components/modules/books-route/book-page";
 import { fetchData } from "@/root/src/libs/client/src/utils";
 import type { Book } from "@/root/src/libs/shared/src/types";
 import { Container } from "../../layouts/container";
