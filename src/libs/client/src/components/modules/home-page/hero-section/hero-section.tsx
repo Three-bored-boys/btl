@@ -1,9 +1,19 @@
+"use client";
+
 import { Container } from "@/client/components/layouts/container";
 import Image from "next/image";
 import heroImage from "@/public/assets/images/hero-section.png";
 import { LinkButton } from "../../../ui/link-button";
+import { useValidateUserSession } from "@/client/hooks";
+import { RecentlyAdded } from "../recently-added";
 
 export function HeroSection() {
+  const { user } = useValidateUserSession();
+
+  if (user) {
+    return <RecentlyAdded user={user}></RecentlyAdded>;
+  }
+
   return (
     <div className="w-full py-10">
       <Container>
