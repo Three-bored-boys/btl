@@ -2,23 +2,30 @@ import React from "react";
 import { Button } from "./button";
 import { Spinner } from "@radix-ui/themes";
 import { cn } from "@/client/utils";
+import { ButtonProps } from "@/client/components/ui/button";
+
+type SubmitButtonProps = ButtonProps & {
+  isSubmitting: boolean;
+  defaultText: string;
+  submittingText: string;
+};
 
 export function SubmitButton({
   isSubmitting,
   defaultText,
   submittingText,
-}: {
-  isSubmitting: boolean;
-  defaultText: string;
-  submittingText: string;
-}) {
+  textSize,
+  background,
+  ...props
+}: SubmitButtonProps) {
   return (
     <Button
-      background={"light"}
+      background={background}
       type="submit"
       disabled={isSubmitting}
-      textSize={"small"}
+      textSize={textSize}
       className={cn({ "cursor-not-allowed bg-secondary-100 hover:bg-secondary-200": isSubmitting })}
+      {...props}
     >
       {isSubmitting ? (
         <span className="mx-auto flex items-center justify-start gap-2">

@@ -120,7 +120,13 @@ export function LoginForm() {
       </div>
 
       <div>
-        <SubmitButton isSubmitting={isSubmitting} defaultText={"Log In"} submittingText={"Logging in..."} />
+        <SubmitButton
+          isSubmitting={isSubmitting}
+          defaultText={"Log In"}
+          submittingText={"Logging in..."}
+          textSize={"small"}
+          background={"light"}
+        />
       </div>
       {"serverResult" in loginFormState && <ServerResultMessage serverResult={loginFormState}></ServerResultMessage>}
     </form>

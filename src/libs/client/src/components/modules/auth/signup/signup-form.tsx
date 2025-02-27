@@ -134,7 +134,13 @@ export function SignupForm() {
       </div>
 
       <div>
-        <SubmitButton isSubmitting={isSubmitting} defaultText={"Sign up"} submittingText={"Signing up..."} />
+        <SubmitButton
+          isSubmitting={isSubmitting}
+          defaultText={"Sign up"}
+          submittingText={"Signing up..."}
+          textSize={"small"}
+          background={"light"}
+        />
       </div>
       {"serverResult" in signupFormState && <ServerResultMessage serverResult={signupFormState}></ServerResultMessage>}
     </form>
