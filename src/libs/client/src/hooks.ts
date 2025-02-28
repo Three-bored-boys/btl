@@ -37,8 +37,12 @@ export const useAuthContext = function () {
 };
 
 export const useValidateUserSession = function () {
-  const query = useQuery({ queryKey: ["btl_session_user"], queryFn: () => getUser(), staleTime: 0 });
   const { user, setUser } = useAuthContext();
+  const query = useQuery({
+    queryKey: ["btl_session_user"],
+    queryFn: () => getUser(),
+    refetchOnMount: true,
+  });
   React.useEffect(() => {
     if (query.data !== undefined) {
       setUser(query.data);

@@ -12,7 +12,7 @@ import { SubmitButton } from "@/client/components/ui/submit-button";
 import { ServerResult } from "@/shared/types";
 import { LoginResult } from "@/shared/validators/auth";
 import { fetchData } from "@/client/utils";
-import { useAuthContext } from "@/client/hooks";
+import { useValidateUserSession } from "@/client/hooks";
 
 export function LoginForm() {
   const router = useRouter();
@@ -20,7 +20,7 @@ export function LoginForm() {
     fieldError: { userName: [], password: [] },
   });
   const [isSubmitting, setIsSubmitting] = React.useState(false);
-  const { setUser } = useAuthContext();
+  const { setUser } = useValidateUserSession();
 
   const updateLoginFormState = async function (event: React.FormEvent<HTMLFormElement>): Promise<LoginFormState> {
     const formData = new FormData(event.currentTarget);

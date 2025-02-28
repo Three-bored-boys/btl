@@ -3,7 +3,7 @@
 import React from "react";
 import { Logo } from "@/client/components/ui/logo";
 import { cn } from "@/client/utils";
-import { useAuthContext } from "@/client/hooks";
+import { useValidateUserSession } from "@/client/hooks";
 import { useRouter } from "next/navigation";
 
 export default function AuthLayout({
@@ -20,7 +20,7 @@ export default function AuthLayout({
   ]);
   const [authLayoutImageIndex, setAuthLayoutImageIndex] = React.useState<number | null>(null);
   const [bgImageClassName, setBgImageClassName] = React.useState<string>("");
-  const { user } = useAuthContext();
+  const { user } = useValidateUserSession();
   const router = useRouter();
 
   React.useEffect(() => {

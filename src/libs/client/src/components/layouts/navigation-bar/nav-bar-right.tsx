@@ -2,7 +2,7 @@ import React, { ComponentProps } from "react";
 import type { NavAuthLinkArr } from "./nav-bar";
 import { LinkButton } from "@/client/components/ui/link-button";
 import { cn } from "@/client/utils";
-import { useAuthContext } from "@/client/hooks";
+import { useValidateUserSession } from "@/client/hooks";
 import { Avatar, DropdownMenu } from "@radix-ui/themes";
 import avatarImage from "@/public/assets/images/avatar.png";
 import { Logout } from "@/client/components/modules/auth/logout/logout";
@@ -12,7 +12,7 @@ type NavBarRightProps = {
 } & ComponentProps<"div">;
 
 export function NavBarRight({ routesArr, className }: NavBarRightProps): React.ReactElement {
-  const { user } = useAuthContext();
+  const { user } = useValidateUserSession();
 
   if (!user) {
     return (

@@ -1,7 +1,7 @@
 import { ServerResult } from "@/root/src/libs/shared/src/types";
 import { useRouter } from "next/navigation";
 import React from "react";
-import { useAuthContext } from "@/client/hooks";
+import { useValidateUserSession } from "@/client/hooks";
 import { SubmitButton } from "@/client/components/ui/submit-button";
 import { fetchData } from "@/client/utils";
 import { useMutation } from "@tanstack/react-query";
@@ -25,7 +25,7 @@ const logout = async function (): Promise<ServerResult<string>> {
 export function Logout() {
   const [logoutState, setLogoutState] = React.useState<LogoutState>(null);
   const router = useRouter();
-  const { setUser } = useAuthContext();
+  const { setUser } = useValidateUserSession();
   const { isPending, mutate } = useMutation({
     mutationFn: logout,
     onSuccess(data) {
