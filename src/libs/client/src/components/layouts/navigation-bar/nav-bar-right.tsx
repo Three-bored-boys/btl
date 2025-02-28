@@ -2,17 +2,17 @@ import React, { ComponentProps } from "react";
 import type { NavAuthLinkArr } from "./nav-bar";
 import { LinkButton } from "@/client/components/ui/link-button";
 import { cn } from "@/client/utils";
-import { useAuthContext } from "@/client/hooks";
+import { useValidateUserSession } from "@/client/hooks";
 import { Avatar, DropdownMenu } from "@radix-ui/themes";
 import avatarImage from "@/public/assets/images/avatar.png";
-import { Button } from "@/client/components/ui/button";
+import { Logout } from "@/client/components/modules/auth/logout/logout";
 
 type NavBarRightProps = {
   routesArr: NavAuthLinkArr;
 } & ComponentProps<"div">;
 
 export function NavBarRight({ routesArr, className }: NavBarRightProps): React.ReactElement {
-  const { user } = useAuthContext();
+  const { user } = useValidateUserSession();
 
   if (!user) {
     return (
@@ -44,9 +44,7 @@ export function NavBarRight({ routesArr, className }: NavBarRightProps): React.R
           </div>
         </DropdownMenu.Trigger>
         <DropdownMenu.Content className="w-40 sm:w-48">
-          <Button background={"light"} textSize={"big"} className="mt-1">
-            Log out
-          </Button>
+          <Logout />
         </DropdownMenu.Content>
       </DropdownMenu.Root>
     </div>
