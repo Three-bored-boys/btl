@@ -11,7 +11,7 @@ export const userBooks = pgTable(
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
     isbn: text("isbn").notNull(),
-    libraryId: text("library_id")
+    libraryId: integer("library_id")
       .notNull()
       .references(() => libraries.id, { onDelete: "cascade" }),
     updatedAt: timestamp("updated_at", { mode: "date", withTimezone: true })
