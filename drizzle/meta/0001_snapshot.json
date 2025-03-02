@@ -1,39 +1,9 @@
 {
-  "id": "5a673875-4626-4c68-aae7-f1dfaa2ef0af",
-  "prevId": "1c6ac48b-c584-48d9-aa72-3bde54d788e2",
+  "id": "a4b6d8f3-febf-45ef-bdc6-f7dfb56fb9f1",
+  "prevId": "c539691f-720b-4529-9e6e-92bcffb2ac8e",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.libraries": {
-      "name": "libraries",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "library_name": {
-          "name": "library_name",
-          "type": "library_name",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "library_value": {
-          "name": "library_value",
-          "type": "library_value",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
     "public.sessions": {
       "name": "sessions",
       "schema": "",
@@ -141,6 +111,113 @@
           "name": "users_email_address_unique",
           "columns": [
             "email_address"
+          ],
+          "nullsNotDistinct": false
+        }
+      }
+    },
+    "public.libraries": {
+      "name": "libraries",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "library_name": {
+          "name": "library_name",
+          "type": "library_name",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "library_value": {
+          "name": "library_value",
+          "type": "library_value",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.user_books": {
+      "name": "user_books",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "isbn": {
+          "name": "isbn",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "library_id": {
+          "name": "library_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "user_books_user_id_users_id_fk": {
+          "name": "user_books_user_id_users_id_fk",
+          "tableFrom": "user_books",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "tableTo": "users",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "cascade"
+        },
+        "user_books_library_id_libraries_id_fk": {
+          "name": "user_books_library_id_libraries_id_fk",
+          "tableFrom": "user_books",
+          "columnsFrom": [
+            "library_id"
+          ],
+          "tableTo": "libraries",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "user_books_user_id_isbn_unique": {
+          "name": "user_books_user_id_isbn_unique",
+          "columns": [
+            "user_id",
+            "isbn"
           ],
           "nullsNotDistinct": false
         }
