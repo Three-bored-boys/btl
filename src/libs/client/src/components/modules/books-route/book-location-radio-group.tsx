@@ -19,7 +19,7 @@ const bookLibraryIcons: [ReactNode, ReactNode, ReactNode, ReactNode] = [
 const bookLibrariesWithIcons = bookLibraries.map((obj, i) => ({ ...obj, icon: bookLibraryIcons[i] }));
 
 export function BookLocationRadioGroup() {
-  const [location, setLocation] = useState<string | null>(null);
+  const [library, setLibrary] = useState<string | null>(null);
 
   return (
     <div className="pt-3">
@@ -31,8 +31,8 @@ export function BookLocationRadioGroup() {
               key={i}
               className={cn("hover:cursor-pointer hover:bg-secondary-300")}
               title={`Add to '${obj.name}'`}
-              checked={obj.value === location}
-              onClick={() => setLocation(obj.value)}
+              checked={obj.value === library}
+              onClick={() => setLibrary(obj.value)}
             >
               <span>{obj.name}</span>
               {obj.icon}
@@ -42,7 +42,7 @@ export function BookLocationRadioGroup() {
       </div>
       <div className="mt-6 flex items-center justify-start">
         {location && (
-          <Button background={"dark"} className="text-sm" onClick={() => setLocation(null)}>
+          <Button background={"dark"} className="text-sm" onClick={() => setLibrary(null)}>
             Clear
           </Button>
         )}
