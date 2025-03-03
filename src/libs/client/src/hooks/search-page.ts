@@ -1,5 +1,5 @@
 import { PaginationObjectType, SearchObjectType } from "@/root/src/libs/shared/src/validators";
-import { fetchData, getSearchObjectFromLocalStorage, handleNumberSearchParam } from "../../../utils";
+import { fetchData, getSearchObjectFromLocalStorage, handleNumberSearchParam } from "@/client/utils";
 import {
   DEFAULT_MAX_RESULTS,
   DEFAULT_PAGE_NUMBER,

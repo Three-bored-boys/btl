@@ -9,7 +9,7 @@ import {
   setSearchObjectToLocalStorage,
 } from "@/client/utils";
 import { DEFAULT_MAX_RESULTS, DEFAULT_PAGE_NUMBER, MAX_MAX_RESULTS, MIN_MAX_RESULTS } from "@/libs/shared/src/utils";
-import { useSearchPage } from "./hooks";
+import { useSearchPage } from "../../../hooks/search-page";
 import { Button } from "../../ui/button";
 import { Container } from "../../layouts/container";
 import { SearchPageQueryComponentWrapper } from "./search-page-query-component-wrapper";
