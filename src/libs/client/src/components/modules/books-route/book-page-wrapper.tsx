@@ -10,7 +10,7 @@ export async function BookPageWrapper({ params: { isbn } }: { params: { isbn: st
   const { fetchDataResult, res } = await fetchData<Book[]>(`${process.env.API_URL}/books/isbn/${isbn}`);
 
   if (fetchDataResult.success) {
-    return <BookPage book={fetchDataResult.data[0]} />;
+    return <BookPage book={fetchDataResult.data[0]} isbn={isbn} />;
   }
 
   const { errors } = fetchDataResult;

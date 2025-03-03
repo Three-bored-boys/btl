@@ -18,7 +18,8 @@ const bookLibraryIcons: [ReactNode, ReactNode, ReactNode, ReactNode] = [
 ];
 const bookLibrariesWithIcons = bookLibraries.map((obj, i) => ({ ...obj, icon: bookLibraryIcons[i] }));
 
-export function BookLocationRadioGroup() {
+export function BookLocationRadioGroup({ isbn }: { isbn: string }) {
+  console.log(isbn);
   const [library, setLibrary] = useState<string | null>(null);
 
   return (
