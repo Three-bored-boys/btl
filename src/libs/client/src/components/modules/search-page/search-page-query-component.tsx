@@ -1,5 +1,5 @@
 import React from "react";
-import { useSearchPageResults } from "../../../hooks/search-page";
+import { useSearchPageResults } from "@/client/hooks/search-page";
 import { PaginationObjectType, SearchObjectType } from "@/shared/validators";
 import { useRouter, useSearchParams } from "next/navigation";
 import { DEFAULT_MAX_RESULTS, DEFAULT_PAGE_NUMBER, MAX_MAX_RESULTS, MIN_MAX_RESULTS } from "@/shared/utils";

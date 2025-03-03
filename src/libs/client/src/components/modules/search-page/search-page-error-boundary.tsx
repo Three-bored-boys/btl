@@ -4,7 +4,7 @@ import { Container } from "@/libs/client/src/components/layouts/container";
 import { Button } from "@/libs/client/src/components/ui/button";
 import Image from "next/image";
 import notFoundImage from "@/public/assets/images/not-found.webp";
-import { ExclamationTriangle } from "../../ui/icons/exclamation-triangle";
+import { ExclamationTriangle } from "@/client/components/ui/icons/exclamation-triangle";
 
 export function SearchPageErrorBoundary({
   error,

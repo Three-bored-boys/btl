@@ -3,7 +3,7 @@
 import { Container } from "@/client/components/layouts/container";
 import Image from "next/image";
 import heroImage from "@/public/assets/images/hero-section.png";
-import { LinkButton } from "../../../ui/link-button";
+import { LinkButton } from "@/client/components/ui/link-button";
 import { useValidateUserSession } from "@/client/hooks/auth";
 import { RecentlyAdded } from "../recently-added";
 

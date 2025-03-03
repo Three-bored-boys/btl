@@ -1,7 +1,7 @@
 "use client";
 
-import { Button } from "../../ui/button";
-import { ExclamationTriangle } from "../../ui/icons/exclamation-triangle";
+import { Button } from "@/client/components/ui/button";
+import { ExclamationTriangle } from "@/client/components/ui/icons/exclamation-triangle";
 
 export function QuickSearchErrorBoundary({
   error,

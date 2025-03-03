@@ -1,8 +1,8 @@
 import { BookPage } from "@/root/src/libs/client/src/components/modules/books-route/book-page";
 import { fetchData } from "@/root/src/libs/client/src/utils";
 import type { Book } from "@/root/src/libs/shared/src/types";
-import { Container } from "../../layouts/container";
-import { LinkButton } from "../../ui/link-button";
+import { Container } from "@/client/components/layouts/container";
+import { LinkButton } from "@/client/components/ui/link-button";
 import Image from "next/image";
 import notFoundImage from "@/public/assets/images/not-found.webp";
 

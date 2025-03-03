@@ -1,5 +1,5 @@
 import { ComponentProps, ReactElement } from "react";
-import { containerStyleClasses, cn } from "../../utils";
+import { containerStyleClasses, cn } from "@/client/utils";
 
 export function Container({ className, children, ...props }: ComponentProps<"div">): ReactElement {
   return (
