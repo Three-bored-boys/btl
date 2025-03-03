@@ -41,7 +41,7 @@ export function BookLocationRadioGroup() {
         </RadioCards.Root>
       </div>
       <div className="mt-6 flex items-center justify-start">
-        {location && (
+        {library && (
           <Button background={"dark"} className="text-sm" onClick={() => setLibrary(null)}>
             Clear
           </Button>
