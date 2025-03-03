@@ -6,7 +6,7 @@ import React from "react";
 import { Spinner } from "@radix-ui/themes";
 import { Logo } from "@/client/components/ui/logo";
 import { useQuery } from "@tanstack/react-query";
-import { getUser } from "../hooks";
+import { getUser } from "@/client/hooks/auth";
 
 export const AuthContext = createContext<{
   user: SanitizedUser | null;

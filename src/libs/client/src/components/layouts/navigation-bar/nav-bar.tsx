@@ -1,6 +1,6 @@
 "use client";
 
-import { Logo } from "../../ui/logo";
+import { Logo } from "@/client/components/ui/logo";
 import React from "react";
 import { NavLinks } from "./nav-links";
 import { NavBarRight } from "./nav-bar-right";
@@ -9,8 +9,8 @@ import { Hamburger } from "@/client/components/ui/icons/hamburger";
 import { Close } from "@/client/components/ui/icons/close";
 import { usePathname } from "next/navigation";
 import { Container } from "../container";
-import { cn } from "../../../utils";
-import { QuickSearch } from "../../modules/quick-search/quick-search";
+import { cn } from "@/client/utils";
+import { QuickSearch } from "@/client/components/modules/quick-search/quick-search";
 
 const navLinkArr = [
   { name: "Home", path: "/" },

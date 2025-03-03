@@ -12,7 +12,7 @@ import { SubmitButton } from "@/client/components/ui/submit-button";
 import { ServerResult } from "@/shared/types";
 import { SignupResult } from "@/shared/validators/auth";
 import { fetchData } from "@/client/utils";
-import { useValidateUserSession } from "@/client/hooks";
+import { useValidateUserSession } from "@/client/hooks/auth";
 
 export function SignupForm() {
   const router = useRouter();

@@ -2,7 +2,7 @@ import React from "react";
 // import { book } from "./data";
 import Image from "next/image";
 import Link from "next/link";
-import { useQuickSearchResults } from "./useQuickSearchResults";
+import { useQuickSearchResults } from "@/client/hooks/quick-search";
 import genericBookImage from "@/public/assets/images/generic-book.png";
 import { DEFAULT_MAX_RESULTS, DEFAULT_PAGE_NUMBER } from "@/libs/shared/src/utils";
 import { ExclamationTriangle } from "@/client/components/ui/icons/exclamation-triangle";
