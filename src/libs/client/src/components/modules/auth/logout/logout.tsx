@@ -1,7 +1,7 @@
 import { ServerResult } from "@/root/src/libs/shared/src/types";
 import { useRouter } from "next/navigation";
 import React from "react";
-import { useValidateUserSession } from "@/client/hooks";
+import { useValidateUserSession } from "@/client/hooks/auth";
 import { SubmitButton } from "@/client/components/ui/submit-button";
 import { fetchData } from "@/client/utils";
 import { useMutation } from "@tanstack/react-query";
