@@ -27,9 +27,3 @@ export const userBooks = pgTable(
 
 export type UserBook = InferSelectModel<typeof userBooks>;
 export type NewUserBook = InferInsertModel<typeof userBooks>;
-
-/* TODO:
-- Create a new column that will hold the library value. Copy the enum from the libraries table
-- Delete the libraryId column
-- Delete the libraries table
-*/
