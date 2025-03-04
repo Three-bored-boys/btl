@@ -26,7 +26,7 @@ export function LibraryBooksPreview({ books, showSidebar }: { books: Book[]; sho
       {books.map((book, i) => (
         <div key={i}>
           <Link
-            href={`/books/${book.isbn13 || book.isbn10}`}
+            href={`/book/${book.isbn13 || book.isbn10}`}
             className={cn("block w-full sm:w-28", {
               "md:w-24 min-[896px]:w-28 lg:w-32 xl:w-40": showSidebar,
               "md:w-28 min-[896px]:w-36 lg:w-40 xl:w-44": !showSidebar,
