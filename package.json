@@ -13,7 +13,7 @@
     "commitlint": "commitlint --edit",
     "wrangler:dev": "wrangler dev",
     "deploy": "wrangler deploy",
-    "db:generate": "drizzle-kit generate",
+    "db:generate": "tsc src/libs/shared/src/db/schema/index.ts && drizzle-kit generate",
     "db:migrate": "tsx src/libs/server/src/db/migrate.ts",
     "db:seed": "tsx src/libs/server/src/db/seed.ts",
     "db:test-conn": "tsx src/libs/server/src/db/test-conn.ts"

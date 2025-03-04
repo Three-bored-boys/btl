@@ -15,6 +15,27 @@
       "when": 1740945637435,
       "tag": "0001_brainy_runaways",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1741094220429,
+      "tag": "0002_lame_golden_guardian",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1741094425031,
+      "tag": "0003_worthless_ulik",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1741094696065,
+      "tag": "0004_oval_tarantula",
+      "breakpoints": true
     }
   ]
 }
