@@ -19,7 +19,7 @@ export function SearchPageResults({ books }: { books: Book[] }) {
     <div className="my-6 grid px-12 xs:grid-cols-2 xs:px-5 radix-xs:px-12 md:grid-cols-4 md:px-1 lg:px-12 xl:px-32">
       {booksWithISBN.map((book, i) => (
         <Link
-          href={`/books/${book.isbn13 || book.isbn10}`}
+          href={`/book/${book.isbn13 || book.isbn10}`}
           key={i}
           className="aspect-auto border py-4 hover:border-primary"
           title={`"${book.title}" by ${book.author}`}
