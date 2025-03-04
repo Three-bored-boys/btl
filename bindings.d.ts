@@ -1,4 +1,4 @@
-import { Environment } from "@/root/bindings";
+import { SanitizedUser } from "./src/libs/shared/src/db/schema";
 export type Environment = {
   Bindings: {
     DATABASE_URL: string;
@@ -6,5 +6,9 @@ export type Environment = {
     NY_TIMES_BOOKS_API_KEY: string;
     SESSION_SECRET_KEY: string;
     ENVIRONMENT: "development" | "production";
+  };
+
+  Variables: {
+    user: SanitizedUser;
   };
 };
