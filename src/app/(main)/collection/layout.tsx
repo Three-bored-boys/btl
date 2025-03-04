@@ -1,5 +1,5 @@
 import React from "react";
-import { CollectionLayout } from "@/client/components/modules/collection-route/collection-layout";
+import { CollectionLayout } from "@/client/components/modules/collection/collection-layout";
 
 export default function Layout({
   children,
