@@ -16,14 +16,23 @@ userBooksApp.get("/:isbn", authMiddleware, async (c) => {
   const { isbn } = c.req.param();
   const userId = user.id;
 
-  const book = await db(c)
-    .select()
-    .from(userBooks)
-    .where(and(eq(userBooks.userId, userId), eq(userBooks.isbn, isbn)));
+  try {
+    const book = await db(c)
+      .select()
+      .from(userBooks)
+      .where(and(eq(userBooks.userId, userId), eq(userBooks.isbn, isbn)));
 
-  const responseData: GoodResponse<{ user: SanitizedUser; book: UserBook[] }> = { success: true, data: { user, book } };
+    const responseData: GoodResponse<{ user: SanitizedUser; book: UserBook[] }> = {
+      success: true,
+      data: { user, book },
+    };
 
-  return c.json(responseData);
+    return c.json(responseData);
+  } catch (e) {
+    console.log(e);
+    const responseData: BadResponse = { success: false, errors: ["There was an issue getting the required book"] };
+    return c.json(responseData, 500);
+  }
 });
 
 userBooksApp.post(
@@ -40,26 +49,32 @@ userBooksApp.post(
     const user = c.get("user");
     const { isbn, library } = c.req.valid("param");
 
-    const existingUserBook = await db(c)
-      .select()
-      .from(userBooks)
-      .where(and(eq(userBooks.userId, user.id), eq(userBooks.isbn, isbn), eq(userBooks.libraryValue, library)));
+    try {
+      const existingUserBook = await db(c)
+        .select()
+        .from(userBooks)
+        .where(and(eq(userBooks.userId, user.id), eq(userBooks.isbn, isbn), eq(userBooks.libraryValue, library)));
 
-    if (existingUserBook.length === 0) {
-      await db(c).insert(userBooks).values({ isbn, libraryValue: library, userId: user.id });
+      if (existingUserBook.length === 0) {
+        await db(c).insert(userBooks).values({ isbn, libraryValue: library, userId: user.id });
+      }
+
+      await db(c)
+        .update(userBooks)
+        .set({ libraryValue: library })
+        .where(and(eq(userBooks.userId, user.id), eq(userBooks.isbn, isbn)));
+
+      const responseData: GoodResponse<string> = {
+        success: true,
+        data: `Added to ${bookLibraries.find((obj) => obj.value === library)?.name ?? "collection"}!`,
+      };
+
+      return c.json(responseData);
+    } catch (e) {
+      console.log(e);
+      const responseData: BadResponse = { success: false, errors: ["There was an issue adding book"] };
+      return c.json(responseData, 500);
     }
-
-    await db(c)
-      .update(userBooks)
-      .set({ libraryValue: library })
-      .where(and(eq(userBooks.userId, user.id), eq(userBooks.isbn, isbn)));
-
-    const responseData: GoodResponse<string> = {
-      success: true,
-      data: `Added to ${bookLibraries.find((obj) => obj.value === library)?.name ?? "collection"}!`,
-    };
-
-    return c.json(responseData);
   },
 );
 
@@ -67,14 +82,23 @@ userBooksApp.delete("/:isbn", authMiddleware, async (c) => {
   const user = c.get("user");
   const { isbn } = c.req.param();
 
-  await db(c)
-    .delete(userBooks)
-    .where(and(eq(userBooks.userId, user.id), eq(userBooks.isbn, isbn)));
+  try {
+    await db(c)
+      .delete(userBooks)
+      .where(and(eq(userBooks.userId, user.id), eq(userBooks.isbn, isbn)));
 
-  const responseData: GoodResponse<string> = {
-    success: true,
-    data: "Removed from collection!",
-  };
+    const responseData: GoodResponse<string> = {
+      success: true,
+      data: "Removed from collection!",
+    };
 
-  return c.json(responseData);
+    return c.json(responseData);
+  } catch (e) {
+    console.log(e);
+    const responseData: BadResponse = {
+      success: false,
+      errors: ["There was an issue deleting the book from your collection"],
+    };
+    return c.json(responseData, 500);
+  }
 });
