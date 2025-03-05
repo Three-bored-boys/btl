@@ -4,15 +4,16 @@ import { zValidator } from "@hono/zod-validator";
 import { signupSchema, loginSchema } from "@/shared/validators";
 import { Environment } from "@/root/bindings";
 import { db } from "@/server/db/db";
-import { users } from "@/server/db/schema";
+import { SanitizedUser, users } from "@/server/db/schema";
 import { eq, or } from "drizzle-orm";
 import { hashPassword, verifyHashedPassword } from "@/server/auth/password";
 import { generateSessionToken, createSession, invalidateSession } from "@/server/auth/sessions";
 import { setSessionCookie, deleteSessionCookie, getSessionCookieToken } from "@/server/auth/cookies";
-import { encryptAuthSessionToken, getUserSession } from "@/server/auth/utils";
+import { encryptAuthSessionToken } from "@/server/auth/utils";
 import { cache } from "hono/cache";
 import { sanitizedUser } from "@/server/utils";
 import { SignupResult, LoginResult } from "@/shared/validators/auth";
+import { authMiddleware } from "../middleware";
 
 export const auth = new Hono<Environment>();
 
@@ -172,11 +173,10 @@ auth.get(
     },
     cacheControl: "no-cache, private",
   }),
-  async (c) => {
-    const responseData = await getUserSession(c);
-    if (!responseData.success) {
-      return c.json(responseData, 401);
-    }
+  authMiddleware,
+  (c) => {
+    const user = c.get("user");
+    const responseData: GoodResponse<SanitizedUser> = { success: true, data: user };
     return c.json(responseData);
   },
 );
