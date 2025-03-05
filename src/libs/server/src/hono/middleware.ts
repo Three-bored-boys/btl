@@ -1,6 +1,6 @@
 import { createMiddleware } from "hono/factory";
 import { Environment } from "@/root/bindings";
-import { getUserSession } from "src/auth/utils";
+import { getUserSession } from "@/server/auth/utils";
 
 export const authMiddleware = createMiddleware<Environment>(async (c, next) => {
   const userSessionRes = await getUserSession(c);

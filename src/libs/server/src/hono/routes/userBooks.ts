@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import { Environment } from "@/root/bindings";
-import { db } from "src/db/db";
+import { db } from "@/server/db/db";
 import { SanitizedUser, userBooks, UserBook } from "@/server/db/schema";
 import { and, eq } from "drizzle-orm";
 import { authMiddleware } from "@/server/hono/middleware";
