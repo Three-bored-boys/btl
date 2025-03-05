@@ -28,11 +28,14 @@ const getUserBookWithISBN = async function (isbn: string) {
   }
 };
 
+const useGetUserBookWithISBN = function (isbn: string) {
+  return useQuery({ queryKey: ["user-books", isbn], queryFn: () => getUserBookWithISBN(isbn) });
+};
+
 export const useBookPage = function (isbn: string) {
   const [libraryValue, setLibraryValue] = useState<string | null>(null);
   const { setUser, user } = useAuthContext();
-
-  const query = useQuery({ queryKey: ["user-books", isbn], queryFn: () => getUserBookWithISBN(isbn) });
+  const query = useGetUserBookWithISBN(isbn);
 
   useEffect(() => {
     if (query.data !== undefined) {
