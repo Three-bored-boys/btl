@@ -62,3 +62,19 @@ userBooksApp.post(
     return c.json(responseData);
   },
 );
+
+userBooksApp.delete("/:isbn/", authMiddleware, async (c) => {
+  const user = c.get("user");
+  const { isbn } = c.req.param();
+
+  await db(c)
+    .delete(userBooks)
+    .where(and(eq(userBooks.userId, user.id), eq(userBooks.isbn, isbn)));
+
+  const responseData: GoodResponse<string> = {
+    success: true,
+    data: "Removed from collection!",
+  };
+
+  return c.json(responseData);
+});
