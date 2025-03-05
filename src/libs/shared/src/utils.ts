@@ -14,4 +14,6 @@ export const bookLibraries = [
   { name: "Did Not Finish", value: "did-not-finish" },
 ];
 
+export const bookLibraryValues = ["currently-reading", "want-to-read", "finished", "did-not-finish"] as const;
+
 export const BTL_AUTH_SESSION_COOKIE_NAME = "btl_auth_session";
