@@ -63,7 +63,7 @@ userBooksApp.post(
   },
 );
 
-userBooksApp.delete("/:isbn/", authMiddleware, async (c) => {
+userBooksApp.delete("/:isbn", authMiddleware, async (c) => {
   const user = c.get("user");
   const { isbn } = c.req.param();
 
