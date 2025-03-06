@@ -20,10 +20,10 @@ const bookLibraryIcons: [ReactNode, ReactNode, ReactNode, ReactNode] = [
 const bookLibrariesWithIcons = bookLibraries.map((obj, i) => ({ ...obj, icon: bookLibraryIcons[i] }));
 
 export function BookLocationRadioGroup({ isbn }: { isbn: string }) {
-  const { libraryValue, setLibraryValue, query } = useBookPage(isbn);
+  const { libraryValue, setLibraryValue, query, mutation, settledMessage } = useBookPage(isbn);
   console.log(libraryValue);
 
-  if (query.isLoading) {
+  if (query.isLoading || mutation.isPending) {
     return <div>Loading...</div>;
   }
 
@@ -38,7 +38,10 @@ export function BookLocationRadioGroup({ isbn }: { isbn: string }) {
               className={cn("hover:cursor-pointer hover:bg-secondary-300")}
               title={`Add to '${obj.name}'`}
               checked={obj.value === libraryValue}
-              onClick={() => setLibraryValue(obj.value)}
+              onClick={() => {
+                setLibraryValue(obj.value);
+                mutation.mutate(obj.value);
+              }}
             >
               <span>{obj.name}</span>
               {obj.icon}
@@ -46,9 +49,17 @@ export function BookLocationRadioGroup({ isbn }: { isbn: string }) {
           ))}
         </RadioCards.Root>
       </div>
+      {settledMessage !== null && <div>{settledMessage.success}</div>}
       <div className="mt-6 flex items-center justify-start">
         {libraryValue && (
-          <Button background={"dark"} className="text-sm" onClick={() => setLibraryValue(null)}>
+          <Button
+            background={"dark"}
+            className="text-sm"
+            onClick={() => {
+              setLibraryValue(null);
+              mutation.mutate(null);
+            }}
+          >
             Clear
           </Button>
         )}

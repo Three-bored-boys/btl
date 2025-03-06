@@ -87,7 +87,6 @@ export const useBookPage = function (isbn: string) {
     },
     onSuccess: (data) => {
       setSettledMessage(data);
-      router.refresh();
     },
   });
 
