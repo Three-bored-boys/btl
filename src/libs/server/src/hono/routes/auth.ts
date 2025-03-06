@@ -7,12 +7,13 @@ import { db } from "@/server/db/db";
 import { SanitizedUser, users } from "@/server/db/schema";
 import { eq, or } from "drizzle-orm";
 import { hashPassword, verifyHashedPassword } from "@/server/auth/password";
-import { generateSessionToken, createSession, validateSessionToken, invalidateSession } from "@/server/auth/sessions";
+import { generateSessionToken, createSession, invalidateSession } from "@/server/auth/sessions";
 import { setSessionCookie, deleteSessionCookie, getSessionCookieToken } from "@/server/auth/cookies";
 import { encryptAuthSessionToken } from "@/server/auth/utils";
 import { cache } from "hono/cache";
 import { sanitizedUser } from "@/server/utils";
 import { SignupResult, LoginResult } from "@/shared/validators/auth";
+import { authMiddleware } from "../middleware";
 
 export const auth = new Hono<Environment>();
 
@@ -172,22 +173,9 @@ auth.get(
     },
     cacheControl: "no-cache, private",
   }),
-  async (c) => {
-    const sessionToken = getSessionCookieToken(c);
-    if (!sessionToken) {
-      deleteSessionCookie(c);
-      const responseData: BadResponse = { success: false, errors: ["No session token found"] };
-      return c.json(responseData, 401);
-    }
-
-    const { session, user } = await validateSessionToken(sessionToken, c);
-
-    if (!session || !user) {
-      deleteSessionCookie(c);
-      const responseData: BadResponse = { success: false, errors: ["Invalid session token"] };
-      return c.json(responseData, 401);
-    }
-
+  authMiddleware,
+  (c) => {
+    const user = c.get("user");
     const responseData: GoodResponse<SanitizedUser> = { success: true, data: user };
     return c.json(responseData);
   },

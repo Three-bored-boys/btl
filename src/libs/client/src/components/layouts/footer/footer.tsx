@@ -1,5 +1,5 @@
 import React from "react";
-import { Logo } from "../../ui/logo";
+import { Logo } from "@/client/components/ui/logo";
 import { Container } from "../container";
 
 export function Footer(): React.ReactElement {

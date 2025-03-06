@@ -12,17 +12,44 @@ import { SubmitButton } from "@/client/components/ui/submit-button";
 import { ServerResult } from "@/shared/types";
 import { LoginResult } from "@/shared/validators/auth";
 import { fetchData } from "@/client/utils";
-import { useValidateUserSession } from "@/client/hooks";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export function LoginForm() {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [loginFormState, setLoginFormState] = React.useState<LoginFormState>({
     fieldError: { userName: [], password: [] },
   });
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
-  const { setUser } = useValidateUserSession();
 
-  const updateLoginFormState = async function (event: React.FormEvent<HTMLFormElement>): Promise<LoginFormState> {
+  const mutation = useMutation({
+    mutationFn: async (loginObj: LoginInput) => {
+      try {
+        const { fetchDataResult } = await fetchData<LoginResult>(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
+          method: "POST",
+          body: JSON.stringify(loginObj),
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
+
+        return { serverResult: fetchDataResult } as ServerResult<LoginResult>;
+      } catch (e) {
+        return {
+          serverResult: { success: false, errors: ["Something went wrong. Please try again."] },
+        } as ServerResult<LoginResult>;
+      }
+    },
+    onSuccess: async (data) => {
+      setLoginFormState(data);
+      if ("serverResult" in data && data.serverResult.success) {
+        await queryClient.invalidateQueries({ queryKey: ["btl_session_user"], exact: true, refetchType: "all" });
+        router.push("/");
+      }
+    },
+  });
+
+  const validateLoginInput = function (event: React.FormEvent<HTMLFormElement>): FieldError<LoginInput> | LoginInput {
     const formData = new FormData(event.currentTarget);
     const loginObjRaw = Object.fromEntries(formData);
 
@@ -42,34 +69,17 @@ export function LoginForm() {
       return fieldErrorObj;
     }
 
-    const loginObj = validation.data;
-
-    try {
-      const { fetchDataResult } = await fetchData<LoginResult>(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
-        method: "POST",
-        body: JSON.stringify(loginObj),
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      });
-
-      return { serverResult: fetchDataResult };
-    } catch (e) {
-      return { serverResult: { success: false, errors: ["Something went wrong. Please try again."] } };
-    }
+    return validation.data;
   };
 
-  const onSubmit = async function (e: React.FormEvent<HTMLFormElement>) {
+  const handleSubmit = function (e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setIsSubmitting(true);
-    const newFormState = await updateLoginFormState(e);
-    setLoginFormState(newFormState);
-    setIsSubmitting(false);
-    if ("serverResult" in newFormState && newFormState.serverResult.success) {
-      setUser(newFormState.serverResult.data.user);
-      router.push("/");
+    const validationResult = validateLoginInput(e);
+    if ("fieldError" in validationResult) {
+      setLoginFormState(validationResult);
+      return;
     }
+    mutation.mutate(validationResult);
   };
 
   const ServerResultMessage = function ({
@@ -96,7 +106,7 @@ export function LoginForm() {
   };
 
   return (
-    <form className="flex w-full flex-col" id="logInForm" onSubmit={(e) => void onSubmit(e)}>
+    <form className="flex w-full flex-col" id="logInForm" onSubmit={(e) => handleSubmit(e)}>
       <div className="mb-6 flex flex-col">
         <Label htmlFor="userName">Username:</Label>
         <Input id="userName" type="text" name="userName" />
@@ -121,7 +131,7 @@ export function LoginForm() {
 
       <div>
         <SubmitButton
-          isSubmitting={isSubmitting}
+          isSubmitting={mutation.isPending}
           defaultText={"Log In"}
           submittingText={"Logging in..."}
           textSize={"small"}

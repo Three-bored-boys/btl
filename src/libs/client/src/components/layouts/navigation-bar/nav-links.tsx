@@ -3,7 +3,7 @@ import { NavLink } from "./nav-link";
 import { cn } from "@/client/utils";
 import { NavLinkArr } from "./nav-bar";
 import { cva, VariantProps } from "class-variance-authority";
-import { useValidateUserSession } from "@/client/hooks";
+import { useValidateUserSession } from "@/client/hooks/auth";
 
 const navLinks = cva(["flex"], {
   variants: {

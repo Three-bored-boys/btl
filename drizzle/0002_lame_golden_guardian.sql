@@ -1,0 +1,1 @@
+ALTER TABLE "user_books" ADD COLUMN "library_value" "library_value" NOT NULL;

@@ -6,9 +6,9 @@ import genericBookImage from "@/public/assets/images/generic-book.png";
 import { BookInformation } from "./book-information";
 import { BookLocationRadioGroup } from "./book-location-radio-group";
 
-type BookPageProps = { book: Book } & ComponentProps<"div">;
+type BookPageProps = { book: Book; isbn: string } & ComponentProps<"div">;
 
-export function BookPage({ book, ...props }: BookPageProps) {
+export function BookPage({ book, isbn, ...props }: BookPageProps) {
   return (
     <div className="mt-5" {...props}>
       <Container>
@@ -33,7 +33,7 @@ export function BookPage({ book, ...props }: BookPageProps) {
             <h2 className="mb-3 text-center font-semibold sm:text-left">{book.title}</h2>
             <h3 className="mb-4 text-center italic sm:text-left">{book.author}</h3>
             <BookInformation book={book} />
-            <BookLocationRadioGroup />
+            <BookLocationRadioGroup isbn={isbn} />
           </div>
         </div>
       </Container>

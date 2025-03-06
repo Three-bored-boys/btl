@@ -12,17 +12,46 @@ import { SubmitButton } from "@/client/components/ui/submit-button";
 import { ServerResult } from "@/shared/types";
 import { SignupResult } from "@/shared/validators/auth";
 import { fetchData } from "@/client/utils";
-import { useValidateUserSession } from "@/client/hooks";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export function SignupForm() {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [signupFormState, setSignupFormState] = React.useState<SignupFormState>({
     fieldError: { userName: [], emailAddress: [], password: [] },
   });
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
-  const { setUser } = useValidateUserSession();
 
-  const updateSignupFormState = async function (event: React.FormEvent<HTMLFormElement>): Promise<SignupFormState> {
+  const mutation = useMutation({
+    mutationFn: async (signupObj: SignupInput) => {
+      try {
+        const { fetchDataResult } = await fetchData<SignupResult>(`${process.env.NEXT_PUBLIC_API_URL}/auth/signup`, {
+          method: "POST",
+          body: JSON.stringify(signupObj),
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
+
+        return { serverResult: fetchDataResult } as ServerResult<SignupResult>;
+      } catch (e) {
+        return {
+          serverResult: { success: false, errors: ["Something went wrong. Please try again."] },
+        } as ServerResult<SignupResult>;
+      }
+    },
+    onSuccess: async (data) => {
+      setSignupFormState(data);
+      if ("serverResult" in data && data.serverResult.success) {
+        await queryClient.invalidateQueries({ queryKey: ["btl_session_user"], exact: true, refetchType: "all" });
+        router.push("/");
+      }
+    },
+  });
+
+  const validateSignupInput = function (
+    event: React.FormEvent<HTMLFormElement>,
+  ): SignupInput | FieldError<SignupInput> {
     const formData = new FormData(event.currentTarget);
     const signupObjRaw = Object.fromEntries(formData);
 
@@ -45,34 +74,17 @@ export function SignupForm() {
       return fieldErrorObj;
     }
 
-    const signupObj = validation.data;
-
-    try {
-      const { fetchDataResult } = await fetchData<SignupResult>(`${process.env.NEXT_PUBLIC_API_URL}/auth/signup`, {
-        method: "POST",
-        body: JSON.stringify(signupObj),
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      });
-
-      return { serverResult: fetchDataResult };
-    } catch (e) {
-      return { serverResult: { success: false, errors: ["Something went wrong. Please try again."] } };
-    }
+    return validation.data;
   };
 
-  const onSubmit = async function (e: React.FormEvent<HTMLFormElement>) {
+  const handleSubmit = function (e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setIsSubmitting(true);
-    const newFormState = await updateSignupFormState(e);
-    setSignupFormState(newFormState);
-    setIsSubmitting(false);
-    if ("serverResult" in newFormState && newFormState.serverResult.success) {
-      setUser(newFormState.serverResult.data.user);
-      router.push("/");
+    const validationResult = validateSignupInput(e);
+    if ("fieldError" in validationResult) {
+      setSignupFormState(validationResult);
+      return;
     }
+    mutation.mutate(validationResult);
   };
 
   const ServerResultMessage = function ({
@@ -99,7 +111,7 @@ export function SignupForm() {
   };
 
   return (
-    <form className="flex w-full flex-col" id="logInForm" onSubmit={(e) => void onSubmit(e)}>
+    <form className="flex w-full flex-col" id="logInForm" onSubmit={(e) => handleSubmit(e)}>
       <div className="mb-6 flex flex-col">
         <Label htmlFor="userName">Username:</Label>
         <Input id="userName" type="text" name="userName" />
@@ -135,7 +147,7 @@ export function SignupForm() {
 
       <div>
         <SubmitButton
-          isSubmitting={isSubmitting}
+          isSubmitting={mutation.isPending}
           defaultText={"Sign up"}
           submittingText={"Signing up..."}
           textSize={"small"}

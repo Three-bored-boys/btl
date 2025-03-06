@@ -1,17 +1,17 @@
 "use client";
 
 import React, { ReactElement, Suspense } from "react";
-import { SearchInput } from "../../ui/search-input";
-import { Label } from "../../ui/label";
+import { SearchInput } from "@/client/components/ui/search-input";
+import { Label } from "@/client/components/ui/label";
 import {
   BTL_LOCAL_STORAGE_SEARCH_OBJECT,
   handleNumberSearchParam,
   setSearchObjectToLocalStorage,
 } from "@/client/utils";
 import { DEFAULT_MAX_RESULTS, DEFAULT_PAGE_NUMBER, MAX_MAX_RESULTS, MIN_MAX_RESULTS } from "@/libs/shared/src/utils";
-import { useSearchPage } from "./hooks";
-import { Button } from "../../ui/button";
-import { Container } from "../../layouts/container";
+import { useSearchPage } from "@/client/hooks/search-page";
+import { Button } from "@/client/components/ui/button";
+import { Container } from "@/client/components/layouts/container";
 import { SearchPageQueryComponentWrapper } from "./search-page-query-component-wrapper";
 import { data } from "./data";
 import { SearchPageResultsLoadingSkeleton } from "./search-page-results-loading-skeleton";

@@ -5,10 +5,11 @@ import { ListBullet } from "@/client/components/ui/icons/list-bullet";
 import { Check } from "@/client/components/ui/icons/check";
 import { Trash } from "@/client/components/ui/icons/trash";
 import { RadioCards } from "@radix-ui/themes";
-import { Button } from "../../ui/button";
+import { Button } from "@/client/components/ui/button";
 import { bookLibraries } from "@/shared/utils";
 import { cn } from "@/client/utils";
-import { useState, ReactNode } from "react";
+import { ReactNode } from "react";
+import { useBookPage } from "@/client/hooks/book-page";
 
 const bookLibraryIcons: [ReactNode, ReactNode, ReactNode, ReactNode] = [
   <BookOpen key={0} />,
@@ -18,8 +19,9 @@ const bookLibraryIcons: [ReactNode, ReactNode, ReactNode, ReactNode] = [
 ];
 const bookLibrariesWithIcons = bookLibraries.map((obj, i) => ({ ...obj, icon: bookLibraryIcons[i] }));
 
-export function BookLocationRadioGroup() {
-  const [location, setLocation] = useState<string | null>(null);
+export function BookLocationRadioGroup({ isbn }: { isbn: string }) {
+  const { libraryValue, setLibraryValue, query, mutation, settledMessage } = useBookPage(isbn);
+  console.log(libraryValue);
 
   return (
     <div className="pt-3">
@@ -31,8 +33,12 @@ export function BookLocationRadioGroup() {
               key={i}
               className={cn("hover:cursor-pointer hover:bg-secondary-300")}
               title={`Add to '${obj.name}'`}
-              checked={obj.value === location}
-              onClick={() => setLocation(obj.value)}
+              checked={obj.value === libraryValue}
+              onClick={() => {
+                setLibraryValue(obj.value);
+                mutation.mutate(obj.value);
+              }}
+              disabled={query.isLoading || mutation.isPending}
             >
               <span>{obj.name}</span>
               {obj.icon}
@@ -40,9 +46,17 @@ export function BookLocationRadioGroup() {
           ))}
         </RadioCards.Root>
       </div>
+      {settledMessage !== null && <div>{settledMessage.success}</div>}
       <div className="mt-6 flex items-center justify-start">
-        {location && (
-          <Button background={"dark"} className="text-sm" onClick={() => setLocation(null)}>
+        {libraryValue && (
+          <Button
+            background={"dark"}
+            className="text-sm"
+            onClick={() => {
+              setLibraryValue(null);
+              mutation.mutate(null);
+            }}
+          >
             Clear
           </Button>
         )}

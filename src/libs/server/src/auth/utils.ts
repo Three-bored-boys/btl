@@ -1,3 +1,10 @@
+import { Environment } from "@/root/bindings";
+import { Context } from "hono";
+import { deleteSessionCookie, getSessionCookieToken } from "./cookies";
+import { BadResponse, GoodResponse } from "@/shared/types";
+import { SanitizedUser } from "@/shared/db/schema";
+import { validateSessionToken } from "./sessions";
+
 export const generateAuthSessionToken = function () {
   return crypto.randomUUID();
 };
@@ -36,4 +43,24 @@ export const encryptAuthSessionToken = async function (token: string, secretKey:
   const encryptedToken = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, encodedToken);
   const encryptedTokenBase64 = uint8ArrayToBase64(new Uint8Array(encryptedToken));
   return encryptedTokenBase64;
+};
+
+export const getUserSession = async function (c: Context<Environment>) {
+  const sessionToken = getSessionCookieToken(c);
+  if (!sessionToken) {
+    deleteSessionCookie(c);
+    const responseData: BadResponse = { success: false, errors: ["No session token found"] };
+    return responseData;
+  }
+
+  const { session, user } = await validateSessionToken(sessionToken, c);
+
+  if (!session || !user) {
+    deleteSessionCookie(c);
+    const responseData: BadResponse = { success: false, errors: ["Invalid session token"] };
+    return responseData;
+  }
+
+  const responseData: GoodResponse<SanitizedUser> = { success: true, data: user };
+  return responseData;
 };
