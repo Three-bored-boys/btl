@@ -1,10 +1,9 @@
 import { ServerResult } from "@/root/src/libs/shared/src/types";
 import { useRouter } from "next/navigation";
 import React from "react";
-import { useValidateUserSession } from "@/client/hooks/auth";
 import { SubmitButton } from "@/client/components/ui/submit-button";
 import { fetchData } from "@/client/utils";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Check } from "@/client/components/ui/icons/check";
 import { FormErrorListItem } from "@/client/components/ui/form-error-list-item";
 
@@ -25,14 +24,17 @@ const logout = async function (): Promise<ServerResult<string>> {
 export function Logout() {
   const [logoutState, setLogoutState] = React.useState<LogoutState>(null);
   const router = useRouter();
-  const { setUser } = useValidateUserSession();
+  const queryClient = useQueryClient();
   const { isPending, mutate } = useMutation({
     mutationFn: logout,
-    onSuccess(data) {
+    onSuccess: async (data) => {
       if (data) {
         setLogoutState(data);
         if (data.serverResult.success) {
-          setUser(null);
+          await Promise.allSettled([
+            queryClient.invalidateQueries({ queryKey: ["btl_session_user"], exact: true, refetchType: "all" }),
+            queryClient.invalidateQueries(),
+          ]);
           router.refresh();
         }
       }
