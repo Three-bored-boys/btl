@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { Environment } from "@/root/bindings";
 import { db } from "@/server/db/db";
-import { SanitizedUser, userBooks, UserBook } from "@/server/db/schema";
+import { userBooks, UserBook } from "@/server/db/schema";
 import { and, eq } from "drizzle-orm";
 import { authMiddleware } from "@/server/hono/middleware";
 import { BadResponse, GoodResponse } from "@/shared/types";
@@ -22,9 +22,9 @@ userBooksApp.get("/:isbn", authMiddleware, async (c) => {
       .from(userBooks)
       .where(and(eq(userBooks.userId, userId), eq(userBooks.isbn, isbn)));
 
-    const responseData: GoodResponse<{ user: SanitizedUser; book: UserBook[] }> = {
+    const responseData: GoodResponse<{ book: UserBook[] }> = {
       success: true,
-      data: { user, book },
+      data: { book },
     };
 
     return c.json(responseData);
