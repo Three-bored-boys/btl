@@ -50,13 +50,18 @@ userBooksApp.post(
     const { isbn, library } = c.req.valid("param");
 
     try {
-      const existingUserBook = await db(c)
+      const existingUserBookWithISBN = await db(c)
         .select()
         .from(userBooks)
-        .where(and(eq(userBooks.userId, user.id), eq(userBooks.isbn, isbn), eq(userBooks.libraryValue, library)));
+        .where(and(eq(userBooks.userId, user.id), eq(userBooks.isbn, isbn)));
 
-      if (existingUserBook.length === 0) {
+      if (existingUserBookWithISBN.length === 0) {
         await db(c).insert(userBooks).values({ isbn, libraryValue: library, userId: user.id });
+        const responseData: GoodResponse<string> = {
+          success: true,
+          data: `Added to ${bookLibraries.find((obj) => obj.value === library)?.name ?? "collection"}!`,
+        };
+        return c.json(responseData);
       }
 
       await db(c)
