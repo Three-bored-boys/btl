@@ -23,10 +23,6 @@ export function BookLocationRadioGroup({ isbn }: { isbn: string }) {
   const { libraryValue, setLibraryValue, query, mutation, settledMessage } = useBookPage(isbn);
   console.log(libraryValue);
 
-  if (query.isLoading || mutation.isPending) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <div className="pt-3">
       <div>
@@ -42,6 +38,7 @@ export function BookLocationRadioGroup({ isbn }: { isbn: string }) {
                 setLibraryValue(obj.value);
                 mutation.mutate(obj.value);
               }}
+              disabled={query.isLoading || mutation.isPending}
             >
               <span>{obj.name}</span>
               {obj.icon}
