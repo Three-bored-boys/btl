@@ -106,7 +106,7 @@ export const getBaseUrl = function () {
   if (process.env.NODE_ENV === "development") {
     return "http://localhost:3000";
   }
-  return "https://btl-kosiumeigbo-kosidinnas-projects.vercel.app";
+  return `https://${process.env.VERCEL_URL!}`;
 };
 
 export const apiUrl = function () {
