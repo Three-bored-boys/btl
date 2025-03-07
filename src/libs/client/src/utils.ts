@@ -103,10 +103,10 @@ export const handleNumberSearchParam = function (
 };
 
 export const getBaseUrl = function () {
-  if (process.env.VERCEL_URL) {
-    return `https://${process.env.VERCEL_URL}`;
+  if (process.env.NODE_ENV === "development") {
+    return "http://localhost:3000";
   }
-  return "http://localhost:3000";
+  return "https://btl-kosiumeigbo-kosidinnas-projects.vercel.app";
 };
 
 export const apiUrl = function () {
