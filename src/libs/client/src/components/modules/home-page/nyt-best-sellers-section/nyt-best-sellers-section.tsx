@@ -28,7 +28,9 @@ export function NYTBestSellersSection() {
 }
 
 async function GetBestSellersWrapper() {
-  const { fetchDataResult, res } = await fetchData<BestSeller[]>(`${apiUrl()}/books/best-sellers`);
+  const { fetchDataResult, res } = await fetchData<BestSeller[]>(`${apiUrl()}/books/best-sellers`, {
+    next: { revalidate: 259200 },
+  });
 
   if (!fetchDataResult.success) {
     const { errors } = fetchDataResult;

@@ -46,7 +46,7 @@ async function GetGenresWrapper() {
   } = fetchDataResult;
 
   const getGenresBooksPromisesArray: Promise<FetchDataResult<Book[]>>[] = genres.map((val) =>
-    fetchData<Book[]>(`${apiUrl()}/books/genres/${val.name}`),
+    fetchData<Book[]>(`${apiUrl()}/books/genres/${val.name}`, { next: { revalidate: 172800 } }),
   );
 
   const allGenresBooksArray = await Promise.all(getGenresBooksPromisesArray);
