@@ -5,9 +5,12 @@ import { Container } from "@/client/components/layouts/container";
 import { LinkButton } from "@/client/components/ui/link-button";
 import Image from "next/image";
 import notFoundImage from "@/public/assets/images/not-found.webp";
+import { apiUrl } from "@/client/utils";
 
 export async function BookPageWrapper({ params: { isbn } }: { params: { isbn: string } }) {
-  const { fetchDataResult, res } = await fetchData<Book[]>(`${process.env.API_URL}/books/isbn/${isbn}`);
+  const { fetchDataResult, res } = await fetchData<Book[]>(`${apiUrl()}/books/isbn/${isbn}`, {
+    next: { revalidate: 172800 },
+  });
 
   if (fetchDataResult.success) {
     return <BookPage book={fetchDataResult.data[0]} isbn={isbn} />;

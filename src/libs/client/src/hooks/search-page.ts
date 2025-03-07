@@ -1,5 +1,5 @@
 import { PaginationObjectType, SearchObjectType } from "@/root/src/libs/shared/src/validators";
-import { fetchData, getSearchObjectFromLocalStorage, handleNumberSearchParam } from "@/client/utils";
+import { apiUrl, fetchData, getSearchObjectFromLocalStorage, handleNumberSearchParam } from "@/client/utils";
 import {
   DEFAULT_MAX_RESULTS,
   DEFAULT_PAGE_NUMBER,
@@ -15,7 +15,8 @@ import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.share
 
 const getFullSearchResults = async function (searchObject: SearchObjectType, paginationObject: PaginationObjectType) {
   const { fetchDataResult, res } = await fetchData<{ books: Book[]; totalItems: number }>(
-    `${process.env.NEXT_PUBLIC_API_URL}/books/full-search?${new URLSearchParams({ ...searchObject, ...paginationObject }).toString()}`,
+    `${apiUrl()}/books/full-search?${new URLSearchParams({ ...searchObject, ...paginationObject }).toString()}`,
+    { next: { revalidate: 172800 } },
   );
   return { fetchDataResult, res };
 };
