@@ -5,7 +5,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { BadResponse, GoodResponse } from "@/shared/types";
 
-const getUserBookWithISBN = async function (isbn: string) {
+const getUserBookWithISBN = async function (isbn: string): Promise<{ libraryValue: string | null }> {
   try {
     const { fetchDataResult, res } = await fetchData<{ book: UserBook[] }>(
       `${process.env.NEXT_PUBLIC_API_URL}/user-books/${isbn}`,
@@ -33,33 +33,52 @@ const useGetUserBookWithISBN = function (isbn: string) {
   return useQuery({ queryKey: ["user-books", isbn], queryFn: () => getUserBookWithISBN(isbn) });
 };
 
-const addUserBookWithISBN = async function (isbn: string, library: string) {
-  const { fetchDataResult, res } = await fetchData<string>(
-    `${process.env.NEXT_PUBLIC_API_URL}/user-books/${isbn}/${library}`,
-    {
-      credentials: "include",
-      method: "POST",
-    },
-  );
+const addUserBookWithISBN = async function (
+  isbn: string,
+  library: string,
+): Promise<BadResponse | GoodResponse<string>> {
+  try {
+    const { fetchDataResult, res } = await fetchData<string>(
+      `${process.env.NEXT_PUBLIC_API_URL}/user-books/${isbn}/${library}`,
+      {
+        credentials: "include",
+        method: "POST",
+      },
+    );
 
-  if (res.status === 401) {
-    throw new Error("User not authenticated");
+    if (res.status === 401) {
+      throw new Error(res.status.toString());
+    }
+
+    return fetchDataResult;
+  } catch (e) {
+    const error = e as Error;
+    if (error.message === "401") {
+      throw error;
+    }
+    return { success: false, errors: ["Something has gone wrong during your request"] };
   }
-
-  return fetchDataResult;
 };
 
-const deleteUserBookWithISBN = async function (isbn: string) {
-  const { fetchDataResult, res } = await fetchData<string>(`${process.env.NEXT_PUBLIC_API_URL}/user-books/${isbn}`, {
-    credentials: "include",
-    method: "DELETE",
-  });
+const deleteUserBookWithISBN = async function (isbn: string): Promise<BadResponse | GoodResponse<string>> {
+  try {
+    const { fetchDataResult, res } = await fetchData<string>(`${process.env.NEXT_PUBLIC_API_URL}/user-books/${isbn}`, {
+      credentials: "include",
+      method: "DELETE",
+    });
 
-  if (res.status === 401) {
-    throw new Error("User not authenticated");
+    if (res.status === 401) {
+      throw new Error(res.status.toString());
+    }
+
+    return fetchDataResult;
+  } catch (e) {
+    const error = e as Error;
+    if (error.message === "401") {
+      throw error;
+    }
+    return { success: false, errors: ["Something has gone wrong during your request"] };
   }
-
-  return fetchDataResult;
 };
 
 export const useBookPage = function (isbn: string) {
@@ -87,6 +106,9 @@ export const useBookPage = function (isbn: string) {
     },
     onSuccess: (data) => {
       setSettledMessage(data);
+      setTimeout(() => {
+        setSettledMessage(null);
+      }, 3000);
     },
   });
 
