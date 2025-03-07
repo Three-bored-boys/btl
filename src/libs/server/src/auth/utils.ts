@@ -53,7 +53,7 @@ export const getUserSession = async function (c: Context<Environment>) {
     return responseData;
   }
 
-  const { session, user } = await validateSessionToken(sessionToken, c);
+  const { session, user } = await validateSessionToken(sessionToken);
 
   if (!session || !user) {
     deleteSessionCookie(c);

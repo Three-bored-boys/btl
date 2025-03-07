@@ -28,7 +28,7 @@ auth.post(
   async (c) => {
     let message = "";
     const { userName, emailAddress, password } = c.req.valid("json");
-    const resultExistingUser = await db(c)
+    const resultExistingUser = await db
       .select()
       .from(users)
       .where(or(eq(users.emailAddress, emailAddress), eq(users.userName, userName)))
@@ -44,7 +44,7 @@ auth.post(
       return c.json(responseData, 404);
     }
     const hashedPassword = await hashPassword(password);
-    const resultNewUser = await db(c).insert(users).values([{ emailAddress, hashedPassword, userName }]).returning();
+    const resultNewUser = await db.insert(users).values([{ emailAddress, hashedPassword, userName }]).returning();
 
     if (!resultNewUser) {
       message = "Something went wrong while trying to create account";
@@ -58,7 +58,7 @@ auth.post(
     const newUser = resultNewUser[0];
 
     const sessionToken = generateSessionToken();
-    const session = await createSession(sessionToken, newUser.id, c);
+    const session = await createSession(sessionToken, newUser.id);
     setSessionCookie(c, sessionToken, session.expiresAt);
 
     message = "Account successfully created!";
@@ -84,7 +84,7 @@ auth.post(
   async (c) => {
     let message = "";
     const { userName, password } = c.req.valid("json");
-    const resultExistingUser = await db(c).select().from(users).where(eq(users.userName, userName)).limit(1);
+    const resultExistingUser = await db.select().from(users).where(eq(users.userName, userName)).limit(1);
 
     if (!resultExistingUser) {
       message = "Incorrect Username or Password";
@@ -131,7 +131,7 @@ auth.post(
     }
 
     const sessionToken = generateSessionToken();
-    const session = await createSession(sessionToken, existingUser.id, c);
+    const session = await createSession(sessionToken, existingUser.id);
     setSessionCookie(c, sessionToken, session.expiresAt);
 
     message = "Successfully logged in!";
@@ -155,9 +155,9 @@ auth.get("/logout", async (c) => {
     return c.json(responseData, 401);
   }
 
-  const sessionId = await encryptAuthSessionToken(token, c.env.SESSION_SECRET_KEY);
+  const sessionId = await encryptAuthSessionToken(token, process.env.SESSION_SECRET_KEY!);
 
-  await invalidateSession(sessionId, c);
+  await invalidateSession(sessionId);
   deleteSessionCookie(c);
 
   const responseData: GoodResponse<string> = { success: true, data: "Successfully logged out!" };

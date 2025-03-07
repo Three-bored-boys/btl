@@ -17,7 +17,7 @@ userBooksApp.get("/:isbn", authMiddleware, async (c) => {
   const userId = user.id;
 
   try {
-    const book = await db(c)
+    const book = await db
       .select()
       .from(userBooks)
       .where(and(eq(userBooks.userId, userId), eq(userBooks.isbn, isbn)));
@@ -50,13 +50,13 @@ userBooksApp.post(
     const { isbn, library } = c.req.valid("param");
 
     try {
-      const existingUserBookWithISBN = await db(c)
+      const existingUserBookWithISBN = await db
         .select()
         .from(userBooks)
         .where(and(eq(userBooks.userId, user.id), eq(userBooks.isbn, isbn)));
 
       if (existingUserBookWithISBN.length === 0) {
-        await db(c).insert(userBooks).values({ isbn, libraryValue: library, userId: user.id });
+        await db.insert(userBooks).values({ isbn, libraryValue: library, userId: user.id });
         const responseData: GoodResponse<string> = {
           success: true,
           data: `Added to ${bookLibraries.find((obj) => obj.value === library)?.name ?? "collection"}!`,
@@ -64,7 +64,7 @@ userBooksApp.post(
         return c.json(responseData);
       }
 
-      await db(c)
+      await db
         .update(userBooks)
         .set({ libraryValue: library })
         .where(and(eq(userBooks.userId, user.id), eq(userBooks.isbn, isbn)));
@@ -88,9 +88,7 @@ userBooksApp.delete("/:isbn", authMiddleware, async (c) => {
   const { isbn } = c.req.param();
 
   try {
-    await db(c)
-      .delete(userBooks)
-      .where(and(eq(userBooks.userId, user.id), eq(userBooks.isbn, isbn)));
+    await db.delete(userBooks).where(and(eq(userBooks.userId, user.id), eq(userBooks.isbn, isbn)));
 
     const responseData: GoodResponse<string> = {
       success: true,

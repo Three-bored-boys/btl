@@ -3,8 +3,6 @@ import { eq } from "drizzle-orm";
 import { users, sessions, Session, SanitizedUser } from "@/server/db/schema";
 import { sanitizedUser } from "@/server/utils";
 import { generateAuthSessionToken, encryptAuthSessionToken } from "./utils";
-import { Context } from "hono";
-import { Environment } from "@/root/bindings";
 
 export type SessionValidationResult =
   | {
@@ -20,22 +18,22 @@ export function generateSessionToken() {
   return generateAuthSessionToken();
 }
 
-export async function createSession(token: string, userId: number, c: Context<Environment>) {
-  const sessionId = await encryptAuthSessionToken(token, c.env.SESSION_SECRET_KEY);
+export async function createSession(token: string, userId: number) {
+  const sessionId = await encryptAuthSessionToken(token, process.env.SESSION_SECRET_KEY!);
   const session: Session = {
     id: sessionId,
     userId,
     expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
   };
-  await db(c).insert(sessions).values(session);
+  await db.insert(sessions).values(session);
 
   return session;
 }
 
-export async function validateSessionToken(token: string, c: Context<Environment>): Promise<SessionValidationResult> {
-  const sessionId = await encryptAuthSessionToken(token, c.env.SESSION_SECRET_KEY);
+export async function validateSessionToken(token: string): Promise<SessionValidationResult> {
+  const sessionId = await encryptAuthSessionToken(token, process.env.SESSION_SECRET_KEY!);
 
-  const result = await db(c)
+  const result = await db
     .select({ user: users, session: sessions })
     .from(sessions)
     .innerJoin(users, eq(sessions.userId, users.id))
@@ -52,13 +50,13 @@ export async function validateSessionToken(token: string, c: Context<Environment
   const { user, session } = result[0];
 
   if (Date.now() >= session.expiresAt.getTime()) {
-    await invalidateSession(session.id, c);
+    await invalidateSession(session.id);
     return { session: null, user: null };
   }
 
   return { session, user: sanitizedUser(user) };
 }
 
-export async function invalidateSession(sessionId: string, c: Context<Environment>) {
-  await db(c).delete(sessions).where(eq(sessions.id, sessionId));
+export async function invalidateSession(sessionId: string) {
+  await db.delete(sessions).where(eq(sessions.id, sessionId));
 }

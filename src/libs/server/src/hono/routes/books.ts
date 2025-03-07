@@ -19,7 +19,7 @@ books.get(
     cacheControl: "max-age=259200, must-revalidate, public",
   }),
   async (c) => {
-    const nytService = new NYTimesService(c.env.NY_TIMES_BOOKS_API_KEY);
+    const nytService = new NYTimesService(process.env.NY_TIMES_BOOKS_API_KEY!);
     const bestSellers = await nytService.getBestSellers();
 
     if (bestSellers.length === 0) {
@@ -79,7 +79,7 @@ books.get(
   async (c) => {
     const { genre } = c.req.valid("param");
 
-    const googleBooksService = new GoogleBooksService(c.env.GOOGLE_BOOKS_API_KEY);
+    const googleBooksService = new GoogleBooksService(process.env.GOOGLE_BOOKS_API_KEY!);
     const returnedValue = await googleBooksService.getBooksByAllParameters({
       searchInput: { genre },
       paginationFilter: { maxResults: (6).toString() },
@@ -157,7 +157,7 @@ books.get(
 
     let book: Book[];
 
-    const googleBooksService = new GoogleBooksService(c.env.GOOGLE_BOOKS_API_KEY);
+    const googleBooksService = new GoogleBooksService(process.env.GOOGLE_BOOKS_API_KEY!);
     book = await googleBooksService.getBookByISBN(isbn);
 
     if (book.length === 0) {
@@ -204,7 +204,7 @@ books.get(
     cacheControl: "max-age=172800, must-revalidate, public",
   }),
   async (c) => {
-    const googleBooksService = new GoogleBooksService(c.env.GOOGLE_BOOKS_API_KEY);
+    const googleBooksService = new GoogleBooksService(process.env.GOOGLE_BOOKS_API_KEY!);
     const books = await googleBooksService.getLatestBooks();
 
     if (books.length === 0) {
@@ -219,7 +219,7 @@ books.get(
 
 books.get("/quick-search/:search", async (c) => {
   const search = c.req.param("search");
-  const googleBooksService = new GoogleBooksService(c.env.GOOGLE_BOOKS_API_KEY);
+  const googleBooksService = new GoogleBooksService(process.env.GOOGLE_BOOKS_API_KEY!);
 
   const allBooksResults = await googleBooksService.getBooksByAllParameters({
     searchInput: { search },
@@ -297,7 +297,7 @@ books.get(
   }),
   async (c) => {
     const { page, maxResults, ...search } = c.req.valid("query");
-    const googleBooksService = new GoogleBooksService(c.env.GOOGLE_BOOKS_API_KEY);
+    const googleBooksService = new GoogleBooksService(process.env.GOOGLE_BOOKS_API_KEY!);
 
     const allBooksResults = await googleBooksService.getBooksByAllParameters({
       searchInput: search,
