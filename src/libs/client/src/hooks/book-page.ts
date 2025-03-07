@@ -106,6 +106,9 @@ export const useBookPage = function (isbn: string) {
     },
     onSuccess: (data) => {
       setSettledMessage(data);
+      setTimeout(() => {
+        setSettledMessage(null);
+      }, 3000);
     },
   });
 

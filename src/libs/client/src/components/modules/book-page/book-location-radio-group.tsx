@@ -10,6 +10,8 @@ import { bookLibraries } from "@/shared/utils";
 import { cn } from "@/client/utils";
 import { ReactNode } from "react";
 import { useBookPage } from "@/client/hooks/book-page";
+import { BadResponse, GoodResponse } from "@/root/src/libs/shared/src/types";
+import { FormErrorListItem } from "@/client/components/ui/form-error-list-item";
 
 const bookLibraryIcons: [ReactNode, ReactNode, ReactNode, ReactNode] = [
   <BookOpen key={0} />,
@@ -22,6 +24,25 @@ const bookLibrariesWithIcons = bookLibraries.map((obj, i) => ({ ...obj, icon: bo
 export function BookLocationRadioGroup({ isbn }: { isbn: string }) {
   const { libraryValue, setLibraryValue, query, mutation, settledMessage } = useBookPage(isbn);
   console.log(libraryValue);
+
+  const ServerResultMessage = function ({ serverResult }: { serverResult: BadResponse | GoodResponse<string> }) {
+    if (serverResult.success) {
+      return (
+        <p className="flex items-center gap-x-0 text-success">
+          <Check className="text-success" fill="#4ade80"></Check>
+          {serverResult.data}
+        </p>
+      );
+    } else {
+      return (
+        <ul style={{ listStyle: "disc", listStylePosition: "outside" }}>
+          {serverResult.errors.map((error, i) => (
+            <FormErrorListItem key={i}>{error}</FormErrorListItem>
+          ))}
+        </ul>
+      );
+    }
+  };
 
   return (
     <div className="pt-3">
@@ -47,7 +68,7 @@ export function BookLocationRadioGroup({ isbn }: { isbn: string }) {
         </RadioCards.Root>
       </div>
       {settledMessage !== null && <div>{settledMessage.success}</div>}
-      <div className="mt-6 flex items-center justify-start">
+      <div className="mt-6 flex flex-col items-start justify-start">
         {libraryValue && (
           <Button
             background={"dark"}
@@ -60,6 +81,7 @@ export function BookLocationRadioGroup({ isbn }: { isbn: string }) {
             Clear
           </Button>
         )}
+        {settledMessage !== null && <ServerResultMessage serverResult={settledMessage}></ServerResultMessage>}
       </div>
     </div>
   );
