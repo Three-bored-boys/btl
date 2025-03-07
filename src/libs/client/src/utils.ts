@@ -101,3 +101,14 @@ export const handleNumberSearchParam = function (
 
   return defaultValue.toString();
 };
+
+export const getBaseUrl = function () {
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}`;
+  }
+  return "http://localhost:3000";
+};
+
+export const apiUrl = function () {
+  return getBaseUrl() + "/api";
+};
