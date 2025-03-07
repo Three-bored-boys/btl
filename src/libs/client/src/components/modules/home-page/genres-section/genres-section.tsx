@@ -1,7 +1,7 @@
 import { SectionPreamble } from "@/client/components/modules/home-page/section-preamble";
 import { Container } from "@/client/components/layouts/container";
 import type { Book, FetchDataResult, Genres } from "@/root/src/libs/shared/src/types";
-import { fetchData } from "@/libs/client/src/utils";
+import { apiUrl, fetchData } from "@/libs/client/src/utils";
 import { SectionBooksShowcase } from "../section-books-showcase";
 import { Suspense } from "react";
 import { LoadingSkeleton } from "../loading-skeleton";
@@ -28,7 +28,7 @@ export function GenresSection() {
 }
 
 async function GetGenresWrapper() {
-  const { fetchDataResult, res } = await fetchData<Genres>(`${process.env.API_URL}/books/genres`);
+  const { fetchDataResult, res } = await fetchData<Genres>(`${apiUrl()}/books/genres`);
 
   if (!fetchDataResult.success) {
     const { errors } = fetchDataResult;
@@ -46,7 +46,7 @@ async function GetGenresWrapper() {
   } = fetchDataResult;
 
   const getGenresBooksPromisesArray: Promise<FetchDataResult<Book[]>>[] = genres.map((val) =>
-    fetchData<Book[]>(`${process.env.API_URL}/books/genres/${val.name}`),
+    fetchData<Book[]>(`${apiUrl()}/books/genres/${val.name}`),
   );
 
   const allGenresBooksArray = await Promise.all(getGenresBooksPromisesArray);

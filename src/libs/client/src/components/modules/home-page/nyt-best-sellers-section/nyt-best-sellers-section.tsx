@@ -1,7 +1,7 @@
 import { SectionPreamble } from "@/client/components/modules/home-page/section-preamble";
 import { Container } from "@/client/components/layouts/container";
 import type { BestSeller } from "@/root/src/libs/shared/src/types";
-import { fetchData } from "@/libs/client/src/utils";
+import { apiUrl, fetchData } from "@/libs/client/src/utils";
 import { Suspense } from "react";
 import { SectionBooksShowcase } from "../section-books-showcase";
 import { LoadingSkeleton } from "../loading-skeleton";
@@ -28,7 +28,7 @@ export function NYTBestSellersSection() {
 }
 
 async function GetBestSellersWrapper() {
-  const { fetchDataResult, res } = await fetchData<BestSeller[]>(`${process.env.API_URL}/books/best-sellers`);
+  const { fetchDataResult, res } = await fetchData<BestSeller[]>(`${apiUrl()}/books/best-sellers`);
 
   if (!fetchDataResult.success) {
     const { errors } = fetchDataResult;
