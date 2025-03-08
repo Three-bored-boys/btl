@@ -9,54 +9,6 @@ import { fullSearchObjectSchema } from "@/shared/validators";
 import { Environment } from "@/root/bindings";
 
 export const books = new Hono<Environment>()
-  /* .get("/best-sellers", async (c) => {
-    const nytService = new NYTimesService(process.env.NY_TIMES_BOOKS_API_KEY!);
-    const bestSellers = await nytService.getBestSellers();
-
-    if (bestSellers.length === 0) {
-      const responseData: BadResponse = { success: false, errors: ["Trouble getting NYT Best Sellers List"] };
-      return c.json(responseData, 400);
-    }
-
-    const responseData: GoodResponse<BestSeller[]> = { success: true, data: bestSellers };
-    return c.json(responseData);
-  }) */
-  /* .get("/genres", (c) => {
-    const genres = genresList.filter((genObj) => genObj.name !== "Non-fiction");
-    const responseData: GoodResponse<Genres> = { success: true, data: { genres, count: genres.length } };
-    return c.json(responseData);
-  }) */
-  /* .get(
-    "/genres/:genre",
-    zValidator(
-      "param",
-      z.object({
-        genre: z.string().min(1),
-      }),
-      (result, c) => {
-        if (!result.success) {
-          const responseData: BadResponse = { success: false, errors: ["Invalid Input"], status: 404 };
-          return c.json(responseData, 404);
-        }
-      },
-    ),
-    async (c) => {
-      const { genre } = c.req.valid("param");
-
-      const googleBooksService = new GoogleBooksService(process.env.GOOGLE_BOOKS_API_KEY!);
-      const returnedValue = await googleBooksService.getBooksByAllParameters({
-        searchInput: { genre },
-        paginationFilter: { maxResults: (6).toString() },
-      });
-
-      const responseData: GoodResponse<Book[]> = {
-        success: true,
-        data: returnedValue.books.filter((book) => book.isbn10 !== "" && book.isbn13 !== ""),
-      };
-
-      return c.json(responseData);
-    },
-  ) */
   .get(
     "/isbn/:isbn",
     zValidator(
