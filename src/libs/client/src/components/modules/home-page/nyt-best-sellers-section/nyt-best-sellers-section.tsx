@@ -29,7 +29,7 @@ export function NYTBestSellersSection() {
 
 async function GetBestSellersWrapper() {
   const url = await apiUrl();
-  console.log(url);
+  console.log(url, "I'm in the best sellers wrapper");
   const { fetchDataResult, res } = await fetchData<BestSeller[]>(`${url}/books/best-sellers`, {
     next: { revalidate: 259200 },
   });
