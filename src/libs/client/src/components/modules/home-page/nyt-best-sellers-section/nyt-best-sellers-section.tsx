@@ -1,7 +1,7 @@
 import { SectionPreamble } from "@/client/components/modules/home-page/section-preamble";
 import { Container } from "@/client/components/layouts/container";
-import type { BestSeller } from "@/root/src/libs/shared/src/types";
-import { apiUrl, fetchData } from "@/client/utils";
+import type { /* BadResponse, */ BestSeller } from "@/root/src/libs/shared/src/types";
+import { apiUrl, /*  fetchData, */ fetchRPCData } from "@/client/utils";
 import { Suspense } from "react";
 import { SectionBooksShowcase } from "../section-books-showcase";
 import { LoadingSkeleton } from "../loading-skeleton";
@@ -9,6 +9,8 @@ import { BookCard } from "../book-card";
 import { ErrorBoundary } from "react-error-boundary";
 import { ErrorBoundaryRender } from "../error-boundary-render";
 import { ExclamationTriangle } from "@/client/components/ui/icons/exclamation-triangle";
+import { type BooksApp } from "@/root/src/app/api/[[...route]]/route";
+import { hc } from "hono/client";
 
 export function NYTBestSellersSection() {
   return (
@@ -29,9 +31,12 @@ export function NYTBestSellersSection() {
 
 async function GetBestSellersWrapper() {
   console.log(apiUrl, "I'm in the best sellers wrapper");
-  const { fetchDataResult, res } = await fetchData<BestSeller[]>(`${apiUrl}/books/best-sellers`, {
+  const booksClient = hc<BooksApp>(`${process.env.URL}/books`);
+  const { fetchDataResult, res } = await fetchRPCData<BestSeller[]>(booksClient["best-sellers"].$get());
+  // const res = await booksClient["best-sellers"].$get();
+  /* const { fetchDataResult, res } = await fetchData<BestSeller[]>(`${apiUrl}/books/best-sellers`, {
     next: { revalidate: 259200 },
-  });
+  }); */
 
   if (!fetchDataResult.success) {
     const { errors } = fetchDataResult;
