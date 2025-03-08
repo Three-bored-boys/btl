@@ -3,7 +3,7 @@ export type GoodResponse<T = NonNullable<unknown>> = {
   data: T;
 };
 
-export type BadResponse = { success: false; errors: string[]; status?: number };
+export type BadResponse = { success: false; errors: string[]; status: number };
 
 export type ServerResult<P> = { serverResult: BadResponse | GoodResponse<P> }; // For the fetch route handler custom functon in app api utils
 
