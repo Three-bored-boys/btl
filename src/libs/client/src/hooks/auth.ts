@@ -8,12 +8,9 @@ import { AuthContext } from "@/client/providers/auth-context-provider";
 
 export const getUser = async function () {
   try {
-    const { fetchDataResult, res } = await fetchData<SanitizedUser>(
-      `${process.env.NEXT_PUBLIC_API_URL}/auth/validate-session`,
-      {
-        credentials: "include",
-      },
-    );
+    const { fetchDataResult, res } = await fetchData<SanitizedUser>(`/api/auth/validate-session`, {
+      credentials: "include",
+    });
 
     if (!fetchDataResult.success || res.status === 401) {
       return null;

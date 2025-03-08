@@ -11,7 +11,7 @@ type LogoutState = ServerResult<string> | null;
 
 const logout = async function (): Promise<ServerResult<string>> {
   try {
-    const { fetchDataResult } = await fetchData<string>(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`, {
+    const { fetchDataResult } = await fetchData<string>(`/api/auth/logout`, {
       credentials: "include",
     });
 

@@ -7,10 +7,10 @@ import { BadResponse, GoodResponse } from "@/shared/types";
 
 const getUserBookWithISBN = async function (isbn: string): Promise<{ libraryValue: string | null }> {
   try {
-    const { fetchDataResult, res } = await fetchData<{ book: UserBook[] }>(
-      `${process.env.NEXT_PUBLIC_API_URL}/user-books/${isbn}`,
-      { credentials: "include", method: "GET" },
-    );
+    const { fetchDataResult, res } = await fetchData<{ book: UserBook[] }>(`/api/user-books/${isbn}`, {
+      credentials: "include",
+      method: "GET",
+    });
 
     if (res.status === 401 || !fetchDataResult.success) {
       return { libraryValue: null };
@@ -38,13 +38,10 @@ const addUserBookWithISBN = async function (
   library: string,
 ): Promise<BadResponse | GoodResponse<string>> {
   try {
-    const { fetchDataResult, res } = await fetchData<string>(
-      `${process.env.NEXT_PUBLIC_API_URL}/user-books/${isbn}/${library}`,
-      {
-        credentials: "include",
-        method: "POST",
-      },
-    );
+    const { fetchDataResult, res } = await fetchData<string>(`/api/user-books/${isbn}/${library}`, {
+      credentials: "include",
+      method: "POST",
+    });
 
     if (res.status === 401) {
       throw new Error(res.status.toString());
@@ -62,7 +59,7 @@ const addUserBookWithISBN = async function (
 
 const deleteUserBookWithISBN = async function (isbn: string): Promise<BadResponse | GoodResponse<string>> {
   try {
-    const { fetchDataResult, res } = await fetchData<string>(`${process.env.NEXT_PUBLIC_API_URL}/user-books/${isbn}`, {
+    const { fetchDataResult, res } = await fetchData<string>(`/api/user-books/${isbn}`, {
       credentials: "include",
       method: "DELETE",
     });

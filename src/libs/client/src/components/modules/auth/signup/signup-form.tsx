@@ -24,7 +24,7 @@ export function SignupForm() {
   const mutation = useMutation({
     mutationFn: async (signupObj: SignupInput) => {
       try {
-        const { fetchDataResult } = await fetchData<SignupResult>(`${process.env.NEXT_PUBLIC_API_URL}/auth/signup`, {
+        const { fetchDataResult } = await fetchData<SignupResult>(`/api/auth/signup`, {
           method: "POST",
           body: JSON.stringify(signupObj),
           headers: {
