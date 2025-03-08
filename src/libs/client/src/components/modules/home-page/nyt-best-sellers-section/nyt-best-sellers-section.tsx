@@ -1,7 +1,7 @@
 import { SectionPreamble } from "@/client/components/modules/home-page/section-preamble";
 import { Container } from "@/client/components/layouts/container";
-import type { /* BadResponse, */ BestSeller } from "@/root/src/libs/shared/src/types";
-import { apiUrl, /*  fetchData, */ fetchRPCData } from "@/client/utils";
+// import type { /* BadResponse, */ BestSeller } from "@/root/src/libs/shared/src/types";
+// import { apiUrl, /*  fetchData, */ fetchRPCData } from "@/client/utils";
 import { Suspense } from "react";
 import { SectionBooksShowcase } from "../section-books-showcase";
 import { LoadingSkeleton } from "../loading-skeleton";
@@ -9,8 +9,9 @@ import { BookCard } from "../book-card";
 import { ErrorBoundary } from "react-error-boundary";
 import { ErrorBoundaryRender } from "../error-boundary-render";
 import { ExclamationTriangle } from "@/client/components/ui/icons/exclamation-triangle";
-import { type BooksApp } from "@/root/src/app/api/[[...route]]/route";
-import { hc } from "hono/client";
+// import { type BooksApp } from "@/root/src/app/api/[[...route]]/route";
+// import { hc } from "hono/client";
+import { getCachedNYTBestSellers } from "@/server/actions";
 
 export function NYTBestSellersSection() {
   return (
@@ -30,20 +31,23 @@ export function NYTBestSellersSection() {
 }
 
 async function GetBestSellersWrapper() {
-  console.log(apiUrl, "I'm in the best sellers wrapper");
+  /*console.log(apiUrl, "I'm in the best sellers wrapper");
+  console.log();
   const booksClient = hc<BooksApp>(`${process.env.URL}/api/books`);
   const { fetchDataResult, res } = await fetchRPCData<BestSeller[]>(booksClient["best-sellers"].$get());
   // const res = await booksClient["best-sellers"].$get();
-  /* const { fetchDataResult, res } = await fetchData<BestSeller[]>(`${apiUrl}/books/best-sellers`, {
+   const { fetchDataResult, res } = await fetchData<BestSeller[]>(`${apiUrl}/books/best-sellers`, {
     next: { revalidate: 259200 },
   }); */
+
+  const fetchDataResult = await getCachedNYTBestSellers();
 
   if (!fetchDataResult.success) {
     const { errors } = fetchDataResult;
     return (
       <div className="my-2 flex w-full flex-col items-center justify-start gap-y-1">
         <ExclamationTriangle />
-        <p className="text-xl font-semibold">Error {res.status}</p>
+        <p className="text-xl font-semibold">Error {fetchDataResult.status}</p>
         <p className="text-base font-normal">{errors[0]}</p>
       </div>
     );
