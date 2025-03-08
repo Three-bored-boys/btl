@@ -1,6 +1,6 @@
 import React from "react";
 import Link, { LinkProps } from "next/link";
-import { cn } from "@/client/utils";
+import { cn } from "@/client/utils/utils";
 
 type SidebarLinkProps = { currentPathname: string; name: string } & LinkProps & React.ComponentProps<"a">;
 

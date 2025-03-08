@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { fetchData } from "@/client/utils";
+import { fetchData } from "@/client/utils/utils";
 import { UserBook } from "@/shared/db/schema";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";

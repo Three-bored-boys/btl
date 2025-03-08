@@ -2,7 +2,7 @@
 
 import { SanitizedUser } from "@/shared/db/schema";
 import React from "react";
-import { fetchData } from "@/client/utils";
+import { fetchData } from "@/client/utils/utils";
 import { useQuery } from "@tanstack/react-query";
 import { AuthContext } from "@/client/providers/auth-context-provider";
 

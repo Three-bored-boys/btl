@@ -1,5 +1,5 @@
 import React, { ComponentProps, forwardRef } from "react";
-import { cn } from "@/client/utils";
+import { cn } from "@/client/utils/utils";
 
 type InputProps = ComponentProps<"input">;
 

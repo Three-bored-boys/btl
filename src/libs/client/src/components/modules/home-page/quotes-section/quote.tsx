@@ -1,5 +1,5 @@
 import React, { ComponentProps } from "react";
-import { cn } from "@/client/utils";
+import { cn } from "@/client/utils/utils";
 
 type QuoteProps = { author: string; quote: string } & ComponentProps<"div">;
 

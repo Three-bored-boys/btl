@@ -2,7 +2,7 @@
 
 import type { Book } from "@/root/src/libs/shared/src/types";
 import { ComponentProps, useState } from "react";
-import { cn } from "@/client/utils";
+import { cn } from "@/client/utils/utils";
 
 type BookInformationProps = { book: Book } & ComponentProps<"div">;
 

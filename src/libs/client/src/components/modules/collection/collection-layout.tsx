@@ -5,7 +5,7 @@ import { ReactElement } from "react";
 import { CaretRight } from "@/root/src/libs/client/src/components/ui/icons/caret-right";
 import { CaretLeft } from "@/root/src/libs/client/src/components/ui/icons/caret-left";
 import React from "react";
-import { cn } from "@/root/src/libs/client/src/utils";
+import { cn } from "@/client/utils/utils";
 import { Sidebar } from "@/root/src/libs/client/src/components/modules/collection/sidebar";
 import { ToggleSidebar } from "@/client/components/ui/toggle-sidebar";
 import { useValidateUserSession } from "@/client/hooks/auth";

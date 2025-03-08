@@ -1,5 +1,5 @@
 import React from "react";
-import { cn } from "@/client/utils";
+import { cn } from "@/client/utils/utils";
 
 export function ExclamationTriangle({ className, onClick, ...props }: React.ComponentProps<"svg">) {
   return (

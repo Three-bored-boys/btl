@@ -3,7 +3,7 @@
 import React, { ComponentProps, useRef, useState, useEffect, Suspense } from "react";
 import { QuickSearchResults } from "./quick-search-results";
 import { SearchInput } from "@/client/components/ui/search-input";
-import { cn, getSearchObjectFromLocalStorage, setSearchObjectToLocalStorage } from "@/client/utils";
+import { cn, getSearchObjectFromLocalStorage, setSearchObjectToLocalStorage } from "@/client/utils/utils";
 import type { SearchObjectType } from "@/shared/validators";
 import { Button } from "@/client/components/ui/button";
 import { Close } from "@/client/components/ui/icons/close";

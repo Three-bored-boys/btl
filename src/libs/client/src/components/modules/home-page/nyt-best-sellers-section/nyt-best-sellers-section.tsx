@@ -1,7 +1,7 @@
 import { SectionPreamble } from "@/client/components/modules/home-page/section-preamble";
 import { Container } from "@/client/components/layouts/container";
 import type { BestSeller } from "@/root/src/libs/shared/src/types";
-import { apiUrl, fetchData } from "@/libs/client/src/utils";
+import { apiUrl, fetchData } from "@/libs/client/src/utils/utils";
 import { Suspense } from "react";
 import { SectionBooksShowcase } from "../section-books-showcase";
 import { LoadingSkeleton } from "../loading-skeleton";

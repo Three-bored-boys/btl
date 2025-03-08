@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "./button";
 import { Spinner } from "@radix-ui/themes";
-import { cn } from "@/client/utils";
+import { cn } from "@/client/utils/utils";
 import { ButtonProps } from "@/client/components/ui/button";
 
 type SubmitButtonProps = ButtonProps & {

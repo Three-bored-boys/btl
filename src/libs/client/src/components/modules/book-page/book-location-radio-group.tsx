@@ -7,7 +7,7 @@ import { Trash } from "@/client/components/ui/icons/trash";
 import { RadioCards } from "@radix-ui/themes";
 import { Button } from "@/client/components/ui/button";
 import { bookLibraries } from "@/shared/utils";
-import { cn } from "@/client/utils";
+import { cn } from "@/client/utils/utils";
 import { ReactNode } from "react";
 import { useBookPage } from "@/client/hooks/book-page";
 import { BadResponse, GoodResponse } from "@/root/src/libs/shared/src/types";

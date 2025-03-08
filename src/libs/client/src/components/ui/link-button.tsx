@@ -1,5 +1,5 @@
 import React from "react";
-import { cn, ButtonVariants, button } from "@/client/utils";
+import { cn, ButtonVariants, button } from "@/client/utils/utils";
 import Link, { LinkProps } from "next/link";
 
 type LinkButtonProps = ButtonVariants & LinkProps & React.ComponentProps<"a">;

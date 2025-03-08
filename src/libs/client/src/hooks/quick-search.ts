@@ -1,7 +1,7 @@
-import { fetchData } from "@/client/utils";
+import { fetchData } from "@/client/utils/utils";
 import { Book } from "@/root/src/libs/shared/src/types";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { apiUrl } from "@/client/utils";
+import { apiUrl } from "@/client/utils/utils";
 
 const getQuickSearchResultsBooks = async function (searchString: string) {
   const { fetchDataResult, res } = await fetchData<Book[]>(`${apiUrl()}/books/quick-search/${searchString}`);

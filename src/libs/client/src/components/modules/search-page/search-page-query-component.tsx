@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { DEFAULT_MAX_RESULTS, DEFAULT_PAGE_NUMBER, MAX_MAX_RESULTS, MIN_MAX_RESULTS } from "@/shared/utils";
 import { ArrowLeftCircle } from "@/client/components/ui/icons/arrow-left-circle";
 import { ArrowRightCircle } from "@/client/components/ui/icons/arrow-right-circle";
-import { cn, handleNumberSearchParam } from "@/libs/client/src/utils";
+import { cn, handleNumberSearchParam } from "@/client/utils/utils";
 import { SearchPageResults } from "./search-page-results";
 import { SearchPageResultsLoadingSkeleton } from "./search-page-results-loading-skeleton";
 import { Container } from "@/client/components/layouts/container";

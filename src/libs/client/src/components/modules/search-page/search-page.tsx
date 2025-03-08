@@ -7,7 +7,7 @@ import {
   BTL_LOCAL_STORAGE_SEARCH_OBJECT,
   handleNumberSearchParam,
   setSearchObjectToLocalStorage,
-} from "@/client/utils";
+} from "@/client/utils/utils";
 import { DEFAULT_MAX_RESULTS, DEFAULT_PAGE_NUMBER, MAX_MAX_RESULTS, MIN_MAX_RESULTS } from "@/libs/shared/src/utils";
 import { useSearchPage } from "@/client/hooks/search-page";
 import { Button } from "@/client/components/ui/button";

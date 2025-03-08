@@ -11,7 +11,7 @@ import { Check } from "@/client/components/ui/icons/check";
 import { SubmitButton } from "@/client/components/ui/submit-button";
 import { ServerResult } from "@/shared/types";
 import { LoginResult } from "@/shared/validators/auth";
-import { fetchData } from "@/client/utils";
+import { fetchData } from "@/client/utils/utils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export function LoginForm() {

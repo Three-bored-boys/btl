@@ -3,7 +3,7 @@ import Link from "next/link";
 import React from "react";
 import Image from "next/image";
 import genericBookImage from "@/public/assets/images/generic-book.png";
-import { cn } from "@/client/utils";
+import { cn } from "@/client/utils/utils";
 
 export function LibraryBooksPreview({ books, showSidebar }: { books: Book[]; showSidebar: boolean }) {
   if (books.length === 0) {

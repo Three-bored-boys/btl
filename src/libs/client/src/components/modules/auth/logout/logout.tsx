@@ -2,7 +2,7 @@ import { ServerResult } from "@/root/src/libs/shared/src/types";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { SubmitButton } from "@/client/components/ui/submit-button";
-import { fetchData } from "@/client/utils";
+import { fetchData } from "@/client/utils/utils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Check } from "@/client/components/ui/icons/check";
 import { FormErrorListItem } from "@/client/components/ui/form-error-list-item";
