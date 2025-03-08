@@ -8,7 +8,6 @@ import { auth } from "@/libs/server/src/hono/routes/auth";
 import { userBooksApp as userBooks } from "@/libs/server/src/hono/routes/userBooks";
 
 export const runtime = "nodejs";
-export const revalidate = 0;
 
 const app = new Hono<Environment>().basePath("/api");
 
