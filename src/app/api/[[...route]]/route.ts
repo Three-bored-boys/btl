@@ -40,6 +40,10 @@ app.route("/books", books);
 app.route("/auth", auth);
 app.route("/user-books", userBooks);
 
+export type BooksApp = typeof books;
+export type AuthApp = typeof auth;
+export type UserBooksApp = typeof userBooks;
+
 export const GET = handle(app);
 export const POST = handle(app);
 export const DELETE = handle(app);
