@@ -1,5 +1,5 @@
 import React from "react";
-import { cn } from "@/client/utils/utils";
+import { cn } from "@/client/utils";
 import { indigo } from "tailwindcss/colors";
 
 export function CaretLeft({ className, onClick, ...props }: React.ComponentProps<"svg">) {

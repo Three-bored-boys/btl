@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink } from "./nav-link";
-import { cn } from "@/client/utils/utils";
+import { cn } from "@/client/utils";
 import { NavLinkArr } from "./nav-bar";
 import { cva, VariantProps } from "class-variance-authority";
 import { useValidateUserSession } from "@/client/hooks/auth";

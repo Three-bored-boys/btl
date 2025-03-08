@@ -1,5 +1,5 @@
 import React from "react";
-import { cn } from "@/client/utils/utils";
+import { cn } from "@/client/utils";
 
 export function Check({ className, ...props }: React.ComponentProps<"svg">) {
   return (

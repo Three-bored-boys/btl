@@ -1,6 +1,6 @@
 import React, { ComponentProps, forwardRef } from "react";
 import { MagnifyingGlass } from "@/client/components/ui/icons/magnifying-glass";
-import { cn } from "@/client/utils/utils";
+import { cn } from "@/client/utils";
 
 type ClassNames = { classNameDiv?: string; classNameInput?: string };
 type Props = ComponentProps<"input"> & ClassNames;

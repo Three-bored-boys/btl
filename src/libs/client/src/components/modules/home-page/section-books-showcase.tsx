@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@/client/utils/utils";
+import { cn } from "@/client/utils";
 import { ArrowLeftCircle } from "@/client/components/ui/icons/arrow-left-circle";
 import { ArrowRightCircle } from "@/client/components/ui/icons/arrow-right-circle";
 import { ComponentProps, useCallback, useEffect, useState } from "react";

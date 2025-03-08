@@ -1,5 +1,5 @@
 import React from "react";
-import { cn } from "@/client/utils/utils";
+import { cn } from "@/client/utils";
 
 export function ArrowLeftCircle({ className, onClick, ...props }: React.ComponentProps<"svg">) {
   return (

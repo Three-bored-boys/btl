@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { cn } from "@/client/utils/utils";
+import { cn } from "@/client/utils";
 
 type LogoProps = React.ComponentProps<"div">;
 

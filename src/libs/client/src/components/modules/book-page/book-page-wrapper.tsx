@@ -4,7 +4,7 @@ import { Container } from "@/client/components/layouts/container";
 import { LinkButton } from "@/client/components/ui/link-button";
 import Image from "next/image";
 import notFoundImage from "@/public/assets/images/not-found.webp";
-import { apiUrl, fetchData } from "@/client/utils/utils";
+import { apiUrl, fetchData } from "@/client/utils";
 
 export async function BookPageWrapper({ params: { isbn } }: { params: { isbn: string } }) {
   const { fetchDataResult, res } = await fetchData<Book[]>(`${apiUrl()}/books/isbn/${isbn}`, {

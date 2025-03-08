@@ -1,5 +1,5 @@
 import React, { ComponentProps } from "react";
-import { cn } from "@/libs/client/src/utils/utils";
+import { cn } from "@/libs/client/src/utils";
 import type { NavLinkArr } from "./nav-bar";
 import Link from "next/link";
 import { cva, VariantProps } from "class-variance-authority";

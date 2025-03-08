@@ -9,7 +9,7 @@ import { Hamburger } from "@/client/components/ui/icons/hamburger";
 import { Close } from "@/client/components/ui/icons/close";
 import { usePathname } from "next/navigation";
 import { Container } from "../container";
-import { cn } from "@/client/utils/utils";
+import { cn } from "@/client/utils";
 import { QuickSearch } from "@/client/components/modules/quick-search/quick-search";
 
 const navLinkArr = [

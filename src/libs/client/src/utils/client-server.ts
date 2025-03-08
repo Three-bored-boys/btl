@@ -4,7 +4,6 @@ import { cva, VariantProps } from "class-variance-authority";
 import type { GoodResponse, BadResponse } from "@/root/src/libs/shared/src/types";
 import type { SearchObjectType } from "@/root/src/libs/shared/src/validators";
 import { FetchDataResult } from "@/shared/types/response";
-import { headers } from "next/headers";
 
 export function cn(...inputs: ClassValue[]): string {
   return twMerge(clsx(inputs));
@@ -101,18 +100,4 @@ export const handleNumberSearchParam = function (
   }
 
   return defaultValue.toString();
-};
-
-export const getBaseServerUrl = function () {
-  if (process.env.NODE_ENV === "development") {
-    return "http://localhost:3000";
-  }
-  const host = headers().get("host");
-  const protocol = "https";
-  return `${protocol}://${host!}`;
-};
-
-export const apiUrl = function () {
-  console.log(getBaseServerUrl());
-  return getBaseServerUrl() + "/api";
 };

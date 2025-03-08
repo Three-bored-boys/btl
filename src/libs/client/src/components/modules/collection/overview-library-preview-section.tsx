@@ -1,7 +1,7 @@
 import { Book } from "@/root/src/libs/shared/src/types";
 import React from "react";
 import { SidebarContext } from "./collection-layout";
-import { cn } from "@/client/utils/utils";
+import { cn } from "@/client/utils";
 import { LibraryBooksPreview } from "./library-books-preview";
 import { LinkButton } from "@/client/components/ui/link-button";
 

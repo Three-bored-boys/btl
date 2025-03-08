@@ -1,6 +1,6 @@
 import { VariantProps } from "class-variance-authority";
 import React from "react";
-import { cn, button } from "@/client/utils/utils";
+import { cn, button } from "@/client/utils";
 
 export type ButtonProps = React.ComponentProps<"button"> & VariantProps<typeof button>;
 

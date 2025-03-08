@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Logo } from "@/client/components/ui/logo";
-import { cn } from "@/client/utils/utils";
+import { cn } from "@/client/utils";
 import { useValidateUserSession } from "@/client/hooks/auth";
 import { useRouter } from "next/navigation";
 
