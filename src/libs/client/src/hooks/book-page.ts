@@ -53,7 +53,7 @@ const addUserBookWithISBN = async function (
     if (error.message === "401") {
       throw error;
     }
-    return { success: false, errors: ["Something has gone wrong during your request"] };
+    return { success: false, errors: ["Something has gone wrong during your request"], status: 400 };
   }
 };
 
@@ -74,7 +74,7 @@ const deleteUserBookWithISBN = async function (isbn: string): Promise<BadRespons
     if (error.message === "401") {
       throw error;
     }
-    return { success: false, errors: ["Something has gone wrong during your request"] };
+    return { success: false, errors: ["Something has gone wrong during your request"], status: 400 };
   }
 };
 

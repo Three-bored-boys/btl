@@ -1,15 +1,15 @@
 import { Hono } from "hono";
-import { genres as genresList } from "@/root/src/libs/shared/src/data/genres";
+// import { genres as genresList } from "@/root/src/libs/shared/src/data/genres";
 import { GoogleBooksService } from "@/server/services/google.service";
-import { NYTimesService } from "@/server/services/ny-times.service";
+// import { NYTimesService } from "@/server/services/ny-times.service";
 import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
-import { type BadResponse, type GoodResponse, type Genres, type BestSeller, type Book } from "@/shared/types";
+import { type BadResponse, type GoodResponse, /*  type Genres, type BestSeller, */ type Book } from "@/shared/types";
 import { fullSearchObjectSchema } from "@/shared/validators";
 import { Environment } from "@/root/bindings";
 
 export const books = new Hono<Environment>()
-  .get("/best-sellers", async (c) => {
+  /* .get("/best-sellers", async (c) => {
     const nytService = new NYTimesService(process.env.NY_TIMES_BOOKS_API_KEY!);
     const bestSellers = await nytService.getBestSellers();
 
@@ -20,13 +20,13 @@ export const books = new Hono<Environment>()
 
     const responseData: GoodResponse<BestSeller[]> = { success: true, data: bestSellers };
     return c.json(responseData);
-  })
-  .get("/genres", (c) => {
+  }) */
+  /* .get("/genres", (c) => {
     const genres = genresList.filter((genObj) => genObj.name !== "Non-fiction");
     const responseData: GoodResponse<Genres> = { success: true, data: { genres, count: genres.length } };
     return c.json(responseData);
-  })
-  .get(
+  }) */
+  /* .get(
     "/genres/:genre",
     zValidator(
       "param",
@@ -35,7 +35,7 @@ export const books = new Hono<Environment>()
       }),
       (result, c) => {
         if (!result.success) {
-          const responseData: BadResponse = { success: false, errors: ["Invalid Input"] };
+          const responseData: BadResponse = { success: false, errors: ["Invalid Input"], status: 404 };
           return c.json(responseData, 404);
         }
       },
@@ -56,7 +56,7 @@ export const books = new Hono<Environment>()
 
       return c.json(responseData);
     },
-  )
+  ) */
   .get(
     "/isbn/:isbn",
     zValidator(
@@ -78,6 +78,7 @@ export const books = new Hono<Environment>()
           const responseData: BadResponse = {
             success: false,
             errors: ["Invalid ISBN. Please enter a valid ISBN and try again"],
+            status: 400,
           };
           return c.json(responseData, 400);
         }
@@ -90,6 +91,7 @@ export const books = new Hono<Environment>()
         const responseData: BadResponse = {
           success: false,
           errors: ["A valid ISBN is required. Please enter one and try again."],
+          status: 400,
         };
         return c.json(responseData, 400);
       }
@@ -127,6 +129,7 @@ export const books = new Hono<Environment>()
         const responseData: BadResponse = {
           success: false,
           errors: ["The book you are currently looking for could not be found."],
+          status: 404,
         };
         return c.json(responseData, 404);
       }
@@ -140,7 +143,7 @@ export const books = new Hono<Environment>()
     const books = await googleBooksService.getLatestBooks();
 
     if (books.length === 0) {
-      const responseData: BadResponse = { success: false, errors: ["Trouble getting books"] };
+      const responseData: BadResponse = { success: false, errors: ["Trouble getting books"], status: 400 };
       return c.json(responseData, 400);
     }
 
@@ -166,7 +169,7 @@ export const books = new Hono<Environment>()
     zValidator("query", fullSearchObjectSchema, (result, c) => {
       if (!result.success) {
         console.log(result.error);
-        const responseData: BadResponse = { success: false, errors: ["Invalid entry"] };
+        const responseData: BadResponse = { success: false, errors: ["Invalid entry"], status: 400 };
         return c.json(responseData, 400);
       }
     }),

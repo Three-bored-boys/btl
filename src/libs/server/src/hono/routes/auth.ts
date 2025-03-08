@@ -20,7 +20,11 @@ export const auth = new Hono<Environment>()
     "/signup",
     zValidator("json", signupSchema, (result, c) => {
       if (!result.success) {
-        const responseData: BadResponse = { success: false, errors: result.error.issues.map((issue) => issue.message) };
+        const responseData: BadResponse = {
+          success: false,
+          errors: result.error.issues.map((issue) => issue.message),
+          status: 400,
+        };
         return c.json(responseData, 400);
       }
     }),
@@ -39,7 +43,7 @@ export const auth = new Hono<Environment>()
           existingUser.emailAddress === emailAddress
             ? "An account with this email already exists"
             : "This user name is taken";
-        const responseData: BadResponse = { success: false, errors: [message] };
+        const responseData: BadResponse = { success: false, errors: [message], status: 404 };
         return c.json(responseData, 404);
       }
       const hashedPassword = await hashPassword(password);
@@ -50,6 +54,7 @@ export const auth = new Hono<Environment>()
         const responseData: BadResponse = {
           success: false,
           errors: [message],
+          status: 404,
         };
         return c.json(responseData, 404);
       }
@@ -75,7 +80,11 @@ export const auth = new Hono<Environment>()
     "/login",
     zValidator("json", loginSchema, (result, c) => {
       if (!result.success) {
-        const responseData: BadResponse = { success: false, errors: result.error.issues.map((issue) => issue.message) };
+        const responseData: BadResponse = {
+          success: false,
+          errors: result.error.issues.map((issue) => issue.message),
+          status: 400,
+        };
         return c.json(responseData, 400);
       }
     }),
@@ -89,6 +98,7 @@ export const auth = new Hono<Environment>()
         const responseData: BadResponse = {
           success: false,
           errors: [message],
+          status: 404,
         };
 
         return c.json(responseData, 404);
@@ -99,6 +109,7 @@ export const auth = new Hono<Environment>()
         const responseData: BadResponse = {
           success: false,
           errors: [message],
+          status: 404,
         };
 
         return c.json(responseData, 404);
@@ -111,6 +122,7 @@ export const auth = new Hono<Environment>()
         const responseData: BadResponse = {
           success: false,
           errors: [message],
+          status: 404,
         };
 
         return c.json(responseData, 404);
@@ -123,6 +135,7 @@ export const auth = new Hono<Environment>()
         const responseData: BadResponse = {
           success: false,
           errors: [message],
+          status: 404,
         };
 
         return c.json(responseData, 404);
@@ -148,7 +161,7 @@ export const auth = new Hono<Environment>()
     const token = getSessionCookieToken(c);
     if (!token) {
       deleteSessionCookie(c);
-      const responseData: BadResponse = { success: false, errors: ["No session token found"] };
+      const responseData: BadResponse = { success: false, errors: ["No session token found"], status: 401 };
       return c.json(responseData, 401);
     }
 

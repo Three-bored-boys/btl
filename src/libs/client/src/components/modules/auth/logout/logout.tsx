@@ -17,7 +17,7 @@ const logout = async function (): Promise<ServerResult<string>> {
 
     return { serverResult: fetchDataResult };
   } catch (e) {
-    return { serverResult: { success: false, errors: ["Something went wrong. Please try again."] } };
+    return { serverResult: { success: false, errors: ["Something went wrong. Please try again."], status: 400 } };
   }
 };
 

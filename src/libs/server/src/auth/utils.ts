@@ -49,7 +49,7 @@ export const getUserSession = async function (c: Context<Environment>) {
   const sessionToken = getSessionCookieToken(c);
   if (!sessionToken) {
     deleteSessionCookie(c);
-    const responseData: BadResponse = { success: false, errors: ["No session token found"] };
+    const responseData: BadResponse = { success: false, errors: ["No session token found"], status: 401 };
     return responseData;
   }
 
@@ -57,7 +57,7 @@ export const getUserSession = async function (c: Context<Environment>) {
 
   if (!session || !user) {
     deleteSessionCookie(c);
-    const responseData: BadResponse = { success: false, errors: ["Invalid session token"] };
+    const responseData: BadResponse = { success: false, errors: ["Invalid session token"], status: 401 };
     return responseData;
   }
 

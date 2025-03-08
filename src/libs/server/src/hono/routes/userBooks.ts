@@ -30,7 +30,11 @@ userBooksApp.get("/:isbn", authMiddleware, async (c) => {
     return c.json(responseData);
   } catch (e) {
     console.log(e);
-    const responseData: BadResponse = { success: false, errors: ["There was an issue getting the required book"] };
+    const responseData: BadResponse = {
+      success: false,
+      errors: ["There was an issue getting the required book"],
+      status: 500,
+    };
     return c.json(responseData, 500);
   }
 });
@@ -41,7 +45,7 @@ userBooksApp.post(
   zValidator("param", z.object({ isbn: z.string(), library: z.enum(bookLibraryValues) }), (result, c) => {
     if (!result.success) {
       console.log(result.error);
-      const responseData: BadResponse = { success: false, errors: ["Invalid entries"] };
+      const responseData: BadResponse = { success: false, errors: ["Invalid entries"], status: 400 };
       return c.json(responseData, 400);
     }
   }),
@@ -77,7 +81,7 @@ userBooksApp.post(
       return c.json(responseData);
     } catch (e) {
       console.log(e);
-      const responseData: BadResponse = { success: false, errors: ["There was an issue adding book"] };
+      const responseData: BadResponse = { success: false, errors: ["There was an issue adding book"], status: 500 };
       return c.json(responseData, 500);
     }
   },
@@ -101,6 +105,7 @@ userBooksApp.delete("/:isbn", authMiddleware, async (c) => {
     const responseData: BadResponse = {
       success: false,
       errors: ["There was an issue deleting the book from your collection"],
+      status: 500,
     };
     return c.json(responseData, 500);
   }
