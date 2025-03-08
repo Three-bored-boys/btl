@@ -31,7 +31,7 @@ export function NYTBestSellersSection() {
 
 async function GetBestSellersWrapper() {
   console.log(apiUrl, "I'm in the best sellers wrapper");
-  const booksClient = hc<BooksApp>(`${process.env.URL}/books`);
+  const booksClient = hc<BooksApp>(`${process.env.URL}/api/books`);
   const { fetchDataResult, res } = await fetchRPCData<BestSeller[]>(booksClient["best-sellers"].$get());
   // const res = await booksClient["best-sellers"].$get();
   /* const { fetchDataResult, res } = await fetchData<BestSeller[]>(`${apiUrl}/books/best-sellers`, {
