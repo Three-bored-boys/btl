@@ -14,13 +14,8 @@ import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 const getFullSearchResults = async function (searchObject: SearchObjectType, paginationObject: PaginationObjectType) {
-  console.log(
-    `/api/books/full-search?${new URLSearchParams({ ...searchObject, ...paginationObject }).toString()}`,
-    ": From the sarch-page hook",
-  );
   const { fetchDataResult, res } = await fetchData<{ books: Book[]; totalItems: number }>(
     `/api/books/full-search?${new URLSearchParams({ ...searchObject, ...paginationObject }).toString()}`,
-    { next: { revalidate: 172800 } },
   );
   return { fetchDataResult, res };
 };
