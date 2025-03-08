@@ -3,8 +3,6 @@ import { HeroSection } from "@/libs/client/src/components/modules/home-page/hero
 import { NYTBestSellersSection } from "@/libs/client/src/components/modules/home-page/nyt-best-sellers-section/nyt-best-sellers-section";
 import { QuotesSection } from "@/libs/client/src/components/modules/home-page/quotes-section/quotes-section";
 
-export const dynamic = "force-dynamic"; // 4 days
-
 export default function Home() {
   return (
     <>
