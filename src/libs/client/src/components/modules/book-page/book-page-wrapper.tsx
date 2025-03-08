@@ -7,7 +7,8 @@ import notFoundImage from "@/public/assets/images/not-found.webp";
 import { apiUrl, fetchData } from "@/client/utils";
 
 export async function BookPageWrapper({ params: { isbn } }: { params: { isbn: string } }) {
-  const { fetchDataResult, res } = await fetchData<Book[]>(`${apiUrl()}/books/isbn/${isbn}`, {
+  const url = await apiUrl();
+  const { fetchDataResult, res } = await fetchData<Book[]>(`${url}/books/isbn/${isbn}`, {
     next: { revalidate: 172800 },
   });
 

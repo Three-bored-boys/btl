@@ -28,7 +28,8 @@ export function GenresSection() {
 }
 
 async function GetGenresWrapper() {
-  const { fetchDataResult, res } = await fetchData<Genres>(`${apiUrl()}/books/genres`);
+  const url = await apiUrl();
+  const { fetchDataResult, res } = await fetchData<Genres>(`${url}/books/genres`);
 
   if (!fetchDataResult.success) {
     const { errors } = fetchDataResult;
@@ -46,7 +47,7 @@ async function GetGenresWrapper() {
   } = fetchDataResult;
 
   const getGenresBooksPromisesArray: Promise<FetchDataResult<Book[]>>[] = genres.map((val) =>
-    fetchData<Book[]>(`${apiUrl()}/books/genres/${val.name}`, { next: { revalidate: 172800 } }),
+    fetchData<Book[]>(`${url}/books/genres/${val.name}`, { next: { revalidate: 172800 } }),
   );
 
   const allGenresBooksArray = await Promise.all(getGenresBooksPromisesArray);

@@ -1,15 +1,17 @@
+"use server";
+
 import { headers } from "next/headers";
 
-export const getBaseServerUrl = function () {
+const getBaseServerUrl = function () {
   if (process.env.NODE_ENV === "development") {
-    return "http://localhost:3000";
+    return Promise.resolve("http://localhost:3000");
   }
   const host = headers().get("host");
   const protocol = "https";
-  return `${protocol}://${host!}`;
+  return Promise.resolve(`${protocol}://${host!}`);
 };
 
-export const apiUrl = function () {
+export const apiUrl = async function () {
   console.log(getBaseServerUrl());
-  return getBaseServerUrl() + "/api";
+  return (await getBaseServerUrl()) + "/api";
 };
