@@ -49,3 +49,66 @@ const getBooksByGenre = async function (genre: unknown) {
 };
 
 export const getCachedBooksByGenre = unstable_cache(getBooksByGenre, ["genres"], { revalidate: 259200 });
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+const getBooksByISBN = async function (isbn: unknown) {
+  const validationResult = z
+    .string()
+    .min(1)
+    .refine((val) => Number.isFinite(+val))
+    .safeParse(isbn);
+  if (!validationResult.success) {
+    const responseData: BadResponse = {
+      success: false,
+      errors: ["Invalid ISBN. Please enter a valid ISBN and try again"],
+      status: 400,
+    };
+    return responseData;
+  }
+
+  const validISBN = validationResult.data;
+
+  let book: Book[];
+
+  const googleBooksService = new GoogleBooksService(process.env.GOOGLE_BOOKS_API_KEY!);
+  book = await googleBooksService.getBookByISBN(validISBN);
+
+  if (book.length === 0) {
+    const bookSearchResult = (
+      await googleBooksService.getBooksByAllParameters({ searchInput: { isbn: validISBN }, paginationFilter: {} })
+    ).books.find((book) => book.isbn10 === isbn || book.isbn13 === isbn);
+
+    if (!bookSearchResult) {
+      book = [];
+    } else {
+      book = [bookSearchResult];
+    }
+  }
+
+  if (book.length === 0) {
+    const bookSearchResult = (
+      await googleBooksService.getBooksByAllParameters({ searchInput: { search: validISBN }, paginationFilter: {} })
+    ).books.find((book) => book.isbn10 === isbn || book.isbn13 === isbn);
+
+    if (!bookSearchResult) {
+      book = [];
+    } else {
+      book = [bookSearchResult];
+    }
+  }
+
+  if (book.length === 0) {
+    const responseData: BadResponse = {
+      success: false,
+      errors: ["The book you are currently looking for could not be found."],
+      status: 404,
+    };
+    return responseData;
+  }
+
+  const responseData: GoodResponse<Book[]> = { success: true, data: book };
+  return responseData;
+};
+
+export const getCachedBooksByISBN = unstable_cache(getBooksByISBN, ["isbn"], { revalidate: 172800 });
