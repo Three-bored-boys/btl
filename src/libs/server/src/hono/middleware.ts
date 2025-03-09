@@ -3,7 +3,7 @@ import { Environment } from "@/root/bindings";
 import { getUserSession } from "@/server/auth/utils";
 
 export const authMiddleware = createMiddleware<Environment>(async (c, next) => {
-  const userSessionRes = await getUserSession(c);
+  const userSessionRes = await getUserSession();
   if (!userSessionRes.success) {
     return c.json(userSessionRes, 401);
   }

@@ -1,4 +1,4 @@
-import { Context, Hono } from "hono";
+import { Hono } from "hono";
 import type { GoodResponse, BadResponse } from "@/shared/types";
 import { zValidator } from "@hono/zod-validator";
 import { signupSchema, loginSchema } from "@/shared/validators";
@@ -10,7 +10,6 @@ import { hashPassword, verifyHashedPassword } from "@/server/auth/password";
 import { generateSessionToken, createSession, invalidateSession } from "@/server/auth/sessions";
 import { setSessionCookie, deleteSessionCookie, getSessionCookieToken } from "@/server/auth/cookies";
 import { encryptAuthSessionToken } from "@/server/auth/utils";
-import { cache } from "hono/cache";
 import { sanitizedUser } from "@/server/utils";
 import { SignupResult, LoginResult } from "@/shared/validators/auth";
 import { authMiddleware } from "../middleware";
@@ -63,7 +62,7 @@ export const auth = new Hono<Environment>()
 
       const sessionToken = generateSessionToken();
       const session = await createSession(sessionToken, newUser.id);
-      setSessionCookie(c, sessionToken, session.expiresAt);
+      await setSessionCookie(sessionToken, session.expiresAt);
 
       message = "Account successfully created!";
 
@@ -143,7 +142,7 @@ export const auth = new Hono<Environment>()
 
       const sessionToken = generateSessionToken();
       const session = await createSession(sessionToken, existingUser.id);
-      setSessionCookie(c, sessionToken, session.expiresAt);
+      await setSessionCookie(sessionToken, session.expiresAt);
 
       message = "Successfully logged in!";
 
@@ -158,9 +157,9 @@ export const auth = new Hono<Environment>()
     },
   )
   .get("/logout", async (c) => {
-    const token = getSessionCookieToken(c);
+    const token = await getSessionCookieToken();
     if (!token) {
-      deleteSessionCookie(c);
+      await deleteSessionCookie();
       const responseData: BadResponse = { success: false, errors: ["No session token found"], status: 401 };
       return c.json(responseData, 401);
     }
@@ -168,24 +167,13 @@ export const auth = new Hono<Environment>()
     const sessionId = await encryptAuthSessionToken(token, process.env.SESSION_SECRET_KEY!);
 
     await invalidateSession(sessionId);
-    deleteSessionCookie(c);
+    await deleteSessionCookie();
 
     const responseData: GoodResponse<string> = { success: true, data: "Successfully logged out!" };
     return c.json(responseData);
   })
-  .get(
-    "/validate-session",
-    cache({
-      cacheName: (c: Context<Environment>) => {
-        const sessionToken = getSessionCookieToken(c);
-        return sessionToken ?? "no-token";
-      },
-      cacheControl: "no-cache, private",
-    }),
-    authMiddleware,
-    (c) => {
-      const user = c.get("user");
-      const responseData: GoodResponse<SanitizedUser> = { success: true, data: user };
-      return c.json(responseData);
-    },
-  );
+  .get("/validate-session", authMiddleware, (c) => {
+    const user = c.get("user");
+    const responseData: GoodResponse<SanitizedUser> = { success: true, data: user };
+    return c.json(responseData);
+  });
