@@ -1,5 +1,3 @@
-import { Environment } from "@/root/bindings";
-import { Context } from "hono";
 import { deleteSessionCookie, getSessionCookieToken } from "./cookies";
 import { BadResponse, GoodResponse } from "@/shared/types";
 import { SanitizedUser } from "@/shared/db/schema";
@@ -45,18 +43,18 @@ export const encryptAuthSessionToken = async function (token: string, secretKey:
   return encryptedTokenBase64;
 };
 
-export const getUserSession = async function (c: Context<Environment>) {
-  const sessionToken = getSessionCookieToken(c);
+export const getUserSession = async function () {
+  const sessionToken = await getSessionCookieToken();
   if (!sessionToken) {
-    deleteSessionCookie(c);
+    await deleteSessionCookie();
     const responseData: BadResponse = { success: false, errors: ["No session token found"], status: 401 };
     return responseData;
   }
 
-  const { session, user } = await validateSessionToken(sessionToken);
+  const { session, user } = await validateSessionToken(sessionToken.value);
 
   if (!session || !user) {
-    deleteSessionCookie(c);
+    await deleteSessionCookie();
     const responseData: BadResponse = { success: false, errors: ["Invalid session token"], status: 401 };
     return responseData;
   }
