@@ -18,20 +18,6 @@ export const books = new Hono<Environment>()
     const responseData: GoodResponse<Book[]> = { success: true, data: books };
     return c.json(responseData);
   })
-  .get("/quick-search/:search", async (c) => {
-    const search = c.req.param("search");
-    const googleBooksService = new GoogleBooksService(process.env.GOOGLE_BOOKS_API_KEY!);
-
-    const allBooksResults = await googleBooksService.getBooksByAllParameters({
-      searchInput: { search },
-      paginationFilter: { maxResults: (8).toString() },
-    });
-
-    console.log(allBooksResults);
-
-    const responseData: GoodResponse<Book[]> = { success: true, data: allBooksResults.books };
-    return c.json(responseData);
-  })
   .get(
     "/full-search",
     zValidator("query", fullSearchObjectSchema, (result, c) => {
