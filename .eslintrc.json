@@ -18,6 +18,7 @@
       }
     ],
     "@typescript-eslint/no-unnecessary-condition": "off",
-    "@typescript-eslint/only-throw-error": "off"
+    "@typescript-eslint/only-throw-error": "off",
+    "@typescript-eslint/no-non-null-assertion": "off"
   }
 }
