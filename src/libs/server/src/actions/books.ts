@@ -112,3 +112,33 @@ const getBooksByISBN = async function (isbn: unknown) {
 };
 
 export const getCachedBooksByISBN = unstable_cache(getBooksByISBN, ["isbn"], { revalidate: 172800 });
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+const getQuickSearchResults = async function (search: unknown) {
+  const validationResult = z.string().min(1).safeParse(search);
+  if (!validationResult.success) {
+    const responseData: BadResponse = {
+      success: false,
+      errors: ["Invalid ISBN. Please enter a valid ISBN and try again"],
+      status: 400,
+    };
+    return responseData;
+  }
+  const validSearch = validationResult.data;
+  const googleBooksService = new GoogleBooksService(process.env.GOOGLE_BOOKS_API_KEY!);
+
+  const allBooksResults = await googleBooksService.getBooksByAllParameters({
+    searchInput: { search: validSearch },
+    paginationFilter: { maxResults: (8).toString() },
+  });
+
+  console.log(allBooksResults);
+
+  const responseData: GoodResponse<Book[]> = { success: true, data: allBooksResults.books };
+  return responseData;
+};
+
+export const getCachedQuickSearchResults = unstable_cache(getQuickSearchResults, ["quick-search"], {
+  revalidate: 86400,
+});
