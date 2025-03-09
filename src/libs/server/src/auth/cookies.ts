@@ -1,24 +1,28 @@
-import { getCookie, setCookie, deleteCookie } from "hono/cookie";
-import { Context } from "hono";
-import { BTL_AUTH_SESSION_COOKIE_NAME } from "@/shared/utils";
-import { Environment } from "@/root/bindings";
+/* eslint-disable @typescript-eslint/require-await */
+"use server";
 
-export const setSessionCookie = function (c: Context<Environment>, token: string, expiresAt: Date) {
-  setCookie(c, BTL_AUTH_SESSION_COOKIE_NAME, token, {
+import { BTL_AUTH_SESSION_COOKIE_NAME } from "@/shared/utils";
+import { cookies } from "next/headers";
+
+export const setSessionCookie = async function (token: string, expiresAt: Date) {
+  const cookieStore = cookies();
+  cookieStore.set(BTL_AUTH_SESSION_COOKIE_NAME, token, {
     expires: expiresAt,
     secure: true,
     httpOnly: true,
-    sameSite: "none",
+    sameSite: "strict",
     path: "/",
   });
 };
 
-export const getSessionCookieToken = function (c: Context<Environment>) {
-  const token = getCookie(c, BTL_AUTH_SESSION_COOKIE_NAME);
+export const getSessionCookieToken = async function () {
+  const cookieStore = cookies();
+  const token = cookieStore.get(BTL_AUTH_SESSION_COOKIE_NAME);
   if (!token) return null;
   return token;
 };
 
-export const deleteSessionCookie = function (c: Context<Environment>) {
-  deleteCookie(c, BTL_AUTH_SESSION_COOKIE_NAME);
+export const deleteSessionCookie = async function () {
+  const cookieStore = cookies();
+  cookieStore.delete(BTL_AUTH_SESSION_COOKIE_NAME);
 };
