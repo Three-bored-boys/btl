@@ -51,7 +51,7 @@ export const getUserSession = async function () {
     return responseData;
   }
 
-  const { session, user } = await validateSessionToken(sessionToken.value);
+  const { session, user } = await validateSessionToken(sessionToken);
 
   if (!session || !user) {
     await deleteSessionCookie();

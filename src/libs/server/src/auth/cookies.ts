@@ -17,9 +17,9 @@ export const setSessionCookie = async function (token: string, expiresAt: Date) 
 
 export const getSessionCookieToken = async function () {
   const cookieStore = cookies();
-  const token = cookieStore.get(BTL_AUTH_SESSION_COOKIE_NAME);
-  if (!token) return null;
-  return token;
+  const sessionCookie = cookieStore.get(BTL_AUTH_SESSION_COOKIE_NAME);
+  if (!sessionCookie) return null;
+  return sessionCookie.value;
 };
 
 export const deleteSessionCookie = async function () {
