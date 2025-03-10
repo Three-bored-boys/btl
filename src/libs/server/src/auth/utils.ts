@@ -1,7 +1,5 @@
 import { deleteSessionCookie, getSessionCookieToken } from "./cookies";
-import { BadResponse, GoodResponse } from "@/shared/types";
-import { SanitizedUser } from "@/shared/db/schema";
-import { validateSessionToken } from "./sessions";
+import { cacheValidateSessionToken } from "./sessions";
 
 export const generateAuthSessionToken = function () {
   return crypto.randomUUID();
@@ -44,21 +42,17 @@ export const encryptAuthSessionToken = async function (token: string, secretKey:
 };
 
 export const getUserSession = async function () {
+  "use server";
   const sessionToken = await getSessionCookieToken();
   if (!sessionToken) {
-    await deleteSessionCookie();
-    const responseData: BadResponse = { success: false, errors: ["No session token found"], status: 401 };
-    return responseData;
+    return { session: null, user: null };
   }
 
-  const { session, user } = await validateSessionToken(sessionToken);
+  const { session, user } = await cacheValidateSessionToken(sessionToken);
 
   if (!session || !user) {
     await deleteSessionCookie();
-    const responseData: BadResponse = { success: false, errors: ["Invalid session token"], status: 401 };
-    return responseData;
   }
 
-  const responseData: GoodResponse<SanitizedUser> = { success: true, data: user };
-  return responseData;
+  return { session, user };
 };
