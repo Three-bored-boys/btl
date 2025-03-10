@@ -2,33 +2,32 @@ import React from "react";
 // import { book } from "./data";
 import Image from "next/image";
 import Link from "next/link";
-import { useQuickSearchResults } from "@/client/hooks/quick-search";
 import genericBookImage from "@/public/assets/images/generic-book.png";
 import { DEFAULT_MAX_RESULTS, DEFAULT_PAGE_NUMBER } from "@/libs/shared/src/utils";
 import { ExclamationTriangle } from "@/client/components/ui/icons/exclamation-triangle";
+import { BadResponse, GoodResponse, Book } from "@/shared/types";
 
 export function QuickSearchResults({
   search,
   setSearchResultsVisible,
+  result,
 }: {
   search: string;
   setSearchResultsVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  result: BadResponse | GoodResponse<Book[]> | null;
 }) {
-  const {
-    data: { fetchDataResult, res },
-    error,
-  } = useQuickSearchResults({ search });
-
-  if (error) {
-    throw error;
+  if (result === null) {
+    return <></>;
   }
 
+  const fetchDataResult = result;
+
   if (!fetchDataResult.success) {
-    const { errors } = fetchDataResult;
+    const { errors, status } = fetchDataResult;
     return (
       <div className="my-2 flex w-full flex-col items-center justify-start gap-y-1">
         <ExclamationTriangle />
-        <p className="text-xl font-semibold">Error {res.status}</p>
+        <p className="text-xl font-semibold">Error {status}</p>
         <p className="text-base font-normal">{errors[0]}</p>
       </div>
     );

@@ -3,7 +3,7 @@ import { migrate } from "drizzle-orm/postgres-js/migrator";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 
-config({ path: ".dev.vars" });
+config({ path: ".env" });
 
 const main = async () => {
   try {

@@ -40,6 +40,19 @@ export const fetchData = async function <T>(url: string, options?: RequestInit):
   return { fetchDataResult: data, res };
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const fetchRPCData = async function <T, P extends Promise<any> = Promise<any>>(promise: P) {
+  const res = (await promise) as Response;
+
+  if (!res.ok) {
+    const data = (await res.json()) as BadResponse;
+    return { fetchDataResult: data, res };
+  }
+
+  const data = (await res.json()) as GoodResponse<T>;
+  return { fetchDataResult: data, res };
+};
+
 export const BTL_LOCAL_STORAGE_SEARCH_OBJECT = "btlSearchObject";
 
 export const getSearchObjectFromLocalStorage = function () {
@@ -101,3 +114,7 @@ export const handleNumberSearchParam = function (
 
   return defaultValue.toString();
 };
+
+const getBaseUrl = process.env.URL;
+
+export const apiUrl = getBaseUrl + "/api";

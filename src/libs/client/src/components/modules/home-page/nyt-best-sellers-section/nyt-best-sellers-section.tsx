@@ -1,7 +1,5 @@
 import { SectionPreamble } from "@/client/components/modules/home-page/section-preamble";
 import { Container } from "@/client/components/layouts/container";
-import type { BestSeller } from "@/root/src/libs/shared/src/types";
-import { fetchData } from "@/libs/client/src/utils";
 import { Suspense } from "react";
 import { SectionBooksShowcase } from "../section-books-showcase";
 import { LoadingSkeleton } from "../loading-skeleton";
@@ -9,6 +7,7 @@ import { BookCard } from "../book-card";
 import { ErrorBoundary } from "react-error-boundary";
 import { ErrorBoundaryRender } from "../error-boundary-render";
 import { ExclamationTriangle } from "@/client/components/ui/icons/exclamation-triangle";
+import { getCachedNYTBestSellers } from "@/server/actions";
 
 export function NYTBestSellersSection() {
   return (
@@ -28,14 +27,14 @@ export function NYTBestSellersSection() {
 }
 
 async function GetBestSellersWrapper() {
-  const { fetchDataResult, res } = await fetchData<BestSeller[]>(`${process.env.API_URL}/books/best-sellers`);
+  const fetchDataResult = await getCachedNYTBestSellers();
 
   if (!fetchDataResult.success) {
     const { errors } = fetchDataResult;
     return (
       <div className="my-2 flex w-full flex-col items-center justify-start gap-y-1">
         <ExclamationTriangle />
-        <p className="text-xl font-semibold">Error {res.status}</p>
+        <p className="text-xl font-semibold">Error {fetchDataResult.status}</p>
         <p className="text-base font-normal">{errors[0]}</p>
       </div>
     );

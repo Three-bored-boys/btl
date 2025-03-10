@@ -15,7 +15,7 @@ import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.share
 
 const getFullSearchResults = async function (searchObject: SearchObjectType, paginationObject: PaginationObjectType) {
   const { fetchDataResult, res } = await fetchData<{ books: Book[]; totalItems: number }>(
-    `${process.env.NEXT_PUBLIC_API_URL}/books/full-search?${new URLSearchParams({ ...searchObject, ...paginationObject }).toString()}`,
+    `/api/books/full-search?${new URLSearchParams({ ...searchObject, ...paginationObject }).toString()}`,
   );
   return { fetchDataResult, res };
 };
