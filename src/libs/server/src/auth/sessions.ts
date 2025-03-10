@@ -3,6 +3,7 @@ import { eq } from "drizzle-orm";
 import { users, sessions, Session, SanitizedUser } from "@/server/db/schema";
 import { sanitizedUser } from "@/server/utils";
 import { generateAuthSessionToken, encryptAuthSessionToken } from "./utils";
+import { unstable_cache } from "next/cache";
 
 export type SessionValidationResult =
   | {
@@ -14,9 +15,13 @@ export type SessionValidationResult =
       session: null;
     };
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
 export function generateSessionToken() {
   return generateAuthSessionToken();
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export async function createSession(token: string, userId: number) {
   const sessionId = await encryptAuthSessionToken(token, process.env.SESSION_SECRET_KEY!);
@@ -30,7 +35,9 @@ export async function createSession(token: string, userId: number) {
   return session;
 }
 
-export async function validateSessionToken(token: string): Promise<SessionValidationResult> {
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+async function validateSessionToken(token: string): Promise<SessionValidationResult> {
   const sessionId = await encryptAuthSessionToken(token, process.env.SESSION_SECRET_KEY!);
 
   const result = await db
@@ -56,6 +63,12 @@ export async function validateSessionToken(token: string): Promise<SessionValida
 
   return { session, user: sanitizedUser(user) };
 }
+
+export const cacheValidateSessionToken = unstable_cache(validateSessionToken, ["user-session"], {
+  tags: ["user-session"],
+});
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export async function invalidateSession(sessionId: string) {
   await db.delete(sessions).where(eq(sessions.id, sessionId));
