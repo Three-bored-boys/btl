@@ -26,7 +26,7 @@ export const BookLocationRadioGroup = function ({ library, isbn }: { library: st
   const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
-    if (settledResult !== null) {
+    if (settledResult?.success) {
       const timer = setTimeout(() => setSettledResult(null), 3000);
       return () => clearTimeout(timer);
     }
