@@ -28,9 +28,7 @@ export function NavBar({ className, ...props }: React.ComponentProps<"nav">): Re
         <NavBarLeft />
         <NavBarMiddle />
         <NavLinksMain navLinkArr={navLinkArr}></NavLinksMain>
-        <div className="flex items-center">
-          <NavBarRight routesArr={navAuthLinkArr} />
-        </div>
+        <NavBarRight routesArr={navAuthLinkArr} />
       </NavBarContainer>
       <NavMenuMobile navLinkArr={navLinkArr}></NavMenuMobile>
     </nav>
