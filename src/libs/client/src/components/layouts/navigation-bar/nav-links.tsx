@@ -3,7 +3,7 @@ import { NavLink } from "./nav-link";
 import { cn } from "@/client/utils";
 import { NavLinkArr } from "./nav-bar";
 import { cva, VariantProps } from "class-variance-authority";
-import { useValidateUserSession } from "@/client/hooks/auth";
+import { useAuthContext } from "@/client/hooks/auth";
 
 const navLinks = cva(["flex"], {
   variants: {
@@ -21,7 +21,7 @@ export type NavLinksProps = React.ComponentProps<"div"> &
   };
 
 export function NavLinks({ device, routesArr, className, rootPathname, ...props }: NavLinksProps): React.ReactElement {
-  const { user } = useValidateUserSession();
+  const { user } = useAuthContext();
 
   const getRoutesArrayToRender = function () {
     if (user) {
