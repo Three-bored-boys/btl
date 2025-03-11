@@ -8,8 +8,6 @@ import React from "react";
 import { cn } from "@/client/utils";
 import { Sidebar } from "@/root/src/libs/client/src/components/modules/collection/sidebar";
 import { ToggleSidebar } from "@/client/components/ui/toggle-sidebar";
-import { useValidateUserSession } from "@/client/hooks/auth";
-import { useRouter } from "next/navigation";
 
 export const SidebarContext = React.createContext<{
   showSidebar: boolean;
@@ -23,12 +21,6 @@ export function CollectionLayout({
 }>): ReactElement {
   const [showSidebar, setShowSidebar] = React.useState(true);
   const sidebarContextValue = React.useMemo(() => ({ showSidebar, setShowSidebar }), [showSidebar]);
-  const { user } = useValidateUserSession();
-  const router = useRouter();
-
-  if (!user) {
-    router.replace("/");
-  }
 
   return (
     <div className="h-full w-full">
