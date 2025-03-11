@@ -1,5 +1,3 @@
-"use client";
-
 import { useRootPathnameContext } from "@/client/hooks/root-pathname";
 import { QuickSearch } from "@/client/components/modules/quick-search/quick-search";
 import { Logo } from "@/client/components/ui/logo";
