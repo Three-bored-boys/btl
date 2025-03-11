@@ -1,17 +1,17 @@
 "use client";
 
+import { BadResponse, GoodResponse } from "@/root/src/libs/shared/src/types";
+import { FormErrorListItem } from "@/client/components/ui/form-error-list-item";
+import { cn } from "@/client/utils";
+import { RadioCards } from "@radix-ui/themes";
+import { Button } from "@/client/components/ui/button";
 import { BookOpen } from "@/client/components/ui/icons/book-open";
 import { ListBullet } from "@/client/components/ui/icons/list-bullet";
 import { Check } from "@/client/components/ui/icons/check";
 import { Trash } from "@/client/components/ui/icons/trash";
-import { RadioCards } from "@radix-ui/themes";
-import { Button } from "@/client/components/ui/button";
 import { bookLibraries } from "@/shared/utils";
-import { cn } from "@/client/utils";
-import { ReactNode } from "react";
-import { useBookPage } from "@/client/hooks/book-page";
-import { BadResponse, GoodResponse } from "@/root/src/libs/shared/src/types";
-import { FormErrorListItem } from "@/client/components/ui/form-error-list-item";
+import { ReactNode, useTransition, useState } from "react";
+import { addUserBook, deleteUserBook } from "@/server/actions";
 
 const bookLibraryIcons: [ReactNode, ReactNode, ReactNode, ReactNode] = [
   <BookOpen key={0} />,
@@ -21,9 +21,9 @@ const bookLibraryIcons: [ReactNode, ReactNode, ReactNode, ReactNode] = [
 ];
 const bookLibrariesWithIcons = bookLibraries.map((obj, i) => ({ ...obj, icon: bookLibraryIcons[i] }));
 
-export function BookLocationRadioGroup({ isbn }: { isbn: string }) {
-  const { libraryValue, setLibraryValue, query, mutation, settledMessage } = useBookPage(isbn);
-  console.log(libraryValue);
+export const BookLocationRadioGroup = function ({ library, isbn }: { library: string | null; isbn: string }) {
+  const [settledResult, setSettledResult] = useState<BadResponse | GoodResponse<string> | null>(null);
+  const [isPending, startTransition] = useTransition();
 
   const ServerResultMessage = function ({ serverResult }: { serverResult: BadResponse | GoodResponse<string> }) {
     if (serverResult.success) {
@@ -54,12 +54,15 @@ export function BookLocationRadioGroup({ isbn }: { isbn: string }) {
               key={i}
               className={cn("hover:cursor-pointer hover:bg-secondary-300")}
               title={`Add to '${obj.name}'`}
-              checked={obj.value === libraryValue}
+              checked={obj.value === library}
               onClick={() => {
-                setLibraryValue(obj.value);
-                mutation.mutate(obj.value);
+                startTransition(async () => {
+                  const result = await addUserBook({ isbn, library: obj.value });
+                  setSettledResult(result);
+                });
+                setTimeout(() => setSettledResult(null), 3000);
               }}
-              disabled={query.isLoading || mutation.isPending}
+              disabled={isPending}
             >
               <span>{obj.name}</span>
               {obj.icon}
@@ -67,22 +70,25 @@ export function BookLocationRadioGroup({ isbn }: { isbn: string }) {
           ))}
         </RadioCards.Root>
       </div>
-      {settledMessage !== null && <div>{settledMessage.success}</div>}
+      {settledResult !== null && <div>{settledResult.success}</div>}
       <div className="mt-6 flex flex-col items-start justify-start">
-        {libraryValue && (
+        {library && (
           <Button
             background={"dark"}
             className="text-sm"
             onClick={() => {
-              setLibraryValue(null);
-              mutation.mutate(null);
+              startTransition(async () => {
+                const result = await deleteUserBook({ isbn });
+                setSettledResult(result);
+              });
+              setTimeout(() => setSettledResult(null), 3000);
             }}
           >
             Clear
           </Button>
         )}
-        {settledMessage !== null && <ServerResultMessage serverResult={settledMessage}></ServerResultMessage>}
+        {settledResult !== null && <ServerResultMessage serverResult={settledResult}></ServerResultMessage>}
       </div>
     </div>
   );
-}
+};
