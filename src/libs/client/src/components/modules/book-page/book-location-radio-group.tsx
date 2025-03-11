@@ -10,7 +10,7 @@ import { ListBullet } from "@/client/components/ui/icons/list-bullet";
 import { Check } from "@/client/components/ui/icons/check";
 import { Trash } from "@/client/components/ui/icons/trash";
 import { bookLibraries } from "@/shared/utils";
-import { ReactNode, useTransition, useState } from "react";
+import { ReactNode, useTransition, useState, useEffect } from "react";
 import { addUserBook, deleteUserBook } from "@/server/actions";
 
 const bookLibraryIcons: [ReactNode, ReactNode, ReactNode, ReactNode] = [
@@ -25,24 +25,12 @@ export const BookLocationRadioGroup = function ({ library, isbn }: { library: st
   const [settledResult, setSettledResult] = useState<BadResponse | GoodResponse<string> | null>(null);
   const [isPending, startTransition] = useTransition();
 
-  const ServerResultMessage = function ({ serverResult }: { serverResult: BadResponse | GoodResponse<string> }) {
-    if (serverResult.success) {
-      return (
-        <p className="flex items-center gap-x-0 text-success">
-          <Check className="text-success" fill="#4ade80"></Check>
-          {serverResult.data}
-        </p>
-      );
-    } else {
-      return (
-        <ul style={{ listStyle: "disc", listStylePosition: "outside" }}>
-          {serverResult.errors.map((error, i) => (
-            <FormErrorListItem key={i}>{error}</FormErrorListItem>
-          ))}
-        </ul>
-      );
+  useEffect(() => {
+    if (settledResult !== null) {
+      const timer = setTimeout(() => setSettledResult(null), 3000);
+      return () => clearTimeout(timer);
     }
-  };
+  }, [settledResult]);
 
   return (
     <div className="pt-3">
@@ -60,7 +48,6 @@ export const BookLocationRadioGroup = function ({ library, isbn }: { library: st
                   const result = await addUserBook({ isbn, library: obj.value });
                   setSettledResult(result);
                 });
-                setTimeout(() => setSettledResult(null), 3000);
               }}
               disabled={isPending}
             >
@@ -70,7 +57,6 @@ export const BookLocationRadioGroup = function ({ library, isbn }: { library: st
           ))}
         </RadioCards.Root>
       </div>
-      {settledResult !== null && <div>{settledResult.success}</div>}
       <div className="mt-6 flex flex-col items-start justify-start">
         {library && (
           <Button
@@ -81,14 +67,32 @@ export const BookLocationRadioGroup = function ({ library, isbn }: { library: st
                 const result = await deleteUserBook({ isbn });
                 setSettledResult(result);
               });
-              setTimeout(() => setSettledResult(null), 3000);
             }}
           >
             Clear
           </Button>
         )}
-        {settledResult !== null && <ServerResultMessage serverResult={settledResult}></ServerResultMessage>}
+        <ServerResultMessage serverResult={settledResult}></ServerResultMessage>
       </div>
     </div>
+  );
+};
+
+const ServerResultMessage = function ({ serverResult }: { serverResult: BadResponse | GoodResponse<string> | null }) {
+  if (!serverResult) return null;
+  if (serverResult.success) {
+    return (
+      <p className="flex items-center gap-x-0 text-success">
+        <Check className="text-success" fill="#4ade80"></Check>
+        {serverResult.data}
+      </p>
+    );
+  }
+  return (
+    <ul style={{ listStyle: "disc", listStylePosition: "outside" }}>
+      {serverResult.errors.map((error, i) => (
+        <FormErrorListItem key={i}>{error}</FormErrorListItem>
+      ))}
+    </ul>
   );
 };
