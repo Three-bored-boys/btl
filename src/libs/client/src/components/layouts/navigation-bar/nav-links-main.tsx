@@ -1,3 +1,5 @@
+"use client";
+
 import { NavLinks } from "./nav-links";
 import { useRootPathnameContext } from "@/client/hooks/root-pathname";
 import { type NavLinkArr } from "./nav-bar";

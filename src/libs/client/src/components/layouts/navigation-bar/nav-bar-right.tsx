@@ -1,3 +1,5 @@
+"use client";
+
 import React, { ComponentProps } from "react";
 import type { NavAuthLinkArr } from "./nav-bar";
 import { LinkButton } from "@/client/components/ui/link-button";
