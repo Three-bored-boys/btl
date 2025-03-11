@@ -115,6 +115,6 @@ export const handleNumberSearchParam = function (
   return defaultValue.toString();
 };
 
-const getBaseUrl = process.env.URL;
-
-export const apiUrl = getBaseUrl + "/api";
+export const getRootPathname = (path: string): string => {
+  return "/" + path.split("/")[1];
+};
