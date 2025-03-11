@@ -7,7 +7,7 @@ import notFoundImage from "@/public/assets/images/not-found.webp";
 import genericBookImage from "@/public/assets/images/generic-book.png";
 import { getCachedBooksByISBN } from "@/server/actions";
 
-export async function BookPageWrapper({ params: { isbn } }: { params: { isbn: string } }) {
+export async function BookPage({ params: { isbn } }: { params: { isbn: string } }) {
   const fetchDataResult = await getCachedBooksByISBN(isbn);
 
   if (fetchDataResult.success) {
