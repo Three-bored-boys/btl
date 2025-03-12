@@ -2,7 +2,7 @@ import React from "react";
 import { NavBarRight } from "./nav-bar-right";
 import { cn } from "@/client/utils";
 import { NavBarContainer } from "./nav-bar-container";
-import { NavMenuMobile } from "./nav-menu-mobile";
+import { NavMenuMobileWrapper } from "./nav-menu-mobile-wrapper";
 import { NavLinksMain } from "./nav-links-main";
 import { NavBarMiddle } from "./nav-bar-middle";
 import { NavBarLeft } from "./nav-bar-left";
@@ -30,7 +30,7 @@ export function NavBar({ className, ...props }: React.ComponentProps<"nav">): Re
         <NavLinksMain navLinkArr={navLinkArr}></NavLinksMain>
         <NavBarRight routesArr={navAuthLinkArr} />
       </NavBarContainer>
-      <NavMenuMobile navLinkArr={navLinkArr}></NavMenuMobile>
+      <NavMenuMobileWrapper navLinkArr={navLinkArr}></NavMenuMobileWrapper>
     </nav>
   );
 }
