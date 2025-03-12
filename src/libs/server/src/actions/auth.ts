@@ -78,7 +78,6 @@ export const signUp = async function (_: SignupFormState, formData: FormData): P
   } catch (e) {
     return { success: false, errors: ["Something went wrong. Please try again."], status: 500 };
   }
-  revalidateTag("user-session");
   revalidatePath("/");
   redirect("/");
 };
@@ -161,7 +160,6 @@ export const login = async function (_: LoginFormState, formData: FormData): Pro
   } catch (e) {
     return { success: false, errors: ["Something went wrong. Please try again."], status: 500 };
   }
-  revalidateTag("user-session");
   revalidatePath("/");
   redirect("/");
 };
