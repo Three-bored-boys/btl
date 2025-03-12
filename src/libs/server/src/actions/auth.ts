@@ -25,17 +25,12 @@ import { redirect } from "next/navigation";
 import { encryptAuthSessionToken } from "@/server/auth/utils";
 
 export const getUserSession = async function () {
-  "use server";
   const sessionToken = await getSessionCookieToken();
   if (!sessionToken) {
     return { session: null, user: null };
   }
 
   const { session, user } = await cacheValidateSessionToken(sessionToken);
-
-  if (!session || !user) {
-    await deleteSessionCookie();
-  }
 
   return { session, user };
 };
@@ -193,7 +188,6 @@ export const logout = async function (): Promise<ServerResult<string>> {
   try {
     const token = await getSessionCookieToken();
     if (!token) {
-      await deleteSessionCookie();
       const responseData: BadResponse = { success: false, errors: ["No session token found"], status: 401 };
       return responseData;
     }
@@ -201,7 +195,7 @@ export const logout = async function (): Promise<ServerResult<string>> {
     const sessionId = await encryptAuthSessionToken(token, process.env.SESSION_SECRET_KEY!);
 
     await invalidateSession(sessionId);
-    await deleteSessionCookie();
+    await deleteSessionCookie(token);
 
     const responseData: GoodResponse<string> = { success: true, data: "Successfully logged out!" };
     return responseData;

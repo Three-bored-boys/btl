@@ -10,7 +10,6 @@ export const auth = new Hono<Environment>();
 auth.get("/logout", async (c) => {
   const token = await getSessionCookieToken();
   if (!token) {
-    await deleteSessionCookie();
     const responseData: BadResponse = { success: false, errors: ["No session token found"], status: 401 };
     return c.json(responseData, 401);
   }
@@ -18,7 +17,7 @@ auth.get("/logout", async (c) => {
   const sessionId = await encryptAuthSessionToken(token, process.env.SESSION_SECRET_KEY!);
 
   await invalidateSession(sessionId);
-  await deleteSessionCookie();
+  await deleteSessionCookie(token);
 
   const responseData: GoodResponse<string> = { success: true, data: "Successfully logged out!" };
   return c.json(responseData);

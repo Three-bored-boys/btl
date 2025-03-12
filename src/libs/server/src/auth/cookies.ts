@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/require-await */
 "use server";
+/* eslint-disable @typescript-eslint/require-await */
 
 import { BTL_AUTH_SESSION_COOKIE_NAME } from "@/shared/utils";
 import { cookies } from "next/headers";
@@ -22,7 +22,7 @@ export const getSessionCookieToken = async function () {
   return sessionCookie.value;
 };
 
-export const deleteSessionCookie = async function () {
+export const deleteSessionCookie = async function (token: string) {
   const cookieStore = cookies();
-  cookieStore.delete(BTL_AUTH_SESSION_COOKIE_NAME);
+  cookieStore.set(BTL_AUTH_SESSION_COOKIE_NAME, token, { maxAge: 0 });
 };

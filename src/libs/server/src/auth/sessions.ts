@@ -50,7 +50,7 @@ async function validateSessionToken(token: string): Promise<SessionValidationRes
     return { session: null, user: null };
   }
 
-  if (result.length < 1) {
+  if (result.length === 0) {
     return { session: null, user: null };
   }
 
