@@ -22,6 +22,7 @@ const bookLibraryIcons: [ReactNode, ReactNode, ReactNode, ReactNode] = [
 const bookLibrariesWithIcons = bookLibraries.map((obj, i) => ({ ...obj, icon: bookLibraryIcons[i] }));
 
 export const BookLocationRadioGroup = function ({ library, isbn }: { library: string | null; isbn: string }) {
+  const [libraryValue, setLibraryValue] = useState<string | null>(library);
   const [settledResult, setSettledResult] = useState<BadResponse | GoodResponse<string> | null>(null);
   const [isPending, startTransition] = useTransition();
 
@@ -42,11 +43,12 @@ export const BookLocationRadioGroup = function ({ library, isbn }: { library: st
               key={i}
               className={cn("hover:cursor-pointer hover:bg-secondary-300")}
               title={`Add to '${obj.name}'`}
-              checked={obj.value === library}
+              checked={obj.value === libraryValue}
               onClick={() => {
                 startTransition(async () => {
                   const result = await addUserBook({ isbn, library: obj.value });
                   setSettledResult(result);
+                  setLibraryValue(obj.value);
                 });
               }}
               disabled={isPending}
@@ -58,7 +60,7 @@ export const BookLocationRadioGroup = function ({ library, isbn }: { library: st
         </RadioCards.Root>
       </div>
       <div className="mt-6 flex flex-col items-start justify-start">
-        {library && (
+        {libraryValue && (
           <Button
             background={"dark"}
             className="text-sm"
@@ -66,6 +68,7 @@ export const BookLocationRadioGroup = function ({ library, isbn }: { library: st
               startTransition(async () => {
                 const result = await deleteUserBook({ isbn });
                 setSettledResult(result);
+                setLibraryValue(null);
               });
             }}
           >
