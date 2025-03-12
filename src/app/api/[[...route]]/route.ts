@@ -5,7 +5,6 @@ import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 import { books } from "@/libs/server/src/hono/routes/books";
 import { auth } from "@/libs/server/src/hono/routes/auth";
-import { userBooksApp as userBooks } from "@/libs/server/src/hono/routes/userBooks";
 
 export const runtime = "nodejs";
 
@@ -38,11 +37,9 @@ app.get("/", (c) => {
 
 app.route("/books", books);
 app.route("/auth", auth);
-app.route("/user-books", userBooks);
 
 export type BooksApp = typeof books;
 export type AuthApp = typeof auth;
-export type UserBooksApp = typeof userBooks;
 
 export const GET = handle(app);
 export const POST = handle(app);
