@@ -2,7 +2,7 @@ import { type NavLinkArr } from "./nav-bar";
 import { getUserSession } from "@/root/src/libs/server/src/auth/utils";
 import { NavLinks } from "./nav-links";
 
-export const NavLinksMain = async function ({ navLinkArr }: { navLinkArr: NavLinkArr }) {
+export const NavBarMainLinks = async function ({ navLinkArr }: { navLinkArr: NavLinkArr }) {
   const { user } = await getUserSession();
 
   return (

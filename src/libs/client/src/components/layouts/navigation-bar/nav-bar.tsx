@@ -3,7 +3,7 @@ import { NavBarRight } from "./nav-bar-right";
 import { cn } from "@/client/utils";
 import { NavBarContainer } from "./nav-bar-container";
 import { NavMenuMobileWrapper } from "./nav-menu-mobile-wrapper";
-import { NavLinksMain } from "./nav-links-main";
+import { NavBarMainLinks } from "./nav-bar-main-links";
 import { NavBarMiddle } from "./nav-bar-middle";
 import { NavBarLeft } from "./nav-bar-left";
 
@@ -27,7 +27,7 @@ export function NavBar({ className, ...props }: React.ComponentProps<"nav">): Re
       <NavBarContainer>
         <NavBarLeft />
         <NavBarMiddle />
-        <NavLinksMain navLinkArr={navLinkArr}></NavLinksMain>
+        <NavBarMainLinks navLinkArr={navLinkArr}></NavBarMainLinks>
         <NavBarRight routesArr={navAuthLinkArr} />
       </NavBarContainer>
       <NavMenuMobileWrapper navLinkArr={navLinkArr}></NavMenuMobileWrapper>
