@@ -4,7 +4,6 @@ import { handle } from "hono/vercel";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 import { books } from "@/libs/server/src/hono/routes/books";
-import { auth } from "@/libs/server/src/hono/routes/auth";
 
 export const runtime = "nodejs";
 
@@ -36,10 +35,8 @@ app.get("/", (c) => {
 });
 
 app.route("/books", books);
-app.route("/auth", auth);
 
 export type BooksApp = typeof books;
-export type AuthApp = typeof auth;
 
 export const GET = handle(app);
 export const POST = handle(app);
