@@ -5,7 +5,9 @@ import { type BadResponse, type GoodResponse, /*  type Genres, type BestSeller, 
 import { fullSearchObjectSchema } from "@/shared/validators";
 import { Environment } from "@/root/bindings";
 
-export const books = new Hono<Environment>().get(
+export const books = new Hono<Environment>();
+
+books.get(
   "/full-search",
   zValidator("query", fullSearchObjectSchema, (result, c) => {
     if (!result.success) {
