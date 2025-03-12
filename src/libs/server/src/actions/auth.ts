@@ -178,7 +178,7 @@ export const login = async function (_: LoginFormState, formData: FormData): Pro
   } catch (e) {
     return { success: false, errors: ["Something went wrong. Please try again."], status: 500 };
   }
-  revalidatePath("/");
+  revalidatePath("/", "layout");
   redirect("/");
 };
 
@@ -196,7 +196,6 @@ export const logout = async function (): Promise<ServerResult<string>> {
 
     await invalidateSession(sessionId);
     await deleteSessionCookie(token);
-
     const responseData: GoodResponse<string> = { success: true, data: "Successfully logged out!" };
     return responseData;
   } catch (e) {
