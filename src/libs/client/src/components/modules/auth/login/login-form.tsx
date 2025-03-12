@@ -8,11 +8,27 @@ import { Check } from "@/client/components/ui/icons/check";
 import { SubmitButton } from "@/client/components/ui/submit-button";
 import { ServerResult } from "@/shared/types";
 import { LoginResult } from "@/shared/validators/auth";
-import { useFormState } from "react-dom";
+import { useFormState, useFormStatus } from "react-dom";
 import { login } from "@/server/actions";
 
+const Submit = function () {
+  const { pending } = useFormStatus();
+
+  return (
+    <div>
+      <SubmitButton
+        isSubmitting={pending}
+        defaultText={"Log In"}
+        submittingText={"Logging in..."}
+        textSize={"small"}
+        background={"light"}
+      />
+    </div>
+  );
+};
+
 export function LoginForm() {
-  const [loginFormState, loginAction, isPending] = useFormState(login, {
+  const [loginFormState, loginAction] = useFormState(login, {
     fieldError: { userName: [], password: [] },
   });
 
@@ -59,15 +75,7 @@ export function LoginForm() {
         </ul>
       </div>
 
-      <div>
-        <SubmitButton
-          isSubmitting={isPending}
-          defaultText={"Log In"}
-          submittingText={"Logging in..."}
-          textSize={"small"}
-          background={"light"}
-        />
-      </div>
+      <Submit />
       {!("fieldError" in loginFormState) && <ServerResultMessage serverResult={loginFormState}></ServerResultMessage>}
     </form>
   );

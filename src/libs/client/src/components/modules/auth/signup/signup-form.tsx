@@ -8,11 +8,27 @@ import { Check } from "@/client/components/ui/icons/check";
 import { SubmitButton } from "@/client/components/ui/submit-button";
 import { ServerResult } from "@/shared/types";
 import { SignupResult } from "@/shared/validators/auth";
-import { useFormState } from "react-dom";
+import { useFormState, useFormStatus } from "react-dom";
 import { signUp } from "@/server/actions";
 
+const Submit = function () {
+  const { pending } = useFormStatus();
+
+  return (
+    <div>
+      <SubmitButton
+        isSubmitting={pending}
+        defaultText={"Sign up"}
+        submittingText={"Signing up..."}
+        textSize={"small"}
+        background={"light"}
+      />
+    </div>
+  );
+};
+
 export function SignupForm() {
-  const [signupFormState, signupAction, isPending] = useFormState(signUp, {
+  const [signupFormState, signupAction] = useFormState(signUp, {
     fieldError: { userName: [], emailAddress: [], password: [] },
   });
 
@@ -70,15 +86,7 @@ export function SignupForm() {
         </ul>
       </div>
 
-      <div>
-        <SubmitButton
-          isSubmitting={isPending}
-          defaultText={"Sign up"}
-          submittingText={"Signing up..."}
-          textSize={"small"}
-          background={"light"}
-        />
-      </div>
+      <Submit />
       {!("fieldError" in signupFormState) && <ServerResultMessage serverResult={signupFormState}></ServerResultMessage>}
     </form>
   );
