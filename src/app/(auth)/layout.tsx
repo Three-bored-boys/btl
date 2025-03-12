@@ -1,5 +1,5 @@
 import { AuthLayout } from "@/client/components/layouts/auth/auth-layout";
-import { getUserSession } from "../../libs/server/src/auth/utils";
+import { getUserSession } from "@/server/actions";
 import { redirect } from "next/navigation";
 
 export default async function Layout({

@@ -3,7 +3,7 @@ import Image from "next/image";
 import heroImage from "@/public/assets/images/hero-section.png";
 import { LinkButton } from "@/client/components/ui/link-button";
 import { RecentlyAdded } from "../recently-added";
-import { getUserSession } from "@/root/src/libs/server/src/auth/utils";
+import { getUserSession } from "@/server/actions";
 
 export async function HeroSection() {
   const { user } = await getUserSession();

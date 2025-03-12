@@ -1,5 +1,5 @@
 import { type NavLinkArr } from "./nav-bar";
-import { getUserSession } from "@/root/src/libs/server/src/auth/utils";
+import { getUserSession } from "@/server/actions";
 import { NavLinks } from "./nav-links";
 
 export const NavBarMainLinks = async function ({ navLinkArr }: { navLinkArr: NavLinkArr }) {

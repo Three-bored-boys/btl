@@ -13,11 +13,34 @@ import { db } from "@/server/db/db";
 import { eq, or } from "drizzle-orm";
 import { users } from "@/server/db/schema";
 import { hashPassword, verifyHashedPassword } from "@/server/auth/password";
-import { generateSessionToken, createSession, invalidateSession } from "@/server/auth/sessions";
+import {
+  generateSessionToken,
+  createSession,
+  invalidateSession,
+  cacheValidateSessionToken,
+} from "@/server/auth/sessions";
 import { deleteSessionCookie, getSessionCookieToken, setSessionCookie } from "@/server/auth/cookies";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { encryptAuthSessionToken } from "@/server/auth/utils";
+
+export const getUserSession = async function () {
+  "use server";
+  const sessionToken = await getSessionCookieToken();
+  if (!sessionToken) {
+    return { session: null, user: null };
+  }
+
+  const { session, user } = await cacheValidateSessionToken(sessionToken);
+
+  if (!session || !user) {
+    await deleteSessionCookie();
+  }
+
+  return { session, user };
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const signUp = async function (_: SignupFormState, formData: FormData): Promise<SignupFormState> {
   const signupObjRaw = Object.fromEntries(formData);

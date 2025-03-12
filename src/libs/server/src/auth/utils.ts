@@ -1,6 +1,3 @@
-import { deleteSessionCookie, getSessionCookieToken } from "./cookies";
-import { cacheValidateSessionToken } from "./sessions";
-
 export const generateAuthSessionToken = function () {
   return crypto.randomUUID();
 };
@@ -39,20 +36,4 @@ export const encryptAuthSessionToken = async function (token: string, secretKey:
   const encryptedToken = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, encodedToken);
   const encryptedTokenBase64 = uint8ArrayToBase64(new Uint8Array(encryptedToken));
   return encryptedTokenBase64;
-};
-
-export const getUserSession = async function () {
-  "use server";
-  const sessionToken = await getSessionCookieToken();
-  if (!sessionToken) {
-    return { session: null, user: null };
-  }
-
-  const { session, user } = await cacheValidateSessionToken(sessionToken);
-
-  if (!session || !user) {
-    await deleteSessionCookie();
-  }
-
-  return { session, user };
 };

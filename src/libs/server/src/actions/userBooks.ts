@@ -5,7 +5,7 @@ import { userBooks } from "@/server/db/schema";
 import { bookLibraries, bookLibraryValues } from "@/shared/utils";
 import { and, eq } from "drizzle-orm";
 import { revalidateTag, unstable_cache } from "next/cache";
-import { getUserSession } from "@/server/auth/utils";
+import { getUserSession } from "@/server/actions";
 import { z } from "zod";
 import { redirect } from "next/navigation";
 import { BadResponse, GoodResponse } from "@/shared/types";

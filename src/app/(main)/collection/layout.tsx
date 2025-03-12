@@ -1,6 +1,6 @@
 import React from "react";
 import { CollectionLayout } from "@/client/components/modules/collection/collection-layout";
-import { getUserSession } from "@/root/src/libs/server/src/auth/utils";
+import { getUserSession } from "@/server/actions";
 import { redirect } from "next/navigation";
 
 export default async function Layout({

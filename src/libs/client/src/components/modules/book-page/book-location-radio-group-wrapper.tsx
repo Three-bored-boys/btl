@@ -1,4 +1,4 @@
-import { getUserSession } from "@/root/src/libs/server/src/auth/utils";
+import { getUserSession } from "@/server/actions";
 import { getCachedUserBookLibraryValue } from "@/root/src/libs/server/src/actions/userBooks";
 import { BookLocationRadioGroup } from "./book-location-radio-group";
 

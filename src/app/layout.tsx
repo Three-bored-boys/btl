@@ -9,7 +9,7 @@ import {
   MobileMenuContextProvider,
   RootPathnameContextProvider,
 } from "@/client/providers";
-import { getUserSession } from "@/server/auth/utils";
+import { getUserSession } from "@/server/actions";
 
 export const metadata: Metadata = {
   title: "BTL (Book Tracker Library)",

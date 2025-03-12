@@ -5,7 +5,7 @@ import { cn } from "@/client/utils";
 import { Avatar, DropdownMenu } from "@radix-ui/themes";
 import avatarImage from "@/public/assets/images/avatar.png";
 import { Logout } from "@/client/components/modules/auth/logout/logout";
-import { getUserSession } from "@/root/src/libs/server/src/auth/utils";
+import { getUserSession } from "@/server/actions";
 
 type NavBarRightProps = {
   routesArr: NavAuthLinkArr;
