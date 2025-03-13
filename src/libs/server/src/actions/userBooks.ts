@@ -37,6 +37,7 @@ export const addUserBook = async function ({
   library: unknown;
 }): Promise<BadResponse | GoodResponse<string>> {
   const { user } = await getUserSession();
+  console.log(user);
   if (!user) {
     redirect("/login");
   }
