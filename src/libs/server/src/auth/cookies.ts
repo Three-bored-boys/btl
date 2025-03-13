@@ -8,9 +8,9 @@ export const setSessionCookie = async function (token: string, expiresAt: Date) 
   const cookieStore = cookies();
   cookieStore.set(BTL_AUTH_SESSION_COOKIE_NAME, token, {
     expires: expiresAt,
-    secure: true,
+    secure: process.env.NODE_ENV === "production",
     httpOnly: true,
-    sameSite: "strict",
+    sameSite: "lax",
     path: "/",
   });
 };
