@@ -1,6 +1,9 @@
+"use client";
+
 import React from "react";
 import { cn, ButtonVariants, button } from "@/client/utils";
 import Link, { LinkProps } from "next/link";
+import { useWindowLocationHref } from "@/client/hooks/window-location-href";
 
 type LinkButtonProps = ButtonVariants & LinkProps & React.ComponentProps<"a">;
 
@@ -12,8 +15,10 @@ export function LinkButton({
   href,
   ...props
 }: LinkButtonProps): React.ReactElement {
+  const redirectUrl = useWindowLocationHref();
+  const newHref = `${href}?redirect=${encodeURIComponent(redirectUrl)}`;
   return (
-    <Link href={href} className={cn(button({ background, textSize }), className)} {...props}>
+    <Link href={newHref} className={cn(button({ background, textSize }), className)} {...props}>
       {children}
     </Link>
   );
