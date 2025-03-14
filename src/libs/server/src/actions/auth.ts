@@ -39,6 +39,7 @@ export const getUserSession = async function () {
 
 export const signUp = async function (_: SignupFormState, formData: FormData): Promise<SignupFormState> {
   const signupObjRaw = Object.fromEntries(formData);
+  const redirectUrl = formData.get("redirect") as string | null;
 
   const validation = signupSchema.safeParse(signupObjRaw);
 
@@ -96,7 +97,10 @@ export const signUp = async function (_: SignupFormState, formData: FormData): P
   } catch (e) {
     return { success: false, errors: ["Something went wrong. Please try again."], status: 500 };
   }
-  revalidatePath("/");
+  revalidatePath("/", "layout");
+  if (redirectUrl) {
+    redirect(decodeURIComponent(redirectUrl));
+  }
   redirect("/");
 };
 

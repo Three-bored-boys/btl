@@ -27,7 +27,7 @@ const Submit = function () {
   );
 };
 
-export function SignupForm() {
+export function SignupForm({ redirect }: { redirect: string }) {
   const [signupFormState, signupAction] = useFormState(signUp, {
     fieldError: { userName: [], emailAddress: [], password: [] },
   });
@@ -53,6 +53,7 @@ export function SignupForm() {
 
   return (
     <form className="flex w-full flex-col" id="logInForm" action={signupAction}>
+      <input type="hidden" name="redirect" value={redirect}></input>
       <div className="mb-6 flex flex-col">
         <Label htmlFor="userName">Username:</Label>
         <Input id="userName" type="text" name="userName" />

@@ -10,7 +10,6 @@ import { ServerResult } from "@/shared/types";
 import { LoginResult } from "@/shared/validators/auth";
 import { useFormState, useFormStatus } from "react-dom";
 import { login } from "@/server/actions";
-import { useSearchParams } from "next/navigation";
 
 const Submit = function () {
   const { pending } = useFormStatus();
@@ -28,9 +27,8 @@ const Submit = function () {
   );
 };
 
-export function LoginForm() {
-  const searchParams = useSearchParams();
-  const redirect = searchParams.get("redirect") ?? "";
+export function LoginForm({ redirect }: { redirect: string }) {
+  console.log(redirect);
   const [loginFormState, loginAction] = useFormState(login, {
     fieldError: { userName: [], password: [] },
   });
