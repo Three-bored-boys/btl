@@ -47,6 +47,7 @@ export function Logout() {
             setLogoutState(newLogoutState);
             if (newLogoutState.success) {
               router.refresh();
+              location.reload();
             }
           });
         }}
