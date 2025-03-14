@@ -3,10 +3,13 @@ import Image from "next/image";
 import { Container } from "../libs/client/src/components/layouts/container";
 import { LinkButton } from "../libs/client/src/components/ui/link-button";
 import notFoundImage from "@/public/assets/images/not-found.webp";
+import { NavBar } from "@/client/components/layouts/navigation-bar/nav-bar";
+import { Footer } from "@/client/components/layouts/footer/footer";
 
 export default function NotFound() {
   return (
     <div className="relative min-h-screen w-full">
+      <NavBar />
       <Container>
         <div className="flex flex-col items-center justify-start gap-y-3 py-5">
           <p className="mb-3 text-8xl font-extralight md:mb-9 md:text-9xl">404</p>
@@ -22,6 +25,7 @@ export default function NotFound() {
           </div>
         </div>
       </Container>
+      <Footer />
     </div>
   );
 }
