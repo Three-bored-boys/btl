@@ -29,17 +29,19 @@ export const getCachedUserBookLibraryValue = unstable_cache(getUserBookLibraryVa
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const addUserBook = async function ({
-  isbn,
-  library,
-}: {
-  isbn: unknown;
-  library: unknown;
-}): Promise<BadResponse | GoodResponse<string>> {
+export const addUserBook = async function (
+  {
+    isbn,
+    library,
+  }: {
+    isbn: unknown;
+    library: unknown;
+  },
+  pathname: string,
+): Promise<BadResponse | GoodResponse<string>> {
   const { user } = await getUserSession();
-  console.log(user);
   if (!user) {
-    redirect("/login");
+    redirect(`/login?redirect=${encodeURIComponent(pathname)}`);
   }
 
   const validation = z.object({ isbn: z.string(), library: z.enum(bookLibraryValues) }).safeParse({ isbn, library });
@@ -86,10 +88,10 @@ export const addUserBook = async function ({
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const deleteUserBook = async function ({ isbn }: { isbn: string }) {
+export const deleteUserBook = async function ({ isbn }: { isbn: string }, pathname: string) {
   const { user } = await getUserSession();
   if (!user) {
-    redirect("/login");
+    redirect(`/login?redirect=${encodeURIComponent(pathname)}`);
   }
 
   try {

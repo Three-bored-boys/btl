@@ -104,6 +104,7 @@ export const signUp = async function (_: SignupFormState, formData: FormData): P
 
 export const login = async function (_: LoginFormState, formData: FormData): Promise<LoginFormState> {
   const loginObjRaw = Object.fromEntries(formData);
+  const redirectUrl = formData.get("redirect") as string | null;
 
   const validation = loginSchema.safeParse(loginObjRaw);
 
@@ -179,6 +180,9 @@ export const login = async function (_: LoginFormState, formData: FormData): Pro
     return { success: false, errors: ["Something went wrong. Please try again."], status: 500 };
   }
   revalidatePath("/", "layout");
+  if (redirectUrl) {
+    redirect(decodeURIComponent(redirectUrl));
+  }
   redirect("/");
 };
 

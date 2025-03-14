@@ -10,6 +10,7 @@ import { ServerResult } from "@/shared/types";
 import { LoginResult } from "@/shared/validators/auth";
 import { useFormState, useFormStatus } from "react-dom";
 import { login } from "@/server/actions";
+import { useSearchParams } from "next/navigation";
 
 const Submit = function () {
   const { pending } = useFormStatus();
@@ -28,6 +29,8 @@ const Submit = function () {
 };
 
 export function LoginForm() {
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect") ?? "";
   const [loginFormState, loginAction] = useFormState(login, {
     fieldError: { userName: [], password: [] },
   });
@@ -53,6 +56,7 @@ export function LoginForm() {
 
   return (
     <form className="flex w-full flex-col" id="logInForm" action={loginAction}>
+      <input type="hidden" name="redirect" value={redirect}></input>
       <div className="mb-6 flex flex-col">
         <Label htmlFor="userName">Username:</Label>
         <Input id="userName" type="text" name="userName" />

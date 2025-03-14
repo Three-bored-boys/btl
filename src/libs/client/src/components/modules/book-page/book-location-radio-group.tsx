@@ -12,6 +12,7 @@ import { Trash } from "@/client/components/ui/icons/trash";
 import { bookLibraries } from "@/shared/utils";
 import { ReactNode, useTransition, useState, useEffect } from "react";
 import { addUserBook, deleteUserBook } from "@/server/actions";
+import { usePathname } from "next/navigation";
 
 const bookLibraryIcons: [ReactNode, ReactNode, ReactNode, ReactNode] = [
   <BookOpen key={0} />,
@@ -25,6 +26,7 @@ export const BookLocationRadioGroup = function ({ library, isbn }: { library: st
   const [libraryValue, setLibraryValue] = useState<string | null>(library);
   const [settledResult, setSettledResult] = useState<BadResponse | GoodResponse<string> | null>(null);
   const [isPending, startTransition] = useTransition();
+  const pathname = usePathname();
 
   useEffect(() => {
     if (settledResult?.success) {
@@ -46,7 +48,7 @@ export const BookLocationRadioGroup = function ({ library, isbn }: { library: st
               checked={obj.value === libraryValue}
               onClick={() => {
                 startTransition(async () => {
-                  const result = await addUserBook({ isbn, library: obj.value });
+                  const result = await addUserBook({ isbn, library: obj.value }, pathname);
                   setSettledResult(result);
                   setLibraryValue(obj.value);
                 });
@@ -66,7 +68,7 @@ export const BookLocationRadioGroup = function ({ library, isbn }: { library: st
             className="text-sm"
             onClick={() => {
               startTransition(async () => {
-                const result = await deleteUserBook({ isbn });
+                const result = await deleteUserBook({ isbn }, pathname);
                 setSettledResult(result);
                 setLibraryValue(null);
               });
