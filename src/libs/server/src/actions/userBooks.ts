@@ -4,7 +4,7 @@ import { db } from "@/server/db/db";
 import { userBooks } from "@/server/db/schema";
 import { bookLibraries, bookLibraryValues } from "@/shared/utils";
 import { and, eq } from "drizzle-orm";
-import { revalidateTag, unstable_cache } from "next/cache";
+import { revalidatePath, unstable_cache } from "next/cache";
 import { getUserSession } from "@/server/actions";
 import { z } from "zod";
 import { redirect } from "next/navigation";
@@ -76,7 +76,7 @@ export const addUserBook = async function ({
       data: `Added to ${bookLibraries.find((obj) => obj.value === library)?.name ?? "collection"}!`,
     };
 
-    revalidateTag("user-book-library-value");
+    revalidatePath(`/book/${validIsbn}`);
     return responseData;
   } catch (e) {
     console.log(e);
@@ -101,7 +101,7 @@ export const deleteUserBook = async function ({ isbn, redirectUrl }: { isbn: str
       data: "Removed from collection!",
     };
 
-    revalidateTag("user-book-library-value");
+    revalidatePath(`/book/${isbn}`);
     return responseData;
   } catch (e) {
     console.log(e);
