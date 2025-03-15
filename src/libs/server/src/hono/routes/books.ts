@@ -11,7 +11,6 @@ books.get(
   "/full-search",
   zValidator("query", fullSearchObjectSchema, (result, c) => {
     if (!result.success) {
-      console.log(result.error);
       const responseData: BadResponse = { success: false, errors: ["Invalid entry"], status: 400 };
       return c.json(responseData, 400);
     }

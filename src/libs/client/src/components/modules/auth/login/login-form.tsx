@@ -28,7 +28,6 @@ const Submit = function () {
 };
 
 export function LoginForm({ redirect }: { redirect: string }) {
-  console.log(redirect);
   const [loginFormState, loginAction] = useFormState(login, {
     fieldError: { userName: [], password: [] },
   });

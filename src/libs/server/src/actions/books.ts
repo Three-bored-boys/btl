@@ -133,8 +133,6 @@ const getQuickSearchResults = async function (search: unknown) {
     paginationFilter: { maxResults: (8).toString() },
   });
 
-  console.log(allBooksResults);
-
   const responseData: GoodResponse<Book[]> = { success: true, data: allBooksResults.books };
   return responseData;
 };
