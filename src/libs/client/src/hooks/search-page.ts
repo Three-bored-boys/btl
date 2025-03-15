@@ -12,6 +12,16 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { ReadonlyURLSearchParams, useRouter, useSearchParams } from "next/navigation";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import assert from "node:assert/strict";
+
+const isDeepEqual = function (actual: unknown, expected: unknown): boolean {
+  try {
+    assert.deepStrictEqual(actual, expected);
+    return true;
+  } catch (e) {
+    return false;
+  }
+};
 
 const getFullSearchResults = async function (searchObject: SearchObjectType, paginationObject: PaginationObjectType) {
   const { fetchDataResult, res } = await fetchData<{ books: Book[]; totalItems: number }>(
@@ -83,7 +93,9 @@ export function useSearchPage(): SearchPageHookReturnType {
     const pageQueryParam = searchParamsObject.get("page");
     searchParamsObject.set("page", handleNumberSearchParam(pageQueryParam, DEFAULT_PAGE_NUMBER, DEFAULT_PAGE_NUMBER));
 
-    if (searchParams.toString() !== searchParamsObject.toString()) {
+    const searchParamsEqual = isDeepEqual(searchParamsObject.entries(), searchParams.entries());
+
+    if (!searchParamsEqual) {
       router.replace(`/search?${searchParamsObject.toString()}`);
     } else {
       setRun(true);
