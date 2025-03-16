@@ -1,27 +1,10 @@
 import { PaginationObjectType, SearchObjectType } from "@/root/src/libs/shared/src/validators";
-import { fetchData, getSearchObjectFromLocalStorage, handleNumberSearchParam } from "@/client/utils";
-import {
-  DEFAULT_MAX_RESULTS,
-  DEFAULT_PAGE_NUMBER,
-  MAX_MAX_RESULTS,
-  MIN_MAX_RESULTS,
-  filterKeysArray,
-} from "@/libs/shared/src/utils";
+import { fetchData } from "@/client/utils";
+import { filterKeysArray } from "@/libs/shared/src/utils";
 import { Book } from "@/root/src/libs/shared/src/types";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { ReadonlyURLSearchParams, useRouter, useSearchParams } from "next/navigation";
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
-import assert from "node:assert/strict";
-
-const isDeepEqual = function (actual: unknown, expected: unknown): boolean {
-  try {
-    assert.deepStrictEqual(actual, expected);
-    return true;
-  } catch (e) {
-    return false;
-  }
-};
+import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 
 const getFullSearchResults = async function (searchObject: SearchObjectType, paginationObject: PaginationObjectType) {
   const { fetchDataResult, res } = await fetchData<{ books: Book[]; totalItems: number }>(
@@ -39,74 +22,55 @@ export function useSearchPageResults(searchObject: SearchObjectType, paginationO
   });
 }
 
-type SearchPageHookReturnType = {
-  filters: React.MutableRefObject<(keyof SearchObjectType)[]>;
-  allInputElementRefsMap: React.MutableRefObject<Map<string, HTMLSelectElement | null>>;
-  searchInputElement: React.MutableRefObject<HTMLInputElement | null>;
-  searchParams: ReadonlyURLSearchParams;
-  router: AppRouterInstance;
-  run: boolean;
-  setRun: Dispatch<SetStateAction<boolean>>;
-};
-
-export function useSearchPage(): SearchPageHookReturnType {
-  const filters = useRef<(keyof SearchObjectType)[]>(filterKeysArray);
+export function useSearchPage({
+  updatedSearchParams,
+  originalSearchParams,
+}: {
+  updatedSearchParams: string;
+  originalSearchParams: string;
+}) {
   const allInputElementRefsMap = useRef<Map<keyof SearchObjectType, HTMLSelectElement | null>>(
-    new Map(filters.current.map((str) => [str, null])),
+    new Map(filterKeysArray.map((str) => [str, null])),
   );
   const searchInputElement = useRef<HTMLInputElement | null>(null);
 
-  const searchParams = useSearchParams();
   const router = useRouter();
   const [run, setRun] = useState(false);
 
   useEffect(() => {
-    const searchParamsObject = new URLSearchParams(searchParams.toString());
+    if (updatedSearchParams !== originalSearchParams) {
+      router.push(`/search?${updatedSearchParams}`);
+      return;
+    }
 
-    const searchQueryParam = searchParamsObject.get("search");
-    if (searchInputElement.current !== null && searchQueryParam !== null) {
-      if (searchQueryParam !== "") {
+    const updatedSearchParamsObject = new URLSearchParams(updatedSearchParams);
+
+    const searchQueryParam = updatedSearchParamsObject.get("search");
+    if (searchInputElement.current !== null) {
+      if (searchQueryParam !== null) {
         searchInputElement.current.value = searchQueryParam;
       } else {
-        searchParamsObject.delete("search");
-      }
-    } else if (searchInputElement.current !== null && searchQueryParam === null && window) {
-      const searchObject = getSearchObjectFromLocalStorage();
-      if (searchObject.search !== undefined) {
-        searchParamsObject.set("search", searchObject.search);
+        searchInputElement.current.value = "";
       }
     }
 
-    allInputElementRefsMap.current.forEach((_, key, map) => {
-      const queryParam = searchParamsObject.get(key);
-      if (queryParam !== null && queryParam.length === 0) {
-        searchParamsObject.delete(key);
+    allInputElementRefsMap.current.forEach((elem, key, _) => {
+      const queryParam = updatedSearchParamsObject.get(key);
+      if (elem !== null) {
+        if (queryParam !== null) {
+          elem.value = queryParam;
+        } else {
+          elem.value = "";
+        }
       }
     });
 
-    const maxResultsQueryParam = searchParamsObject.get("maxResults");
-    searchParamsObject.set(
-      "maxResults",
-      handleNumberSearchParam(maxResultsQueryParam, DEFAULT_MAX_RESULTS, MIN_MAX_RESULTS, MAX_MAX_RESULTS),
-    );
-
-    const pageQueryParam = searchParamsObject.get("page");
-    searchParamsObject.set("page", handleNumberSearchParam(pageQueryParam, DEFAULT_PAGE_NUMBER, DEFAULT_PAGE_NUMBER));
-
-    const searchParamsEqual = isDeepEqual(searchParamsObject.entries(), searchParams.entries());
-
-    if (!searchParamsEqual) {
-      router.replace(`/search?${searchParamsObject.toString()}`);
-    } else {
-      setRun(true);
-    }
-  }, [router, searchParams]);
+    setRun(true);
+  }, [updatedSearchParams, originalSearchParams]);
 
   return {
-    filters,
     allInputElementRefsMap,
     searchInputElement,
-    searchParams,
     router,
     run,
     setRun,

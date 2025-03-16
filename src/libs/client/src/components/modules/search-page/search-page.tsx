@@ -1,77 +1,74 @@
 "use client";
 
-import React, { ReactElement, Suspense } from "react";
+import React, { ReactElement } from "react";
 import { SearchInput } from "@/client/components/ui/search-input";
 import { Label } from "@/client/components/ui/label";
-import {
-  BTL_LOCAL_STORAGE_SEARCH_OBJECT,
-  handleNumberSearchParam,
-  setSearchObjectToLocalStorage,
-} from "@/client/utils";
-import { DEFAULT_MAX_RESULTS, DEFAULT_PAGE_NUMBER, MAX_MAX_RESULTS, MIN_MAX_RESULTS } from "@/libs/shared/src/utils";
+import { filterKeysArray } from "@/libs/shared/src/utils";
 import { useSearchPage } from "@/client/hooks/search-page";
 import { Button } from "@/client/components/ui/button";
 import { Container } from "@/client/components/layouts/container";
-import { SearchPageQueryComponentWrapper } from "./search-page-query-component-wrapper";
 import { data } from "./data";
 import { SearchPageResultsLoadingSkeleton } from "./search-page-results-loading-skeleton";
+import { DEFAULT_MAX_RESULTS, DEFAULT_PAGE_NUMBER, MAX_MAX_RESULTS, MIN_MAX_RESULTS } from "@/shared/utils";
+import { handleNumberSearchParam, editSearchObjectInLocalStorage } from "@/client/utils";
 
-export const SearchPage = function (): ReactElement {
-  const { filters, allInputElementRefsMap, searchInputElement, router, searchParams, run, setRun } = useSearchPage();
+export const SearchPage = function ({
+  updatedSearchParams,
+  originalSearchParams,
+  children,
+}: {
+  updatedSearchParams: string;
+  originalSearchParams: string;
+  children: React.ReactNode;
+}): ReactElement {
+  const { allInputElementRefsMap, searchInputElement, router, run, setRun } = useSearchPage({
+    updatedSearchParams,
+    originalSearchParams,
+  });
 
   const handleOnSubmit = function (e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
-
-    if (
-      searchInputElement.current?.value.trim() === "" &&
-      Array.from(allInputElementRefsMap.current.values()).filter((elem) => {
-        return elem?.value.trim() !== "";
-      }).length === 0
-    ) {
-      return;
-    }
-
     setRun(false);
 
-    const searchParamsObject = new URLSearchParams(searchParams.toString());
+    const newSearchParamsObject = new URLSearchParams(updatedSearchParams);
 
-    searchParamsObject.set(
-      "maxResults",
-      handleNumberSearchParam(
-        searchParamsObject.get("maxResults"),
-        DEFAULT_MAX_RESULTS,
-        MIN_MAX_RESULTS,
-        MAX_MAX_RESULTS,
-      ),
+    const maxResultsQueryParam = newSearchParamsObject.get("maxResults");
+    const newMaxResultsQueryParam = handleNumberSearchParam(
+      maxResultsQueryParam,
+      DEFAULT_MAX_RESULTS,
+      MIN_MAX_RESULTS,
+      MAX_MAX_RESULTS,
     );
-    searchParamsObject.set("page", DEFAULT_PAGE_NUMBER.toString());
+    newSearchParamsObject.set("maxResults", newMaxResultsQueryParam);
+
+    newSearchParamsObject.set("page", DEFAULT_PAGE_NUMBER.toString());
 
     if (searchInputElement.current !== null) {
       const search = searchInputElement.current.value.trim();
       if (search.length !== 0) {
-        searchParamsObject.set("search", search);
-        if (window) setSearchObjectToLocalStorage({ search });
+        newSearchParamsObject.set("search", search);
       } else {
-        searchParamsObject.delete("search");
-        if (window) window.localStorage.removeItem(BTL_LOCAL_STORAGE_SEARCH_OBJECT);
+        newSearchParamsObject.delete("search");
+      }
+      if (window) {
+        editSearchObjectInLocalStorage("search", search);
       }
     }
 
     allInputElementRefsMap.current.forEach((_, key, map) => {
       const node = map.get(key);
-
       if (node !== undefined && node !== null) {
         const filterValue = node.value.trim();
         if (filterValue.length !== 0) {
-          searchParamsObject.set(key, filterValue);
+          newSearchParamsObject.set(key, filterValue);
         } else {
-          searchParamsObject.delete(key);
+          newSearchParamsObject.delete(key);
         }
       }
     });
 
-    if (searchParamsObject.toString() !== searchParams.toString()) {
-      router.push(`/search?${searchParamsObject.toString()}`);
+    if (updatedSearchParams.toString() !== newSearchParamsObject.toString()) {
+      router.push(`/search?${newSearchParamsObject.toString()}`);
     } else {
       setRun(true);
     }
@@ -92,7 +89,7 @@ export const SearchPage = function (): ReactElement {
             <p className="text-2xl font-semibold">Filters</p>
             <hr className="h-5" />
             <div className="flex items-center justify-center gap-x-3">
-              {filters.current.map((str) => (
+              {filterKeysArray.map((str) => (
                 <Label key={str}>
                   <span className="text-xl font-medium">{str[0].toUpperCase() + str.slice(1)}</span>
                   <div className="appearance-none">
@@ -105,7 +102,6 @@ export const SearchPage = function (): ReactElement {
                           allInputElementRefsMap.current.delete(str);
                         }
                       }}
-                      defaultValue={searchParams.get(str) ?? ""}
                     >
                       <option value="">All {str}s</option>
                       {data[str]?.map((val, i) => (
@@ -123,14 +119,14 @@ export const SearchPage = function (): ReactElement {
             Submit
           </Button>
         </form>
-        {run ? (
-          <Suspense fallback={<SearchPageResultsLoadingSkeleton />}>
-            <SearchPageQueryComponentWrapper />
-          </Suspense>
-        ) : (
-          <SearchPageResultsLoadingSkeleton />
-        )}
+        {run ? children : <SearchPageResultsLoadingSkeleton />}
       </Container>
     </div>
   );
 };
+
+{
+  /* <Suspense fallback={<SearchPageResultsLoadingSkeleton />}>
+            <SearchPageQueryComponentWrapper />
+          </Suspense> */
+}
