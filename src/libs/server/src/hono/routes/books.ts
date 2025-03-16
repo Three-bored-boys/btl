@@ -20,8 +20,8 @@ books.get(
     const googleBooksService = new GoogleBooksService(process.env.GOOGLE_BOOKS_API_KEY!);
 
     const allBooksResults = await googleBooksService.getBooksByAllParameters({
-      searchInput: search,
-      paginationFilter: { maxResults, page },
+      searchObject: search,
+      paginationObject: { maxResults, page },
     });
 
     const responseData: GoodResponse<{ books: Book[]; totalItems: number }> = {

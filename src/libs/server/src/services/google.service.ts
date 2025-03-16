@@ -61,11 +61,11 @@ export class GoogleBooksService {
   }
 
   async getBooksByAllParameters({
-    searchInput: { search, genre, publisher, isbn },
-    paginationFilter: { maxResults = DEFAULT_MAX_RESULTS.toString(), page = DEFAULT_PAGE_NUMBER.toString() },
+    searchObject: { search, genre, publisher, isbn },
+    paginationObject: { maxResults = DEFAULT_MAX_RESULTS.toString(), page = DEFAULT_PAGE_NUMBER.toString() },
   }: {
-    searchInput: SearchObjectType;
-    paginationFilter: PaginationObjectType;
+    searchObject: SearchObjectType;
+    paginationObject: PaginationObjectType;
   }): Promise<{ books: Book[]; totalItems: number }> {
     const searchUrl = search ?? "";
     const genreUrl = genre !== undefined ? `+subject:${genre}` : "";

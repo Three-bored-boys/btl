@@ -36,8 +36,8 @@ const getBooksByGenre = async function (genre: unknown) {
   const validGenre = validationResult.data;
   const googleBooksService = new GoogleBooksService(process.env.GOOGLE_BOOKS_API_KEY!);
   const returnedValue = await googleBooksService.getBooksByAllParameters({
-    searchInput: { genre: validGenre },
-    paginationFilter: { maxResults: (6).toString() },
+    searchObject: { genre: validGenre },
+    paginationObject: { maxResults: (6).toString() },
   });
 
   const responseData: GoodResponse<Book[]> = {
@@ -76,7 +76,7 @@ const getBooksByISBN = async function (isbn: unknown) {
 
   if (book.length === 0) {
     const bookSearchResult = (
-      await googleBooksService.getBooksByAllParameters({ searchInput: { isbn: validISBN }, paginationFilter: {} })
+      await googleBooksService.getBooksByAllParameters({ searchObject: { isbn: validISBN }, paginationObject: {} })
     ).books.find((book) => book.isbn10 === isbn || book.isbn13 === isbn);
 
     if (!bookSearchResult) {
@@ -88,7 +88,7 @@ const getBooksByISBN = async function (isbn: unknown) {
 
   if (book.length === 0) {
     const bookSearchResult = (
-      await googleBooksService.getBooksByAllParameters({ searchInput: { search: validISBN }, paginationFilter: {} })
+      await googleBooksService.getBooksByAllParameters({ searchObject: { search: validISBN }, paginationObject: {} })
     ).books.find((book) => book.isbn10 === isbn || book.isbn13 === isbn);
 
     if (!bookSearchResult) {
@@ -129,8 +129,8 @@ const getQuickSearchResults = async function (search: unknown) {
   const googleBooksService = new GoogleBooksService(process.env.GOOGLE_BOOKS_API_KEY!);
 
   const allBooksResults = await googleBooksService.getBooksByAllParameters({
-    searchInput: { search: validSearch },
-    paginationFilter: { maxResults: (8).toString() },
+    searchObject: { search: validSearch },
+    paginationObject: { maxResults: (8).toString() },
   });
 
   const responseData: GoodResponse<Book[]> = { success: true, data: allBooksResults.books };
