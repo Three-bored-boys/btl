@@ -5,6 +5,7 @@ import { NYTimesService } from "@/server/services/ny-times.service";
 import { GoogleBooksService } from "@/server/services/google.service";
 import { BadResponse, BestSeller, Book, GoodResponse } from "@/shared/types";
 import { z } from "zod";
+import { fullSearchObjectSchema } from "@/shared/validators";
 
 const getNYTBestSellers = async function () {
   const nytService = new NYTimesService(process.env.NY_TIMES_BOOKS_API_KEY!);
@@ -138,5 +139,35 @@ const getQuickSearchResults = async function (search: unknown) {
 };
 
 export const getCachedQuickSearchResults = unstable_cache(getQuickSearchResults, ["quick-search"], {
+  revalidate: 86400,
+});
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+const getFullSearchResults = async function (fullSearchObject: unknown) {
+  const validation = fullSearchObjectSchema.safeParse(fullSearchObject);
+  if (!validation.success) {
+    const responseData: BadResponse = { success: false, errors: ["Invalid entry"], status: 400 };
+    return responseData;
+  }
+
+  const { page, maxResults, ...search } = validation.data;
+
+  const googleBooksService = new GoogleBooksService(process.env.GOOGLE_BOOKS_API_KEY!);
+
+  const allBooksResults = await googleBooksService.getBooksByAllParameters({
+    searchObject: search,
+    paginationObject: { maxResults, page },
+  });
+
+  const responseData: GoodResponse<{ books: Book[]; totalItems: number }> = {
+    success: true,
+    data: allBooksResults,
+  };
+
+  return responseData;
+};
+
+export const getCachedFullSearchResults = unstable_cache(getFullSearchResults, ["full-search"], {
   revalidate: 86400,
 });

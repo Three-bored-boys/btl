@@ -1,26 +1,8 @@
-import { PaginationObjectType, SearchObjectType } from "@/root/src/libs/shared/src/validators";
-import { fetchData, getSearchObjectFromLocalStorage } from "@/client/utils";
+import { SearchObjectType } from "@/root/src/libs/shared/src/validators";
+import { getSearchObjectFromLocalStorage } from "@/client/utils";
 import { filterKeysArray } from "@/libs/shared/src/utils";
-import { Book } from "@/root/src/libs/shared/src/types";
-import { useSuspenseQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-
-const getFullSearchResults = async function (searchObject: SearchObjectType, paginationObject: PaginationObjectType) {
-  const { fetchDataResult, res } = await fetchData<{ books: Book[]; totalItems: number }>(
-    `/api/books/full-search?${new URLSearchParams({ ...searchObject, ...paginationObject }).toString()}`,
-  );
-  return { fetchDataResult, res };
-};
-
-export function useSearchPageResults(searchObject: SearchObjectType, paginationObject: PaginationObjectType) {
-  return useSuspenseQuery({
-    queryKey: ["full-search-results", searchObject, paginationObject],
-    queryFn: async () => {
-      return await getFullSearchResults(searchObject, paginationObject);
-    },
-  });
-}
 
 export function useSearchPage({
   updatedSearchParams,

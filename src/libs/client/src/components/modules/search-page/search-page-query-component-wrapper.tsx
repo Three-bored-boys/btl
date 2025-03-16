@@ -1,49 +1,42 @@
 import { PaginationObjectType, SearchObjectType } from "@/root/src/libs/shared/src/validators";
-import { filterKeysArray } from "@/root/src/libs/shared/src/utils";
-import { useSearchParams } from "next/navigation";
 import React from "react";
 import { SearchPageQueryComponent } from "./search-page-query-component";
-import { ErrorBoundary } from "react-error-boundary";
-import { SearchPageErrorBoundary } from "./search-page-error-boundary";
+import { getCachedFullSearchResults } from "@/server/actions";
+import { Container } from "@/client/components/layouts/container";
+import { LinkButton } from "@/client/components/ui/link-button";
+import Image from "next/image";
+import notFoundImage from "@/public/assets/images/not-found.webp";
 
-export function SearchPageQueryComponentWrapper() {
-  const searchParams = useSearchParams();
+export async function SearchPageQueryComponentWrapper({
+  searchObject,
+  paginationObject,
+}: {
+  searchObject: SearchObjectType;
+  paginationObject: PaginationObjectType;
+}) {
+  const fetchDataResult = await getCachedFullSearchResults({ ...searchObject, ...paginationObject });
 
-  const searchParamsHasSearch = searchParams.has("search");
-  const searchParamsHasFilters = filterKeysArray.filter((val) => searchParams.has(val));
-
-  if (!searchParamsHasSearch && searchParamsHasFilters.length === 0) {
-    return <div>Please enter a search term or select a filter and click &quot;Submit&quot;</div>;
+  if (!fetchDataResult.success) {
+    const { errors, status } = fetchDataResult;
+    return (
+      <div className="relative min-h-screen w-full">
+        <Container>
+          <div className="flex flex-col items-center justify-start gap-y-3 py-5">
+            <p className="mb-3 text-8xl font-extralight md:mb-9 md:text-9xl">{status}</p>
+            <h2 className="mb-2 text-4xl radix-xs:text-5xl md:mb-5 md:text-7xl">Oops! Something has gone wrong!</h2>
+            <p className="mb-8 text-base radix-xs:text-xl md:mb-3 md:text-2xl">{errors[0]}</p>
+            <LinkButton href="/" background={"light"} textSize={"big"} className="mb-2">
+              Return Home
+            </LinkButton>
+            <div>
+              <Image src={notFoundImage} alt="Cartoon image of man sitting on floor and reading a book"></Image>
+            </div>
+          </div>
+        </Container>
+      </div>
+    );
   }
 
-  const searchObject: SearchObjectType = {};
-  const paginationObject: PaginationObjectType = {};
-
-  const searchQueryParam = searchParams.get("search");
-  if (searchQueryParam !== null) {
-    searchObject.search = searchQueryParam;
-  }
-
-  filterKeysArray.forEach((val) => {
-    const filterParam = searchParams.get(val);
-    if (filterParam !== null) {
-      searchObject[val] = filterParam;
-    }
-  });
-
-  const maxResults = searchParams.get("maxResults");
-  if (maxResults !== null) {
-    paginationObject.maxResults = maxResults;
-  }
-
-  const page = searchParams.get("page");
-  if (page !== null) {
-    paginationObject.page = page;
-  }
-
-  return (
-    <ErrorBoundary fallbackRender={SearchPageErrorBoundary}>
-      <SearchPageQueryComponent searchObject={searchObject} paginationObject={paginationObject} />
-    </ErrorBoundary>
-  );
+  return <SearchPageQueryComponent fullSearchResult={fetchDataResult.data} />;
+  // return <div>Yooo</div>;
 }
