@@ -5,7 +5,6 @@ import { NYTimesService } from "@/server/services/ny-times.service";
 import { GoogleBooksService } from "@/server/services/google.service";
 import { BadResponse, BestSeller, Book, GoodResponse } from "@/shared/types";
 import { z } from "zod";
-import { cookies } from "next/headers";
 
 const getNYTBestSellers = async function () {
   const nytService = new NYTimesService(process.env.NY_TIMES_BOOKS_API_KEY!);
@@ -116,23 +115,7 @@ export const getCachedBooksByISBN = unstable_cache(getBooksByISBN, ["isbn"], { r
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const getQuickSearchResults = async function (search: string) {
-  const googleBooksService = new GoogleBooksService(process.env.GOOGLE_BOOKS_API_KEY!);
-
-  const allBooksResults = await googleBooksService.getBooksByAllParameters({
-    searchInput: { search },
-    paginationFilter: { maxResults: (8).toString() },
-  });
-
-  const responseData: GoodResponse<Book[]> = { success: true, data: allBooksResults.books };
-  return responseData;
-};
-
-const getCachedQuickSearchResults = unstable_cache(getQuickSearchResults, ["quick-search"], {
-  revalidate: 86400,
-});
-
-export const getResultsOfQuickSearch = async function (search: unknown) {
+const getQuickSearchResults = async function (search: unknown) {
   const validationResult = z.string().min(1).safeParse(search);
   if (!validationResult.success) {
     const responseData: BadResponse = {
@@ -143,7 +126,17 @@ export const getResultsOfQuickSearch = async function (search: unknown) {
     return responseData;
   }
   const validSearch = validationResult.data;
-  const cookieStore = cookies();
-  cookieStore.set("search", validSearch);
-  return await getCachedQuickSearchResults(validSearch);
+  const googleBooksService = new GoogleBooksService(process.env.GOOGLE_BOOKS_API_KEY!);
+
+  const allBooksResults = await googleBooksService.getBooksByAllParameters({
+    searchInput: { search: validSearch },
+    paginationFilter: { maxResults: (8).toString() },
+  });
+
+  const responseData: GoodResponse<Book[]> = { success: true, data: allBooksResults.books };
+  return responseData;
 };
+
+export const getCachedQuickSearchResults = unstable_cache(getQuickSearchResults, ["quick-search"], {
+  revalidate: 86400,
+});

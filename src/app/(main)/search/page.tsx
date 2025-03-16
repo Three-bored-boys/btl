@@ -8,9 +8,6 @@ import { ErrorBoundary } from "react-error-boundary";
 import { SearchPageErrorBoundary } from "@/client/components/modules/search-page/search-page-error-boundary";
 import { SearchPageQueryComponentWrapper } from "@/client/components/modules/search-page/search-page-query-component-wrapper";
 import { SearchPageResultsLoadingSkeleton } from "@/client/components/modules/search-page/search-page-results-loading-skeleton";
-import { cookies } from "next/headers";
-
-// export const dynamic = "force-dynamic";
 
 function Search({ searchParams }: { searchParams: SearchObjectType & PaginationObjectType }) {
   const originalSearchParamsObject = new URLSearchParams(searchParams);
@@ -24,13 +21,6 @@ function Search({ searchParams }: { searchParams: SearchObjectType & PaginationO
     if (searchQueryParam.length !== 0) {
       newSearchParamsObject.set("search", searchQueryParam);
       searchObject.search = searchQueryParam;
-    }
-  } else {
-    const cookieStore = cookies();
-    const searchCookie = cookieStore.get("search");
-    if (searchCookie) {
-      newSearchParamsObject.set("search", searchCookie.value);
-      searchObject.search = searchCookie.value;
     }
   }
 
