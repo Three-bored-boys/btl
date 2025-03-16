@@ -26,7 +26,7 @@ export const SearchPage = function ({
     originalSearchParams,
   });
 
-  const handleOnSubmit = function (e: React.MouseEvent<HTMLButtonElement>) {
+  const handleOnSubmit = function (e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setRun(false);
 
@@ -77,7 +77,7 @@ export const SearchPage = function ({
   return (
     <div className="w-full">
       <Container>
-        <form className="mt-3 w-full">
+        <form className="mt-3 w-full" onSubmit={(e) => handleOnSubmit(e)}>
           <div className="mx-auto mb-5 w-11/12 max-w-96">
             <SearchInput
               classNameDiv="w-full border-2 border-primary-100"
@@ -115,7 +115,7 @@ export const SearchPage = function ({
               ))}
             </div>
           </div>
-          <Button type="submit" background={"light"} textSize={"small"} onClick={handleOnSubmit}>
+          <Button type="submit" background={"light"} textSize={"small"}>
             Submit
           </Button>
         </form>

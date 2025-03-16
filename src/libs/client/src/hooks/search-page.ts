@@ -1,5 +1,5 @@
 import { PaginationObjectType, SearchObjectType } from "@/root/src/libs/shared/src/validators";
-import { fetchData } from "@/client/utils";
+import { fetchData, getSearchObjectFromLocalStorage } from "@/client/utils";
 import { filterKeysArray } from "@/libs/shared/src/utils";
 import { Book } from "@/root/src/libs/shared/src/types";
 import { useSuspenseQuery } from "@tanstack/react-query";
@@ -39,7 +39,7 @@ export function useSearchPage({
 
   useEffect(() => {
     if (updatedSearchParams !== originalSearchParams) {
-      router.push(`/search?${updatedSearchParams}`);
+      router.replace(`/search?${updatedSearchParams}`);
       return;
     }
 
@@ -50,7 +50,12 @@ export function useSearchPage({
       if (searchQueryParam !== null) {
         searchInputElement.current.value = searchQueryParam;
       } else {
-        searchInputElement.current.value = "";
+        const searchObject = getSearchObjectFromLocalStorage();
+        if (searchObject.search !== undefined) {
+          searchInputElement.current.value = searchObject.search;
+        } else {
+          searchInputElement.current.value = "";
+        }
       }
     }
 
