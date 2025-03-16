@@ -66,16 +66,22 @@ function Search({ searchParams }: { searchParams: SearchObjectType & PaginationO
     newSearchParamsObject.toString(),
   );
 
+  const noFormInput = !searchObject.genre && !searchObject.publisher && !searchObject.search;
+
   return (
     <SearchPage
       updatedSearchParams={newSearchParamsObject.toString()}
       originalSearchParams={originalSearchParamsObject.toString()}
     >
-      <ErrorBoundary fallbackRender={SearchPageErrorBoundary}>
-        <Suspense fallback={<SearchPageResultsLoadingSkeleton />}>
-          <SearchPageQueryComponentWrapper searchObject={searchObject} paginationObject={paginationObject} />
-        </Suspense>
-      </ErrorBoundary>
+      {noFormInput ? (
+        <div>Please enter a search term or select a filter and click &quot;Submit&quot;</div>
+      ) : (
+        <ErrorBoundary fallbackRender={SearchPageErrorBoundary}>
+          <Suspense fallback={<SearchPageResultsLoadingSkeleton />}>
+            <SearchPageQueryComponentWrapper searchObject={searchObject} paginationObject={paginationObject} />
+          </Suspense>
+        </ErrorBoundary>
+      )}
     </SearchPage>
   );
 }
