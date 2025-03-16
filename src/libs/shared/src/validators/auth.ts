@@ -2,7 +2,6 @@ import { z } from "zod";
 import { FormState } from "@/libs/shared/src/types";
 import { SanitizedUser } from "@/shared/db/schema";
 
-// Signup Schema
 const userNameSchema = z
   .string({ required_error: "Username is required" })
   .min(3, "Username must be at least 3 characters")
@@ -24,6 +23,7 @@ const passwordSchema = z
   .regex(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/, "Password must contain at least one special character")
   .refine((password) => !password.includes(" "), "Password cannot contain spaces");
 
+// Signup Schema
 export const signupSchema = z.object({
   userName: userNameSchema,
   emailAddress: emailAddressSchema,

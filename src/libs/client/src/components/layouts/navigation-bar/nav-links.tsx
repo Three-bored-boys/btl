@@ -1,9 +1,12 @@
+"use client";
+
 import React from "react";
 import { NavLink } from "./nav-link";
 import { cn } from "@/client/utils";
 import { NavLinkArr } from "./nav-bar";
 import { cva, VariantProps } from "class-variance-authority";
-import { useValidateUserSession } from "@/client/hooks/auth";
+import { SanitizedUser } from "@/root/src/libs/shared/src/db/schema";
+import { useRootPathnameContext } from "../../../hooks/root-pathname";
 
 const navLinks = cva(["flex"], {
   variants: {
@@ -17,12 +20,11 @@ const navLinks = cva(["flex"], {
 export type NavLinksProps = React.ComponentProps<"div"> &
   VariantProps<typeof navLinks> & {
     routesArr: NavLinkArr;
-    rootPathname: string;
+    user: SanitizedUser | null;
   };
 
-export function NavLinks({ device, routesArr, className, rootPathname, ...props }: NavLinksProps): React.ReactElement {
-  const { user } = useValidateUserSession();
-
+export function NavLinks({ device, routesArr, className, user, ...props }: NavLinksProps): React.ReactElement {
+  const { rootPathname } = useRootPathnameContext();
   const getRoutesArrayToRender = function () {
     if (user) {
       return routesArr;

@@ -3,11 +3,11 @@ import { SignupForm } from "@/client/components/modules/auth/signup/signup-form"
 import Link from "next/link";
 import React from "react";
 
-export function Signup(): ReactElement {
+export function Signup({ redirect }: { redirect: string }): ReactElement {
   return (
     <>
-      <SignupForm />
-      <Link href={"/login"}>Go to Log In page</Link>
+      <SignupForm redirect={encodeURIComponent(redirect)} />
+      <Link href={`/login?redirect=${encodeURIComponent(redirect)}`}>Go to Log In page</Link>
     </>
   );
 }

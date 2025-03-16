@@ -1,14 +1,12 @@
-"use client";
-
 import { Container } from "@/client/components/layouts/container";
 import Image from "next/image";
 import heroImage from "@/public/assets/images/hero-section.png";
 import { LinkButton } from "@/client/components/ui/link-button";
-import { useValidateUserSession } from "@/client/hooks/auth";
 import { RecentlyAdded } from "../recently-added";
+import { getUserSession } from "@/server/actions";
 
-export function HeroSection() {
-  const { user } = useValidateUserSession();
+export async function HeroSection() {
+  const { user } = await getUserSession();
 
   if (user) {
     return <RecentlyAdded user={user}></RecentlyAdded>;

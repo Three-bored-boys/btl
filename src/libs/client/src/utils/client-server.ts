@@ -101,3 +101,16 @@ export const handleNumberSearchParam = function (
 
   return defaultValue.toString();
 };
+
+export const getRootPathname = (path: string): string => {
+  return "/" + path.split("/")[1];
+};
+
+export const getRedirectFromSearchParams = function (searchParams: Record<string, string | string[] | undefined>) {
+  let redirect = searchParams.redirect;
+
+  if (redirect === undefined || typeof redirect !== "string") {
+    redirect = "";
+  }
+  return redirect;
+};

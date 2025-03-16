@@ -4,94 +4,35 @@ import React from "react";
 import { Label } from "@/client/components/ui/label";
 import { Input } from "@/client/components/ui/input";
 import { FormErrorListItem } from "@/client/components/ui/form-error-list-item";
-import { signupSchema, SignupFormState, SignupInput } from "@/root/src/libs/shared/src/validators";
-import { useRouter } from "next/navigation";
-import { FieldError } from "@/libs/shared/src/types";
 import { Check } from "@/client/components/ui/icons/check";
 import { SubmitButton } from "@/client/components/ui/submit-button";
 import { ServerResult } from "@/shared/types";
 import { SignupResult } from "@/shared/validators/auth";
-import { fetchData } from "@/client/utils";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useFormState, useFormStatus } from "react-dom";
+import { signUp } from "@/server/actions";
 
-export function SignupForm() {
-  const router = useRouter();
-  const queryClient = useQueryClient();
-  const [signupFormState, setSignupFormState] = React.useState<SignupFormState>({
+const Submit = function () {
+  const { pending } = useFormStatus();
+
+  return (
+    <div>
+      <SubmitButton
+        isSubmitting={pending}
+        defaultText={"Sign up"}
+        submittingText={"Signing up..."}
+        textSize={"small"}
+        background={"light"}
+      />
+    </div>
+  );
+};
+
+export function SignupForm({ redirect }: { redirect: string }) {
+  const [signupFormState, signupAction] = useFormState(signUp, {
     fieldError: { userName: [], emailAddress: [], password: [] },
   });
 
-  const mutation = useMutation({
-    mutationFn: async (signupObj: SignupInput) => {
-      try {
-        const { fetchDataResult } = await fetchData<SignupResult>(`${process.env.NEXT_PUBLIC_API_URL}/auth/signup`, {
-          method: "POST",
-          body: JSON.stringify(signupObj),
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        });
-
-        return { serverResult: fetchDataResult } as ServerResult<SignupResult>;
-      } catch (e) {
-        return {
-          serverResult: { success: false, errors: ["Something went wrong. Please try again."] },
-        } as ServerResult<SignupResult>;
-      }
-    },
-    onSuccess: async (data) => {
-      setSignupFormState(data);
-      if ("serverResult" in data && data.serverResult.success) {
-        await queryClient.invalidateQueries({ queryKey: ["btl_session_user"], exact: true, refetchType: "all" });
-        router.push("/");
-      }
-    },
-  });
-
-  const validateSignupInput = function (
-    event: React.FormEvent<HTMLFormElement>,
-  ): SignupInput | FieldError<SignupInput> {
-    const formData = new FormData(event.currentTarget);
-    const signupObjRaw = Object.fromEntries(formData);
-
-    const validation = signupSchema.safeParse(signupObjRaw);
-
-    if (!validation.success) {
-      const fieldErrorObj: FieldError<SignupInput> = {
-        fieldError: {
-          userName: validation.error.issues
-            .filter((issue) => issue.path[0] === "userName")
-            .map((issue) => issue.message),
-          emailAddress: validation.error.issues
-            .filter((issue) => issue.path[0] === "emailAddress")
-            .map((issue) => issue.message),
-          password: validation.error.issues
-            .filter((issue) => issue.path[0] === "password")
-            .map((issue) => issue.message),
-        },
-      };
-      return fieldErrorObj;
-    }
-
-    return validation.data;
-  };
-
-  const handleSubmit = function (e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const validationResult = validateSignupInput(e);
-    if ("fieldError" in validationResult) {
-      setSignupFormState(validationResult);
-      return;
-    }
-    mutation.mutate(validationResult);
-  };
-
-  const ServerResultMessage = function ({
-    serverResult: { serverResult },
-  }: {
-    serverResult: ServerResult<SignupResult>;
-  }) {
+  const ServerResultMessage = function ({ serverResult }: { serverResult: ServerResult<SignupResult> }) {
     if (serverResult.success) {
       return (
         <p className="flex items-center gap-x-0 text-success">
@@ -111,7 +52,8 @@ export function SignupForm() {
   };
 
   return (
-    <form className="flex w-full flex-col" id="logInForm" onSubmit={(e) => handleSubmit(e)}>
+    <form className="flex w-full flex-col" id="logInForm" action={signupAction}>
+      <input type="hidden" name="redirect" value={redirect}></input>
       <div className="mb-6 flex flex-col">
         <Label htmlFor="userName">Username:</Label>
         <Input id="userName" type="text" name="userName" />
@@ -145,16 +87,8 @@ export function SignupForm() {
         </ul>
       </div>
 
-      <div>
-        <SubmitButton
-          isSubmitting={mutation.isPending}
-          defaultText={"Sign up"}
-          submittingText={"Signing up..."}
-          textSize={"small"}
-          background={"light"}
-        />
-      </div>
-      {"serverResult" in signupFormState && <ServerResultMessage serverResult={signupFormState}></ServerResultMessage>}
+      <Submit />
+      {!("fieldError" in signupFormState) && <ServerResultMessage serverResult={signupFormState}></ServerResultMessage>}
     </form>
   );
 }
