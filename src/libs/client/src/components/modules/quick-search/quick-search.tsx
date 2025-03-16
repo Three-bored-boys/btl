@@ -11,7 +11,7 @@ import { LoadingSkeleton } from "./loading-skeleton";
 import { ErrorBoundary } from "react-error-boundary";
 import { QuickSearchErrorBoundary } from "./quick-search-error-boundary";
 import { BadResponse, GoodResponse, Book } from "@/shared/types";
-import { getCachedQuickSearchResults } from "@/server/actions";
+import { getResultsOfQuickSearch } from "@/server/actions";
 
 type QuickSearchResultsWrapperProps = {
   setSearchResultsVisible: React.Dispatch<React.SetStateAction<boolean>>;
@@ -61,7 +61,7 @@ export function QuickSearch({ className }: ComponentProps<"div">) {
         setSearchObjectToLocalStorage({ search: searchInputElement.current.value.trim() });
       }
 
-      const resultOfQuickSearch = await getCachedQuickSearchResults(searchInputElement.current.value.trim());
+      const resultOfQuickSearch = await getResultsOfQuickSearch(searchInputElement.current.value.trim());
       setResult(resultOfQuickSearch);
 
       setSearchInput(searchInputElement.current.value.trim());
