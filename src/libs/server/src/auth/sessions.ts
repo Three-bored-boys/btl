@@ -3,7 +3,6 @@ import { eq } from "drizzle-orm";
 import { users, sessions, Session, SanitizedUser } from "@/server/db/schema";
 import { sanitizedUser } from "@/server/utils";
 import { generateAuthSessionToken, encryptAuthSessionToken } from "./utils";
-import { cache } from "react";
 
 export type SessionValidationResult =
   | {
@@ -37,7 +36,7 @@ export async function createSession(token: string, userId: number) {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-async function validateSessionToken(token: string): Promise<SessionValidationResult> {
+export async function validateSessionToken(token: string): Promise<SessionValidationResult> {
   const sessionId = await encryptAuthSessionToken(token, process.env.SESSION_SECRET_KEY!);
 
   const result = await db
@@ -63,8 +62,6 @@ async function validateSessionToken(token: string): Promise<SessionValidationRes
 
   return { session, user: sanitizedUser(user) };
 }
-
-export const cacheValidateSessionToken = cache(validateSessionToken);
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 

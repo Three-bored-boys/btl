@@ -13,16 +13,12 @@ import { db } from "@/server/db/db";
 import { eq, or } from "drizzle-orm";
 import { users } from "@/server/db/schema";
 import { hashPassword, verifyHashedPassword } from "@/server/auth/password";
-import {
-  generateSessionToken,
-  createSession,
-  invalidateSession,
-  cacheValidateSessionToken,
-} from "@/server/auth/sessions";
+import { generateSessionToken, createSession, invalidateSession } from "@/server/auth/sessions";
 import { deleteSessionCookie, getSessionCookieToken, setSessionCookie } from "@/server/auth/cookies";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { encryptAuthSessionToken } from "@/server/auth/utils";
+import { cacheValidateSessionToken } from "./cache";
 
 export const getUserSession = async function () {
   const sessionToken = await getSessionCookieToken();
