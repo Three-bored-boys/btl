@@ -9,9 +9,22 @@ import { getUserSession } from "@/server/actions";
 import { z } from "zod";
 import { redirect } from "next/navigation";
 import { BadResponse, GoodResponse } from "@/shared/types";
-import { cacheUserBookLibraryValue } from "./cache";
+import { unstable_cache } from "next/cache";
 
-export const userBookLibraryValue = async function (isbn: string, userId: number) {
+export const getUserBookLibraryValue = async function (isbn: string, userId: number) {
+  const cachedUserBookLibraryValue = cacheUserBookLibraryValue({ isbn, userId });
+  return await cachedUserBookLibraryValue();
+};
+
+const cacheUserBookLibraryValue = function ({ isbn, userId }: { isbn: string; userId: number }) {
+  return unstable_cache(
+    () => userBookLibraryValue(isbn, userId),
+    ["user-book-library-value", `isbn-${isbn},userId-${userId.toString()}`],
+    { tags: ["user-book-library-value", `isbn-${isbn},userId-${userId.toString()}`] },
+  );
+};
+
+const userBookLibraryValue = async function (isbn: string, userId: number) {
   try {
     const [book] = await db
       .select()
@@ -22,11 +35,6 @@ export const userBookLibraryValue = async function (isbn: string, userId: number
     console.log(e);
     return null;
   }
-};
-
-export const getUserBookLibraryValue = async function (isbn: string, userId: number) {
-  const cachedUserBookLibraryValue = cacheUserBookLibraryValue({ isbn, userId });
-  return await cachedUserBookLibraryValue();
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////

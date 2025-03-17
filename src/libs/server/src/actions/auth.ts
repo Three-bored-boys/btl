@@ -18,7 +18,8 @@ import { deleteSessionCookie, getSessionCookieToken, setSessionCookie } from "@/
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { encryptAuthSessionToken } from "@/server/auth/utils";
-import { cacheValidateSessionToken } from "./cache";
+import { cache } from "react";
+import { validateSessionToken } from "@/server/auth/sessions";
 
 export const getUserSession = async function () {
   const sessionToken = await getSessionCookieToken();
@@ -30,6 +31,8 @@ export const getUserSession = async function () {
 
   return { session, user };
 };
+
+const cacheValidateSessionToken = cache(validateSessionToken);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

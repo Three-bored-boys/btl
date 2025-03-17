@@ -6,7 +6,6 @@ import { GoogleBooksService } from "@/server/services/google.service";
 import { BadResponse, BestSeller, Book, GoodResponse } from "@/shared/types";
 import { z } from "zod";
 import { PaginationObjectType, SearchObjectType, fullSearchObjectSchema } from "@/shared/validators";
-import { cacheFullSearchResults } from "./cache";
 
 const getNYTBestSellers = async function () {
   const nytService = new NYTimesService(process.env.NY_TIMES_BOOKS_API_KEY!);
@@ -157,7 +156,25 @@ export const getFullSearchResults = async function (fullSearchObject: unknown) {
   return await cachedFullSearchResults();
 };
 
-export const fullSearchResults = async function ({
+const cacheFullSearchResults = function ({
+  maxResults,
+  page,
+  search,
+  genre,
+  isbn,
+  publisher,
+}: SearchObjectType & PaginationObjectType) {
+  return unstable_cache(
+    () => fullSearchResults({ maxResults, page, search, genre, isbn, publisher }),
+    [
+      "full-search",
+      `maxResults-${maxResults ?? ""},page-${page ?? ""},search-${search ?? ""},genre-${genre ?? ""},isbn-${isbn ?? ""},publisher-${publisher ?? ""}`,
+    ],
+    { revalidate: 86400 },
+  );
+};
+
+const fullSearchResults = async function ({
   maxResults,
   page,
   search,
