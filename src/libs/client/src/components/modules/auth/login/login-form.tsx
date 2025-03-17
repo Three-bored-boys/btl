@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useActionState } from "react";
 import { Label } from "@/client/components/ui/label";
 import { Input } from "@/client/components/ui/input";
 import { FormErrorListItem } from "@/client/components/ui/form-error-list-item";
@@ -8,7 +8,7 @@ import { Check } from "@/client/components/ui/icons/check";
 import { SubmitButton } from "@/client/components/ui/submit-button";
 import { ServerResult } from "@/shared/types";
 import { LoginResult } from "@/shared/validators/auth";
-import { useFormState, useFormStatus } from "react-dom";
+import { useFormStatus } from "react-dom";
 import { login } from "@/server/actions";
 
 const Submit = function () {
@@ -28,7 +28,7 @@ const Submit = function () {
 };
 
 export function LoginForm({ redirect }: { redirect: string }) {
-  const [loginFormState, loginAction] = useFormState(login, {
+  const [loginFormState, loginAction] = useActionState(login, {
     fieldError: { userName: [], password: [] },
   });
 
