@@ -49,12 +49,12 @@ function Search({ searchParams }: { searchParams: SearchObjectType & PaginationO
   newSearchParamsObject.set("page", newPageQueryParam);
   paginationObject.page = newPageQueryParam;
 
-  console.log(
+  /* console.log(
     "The old string is: ",
     originalSearchParamsObject.toString(),
     "The new string is: ",
     newSearchParamsObject.toString(),
-  );
+  ); */
 
   const noFormInput = !searchObject.genre && !searchObject.publisher && !searchObject.search;
 
