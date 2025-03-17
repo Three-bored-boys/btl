@@ -4,13 +4,14 @@ import { db } from "@/server/db/db";
 import { userBooks } from "@/server/db/schema";
 import { bookLibraries, bookLibraryValues } from "@/shared/utils";
 import { and, eq } from "drizzle-orm";
-import { revalidatePath, unstable_cache } from "next/cache";
+import { revalidatePath } from "next/cache";
 import { getUserSession } from "@/server/actions";
 import { z } from "zod";
 import { redirect } from "next/navigation";
 import { BadResponse, GoodResponse } from "@/shared/types";
+import { cacheUserBookLibraryValue } from "./cache";
 
-const getUserBookLibraryValue = async function (isbn: string, userId: number) {
+export const userBookLibraryValue = async function (isbn: string, userId: number) {
   try {
     const [book] = await db
       .select()
@@ -23,9 +24,10 @@ const getUserBookLibraryValue = async function (isbn: string, userId: number) {
   }
 };
 
-export const getCachedUserBookLibraryValue = unstable_cache(getUserBookLibraryValue, ["user-book-library-value"], {
-  tags: ["user-book-library-value"],
-});
+export const getUserBookLibraryValue = async function (isbn: string, userId: number) {
+  const cachedUserBookLibraryValue = cacheUserBookLibraryValue({ isbn, userId });
+  return await cachedUserBookLibraryValue();
+};
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
