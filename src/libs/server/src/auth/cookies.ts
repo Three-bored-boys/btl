@@ -1,5 +1,4 @@
 "use server";
-/* eslint-disable @typescript-eslint/await-thenable */
 
 import { BTL_AUTH_SESSION_COOKIE_NAME } from "@/shared/utils";
 import { cookies } from "next/headers";
