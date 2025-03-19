@@ -26,7 +26,7 @@ export function AuthLayout({
   }, []);
 
   return (
-    <div className="grid h-full w-full grid-cols-1 md:grid-cols-2 md:grid-rows-[100vh]">
+    <div className="grid min-h-screen w-full grid-cols-1 md:grid-cols-2">
       <div
         className={cn("relative hidden bg-cover bg-center md:block", {
           "bg-gradient-to-b from-primary-50 to-secondary-50": bgImageClassName === "",
@@ -40,11 +40,11 @@ export function AuthLayout({
         />
       </div>
       <div className="h-screen overflow-y-auto">
-        <div className="flex h-full w-full flex-col justify-between">
-          <div className="px-10 py-20 xs:px-16 sm:px-28 md:px-10 lg:px-24 xl:px-40">{children}</div>
-          <div className="block pb-5 pl-5 md:hidden">
+        <div className="flex h-full w-full flex-col justify-start">
+          <div className="block pl-5 pt-5 md:hidden">
             <Logo className={cn("text-5xl md:hidden")} />
           </div>
+          <div className="px-10 py-20 xs:px-16 sm:px-28 md:px-10 lg:px-24 xl:px-40">{children}</div>
         </div>
       </div>
     </div>
