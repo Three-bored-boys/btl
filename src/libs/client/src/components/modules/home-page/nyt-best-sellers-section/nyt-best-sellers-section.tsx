@@ -43,7 +43,7 @@ async function GetBestSellersWrapper() {
   const { data } = fetchDataResult;
 
   return (
-    <SectionBooksShowcase name="best-sellers" count={data.length} sessionStorageKey="best-sellers-index">
+    <SectionBooksShowcase name="best-sellers" count={data.length} localStorageKey="best-sellers-index">
       {data.map(({ name, books }, i) => {
         return (
           <div className="w-full flex-[0_0_100%]" key={i}>

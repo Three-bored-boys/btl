@@ -11,29 +11,23 @@ type SectionBooksShowcaseProps = (
       name: "genres";
 
       count: number;
-      sessionStorageKey: "genres-index";
+      localStorageKey: "genres-index";
     }
-  | { name: "best-sellers"; count: number; sessionStorageKey: "best-sellers-index" }
+  | { name: "best-sellers"; count: number; localStorageKey: "best-sellers-index" }
 ) &
   ComponentProps<"div">;
 
-export function SectionBooksShowcase({
-  name,
-  count,
-  sessionStorageKey,
-  children,
-  ...props
-}: SectionBooksShowcaseProps) {
+export function SectionBooksShowcase({ name, count, localStorageKey, children, ...props }: SectionBooksShowcaseProps) {
   const [index, setIndex] = useState<number>(0);
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false, duration: 30, startIndex: 0, watchDrag: false });
 
-  const getIndexFromSessionStorage = useCallback(
-    (sessionStorageIndex: number) => {
-      if (sessionStorageIndex && emblaApi) {
-        if (sessionStorageIndex >= 0 && sessionStorageIndex < count) {
-          setIndex(sessionStorageIndex);
-          emblaApi.scrollTo(sessionStorageIndex);
-        } else if (sessionStorageIndex >= count) {
+  const getIndexFromLocalStorage = useCallback(
+    (localStorageIndex: number) => {
+      if (localStorageIndex && emblaApi) {
+        if (localStorageIndex >= 0 && localStorageIndex < count) {
+          setIndex(localStorageIndex);
+          emblaApi.scrollTo(localStorageIndex);
+        } else if (localStorageIndex >= count) {
           setIndex(count - 1);
           emblaApi.scrollTo(count - 1);
         } else {
@@ -45,25 +39,25 @@ export function SectionBooksShowcase({
     [count, emblaApi],
   );
 
-  const setIndexToSessionStorage = useCallback(
+  const setIndexToLocalStorage = useCallback(
     (indexToSet: number) => {
       if (indexToSet >= 0 && indexToSet < count) {
-        window.sessionStorage.setItem(sessionStorageKey, String(indexToSet));
+        window.localStorage.setItem(localStorageKey, String(indexToSet));
       } else if (indexToSet >= count) {
-        window.sessionStorage.setItem(sessionStorageKey, String(count - 1));
+        window.localStorage.setItem(localStorageKey, String(count - 1));
       } else {
-        window.sessionStorage.setItem(sessionStorageKey, "0");
+        window.localStorage.setItem(localStorageKey, "0");
       }
     },
-    [count, sessionStorageKey],
+    [count, localStorageKey],
   );
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const startIndex = Number(window.sessionStorage.getItem(sessionStorageKey));
-      getIndexFromSessionStorage(startIndex);
+      const startIndex = Number(window.localStorage.getItem(localStorageKey));
+      getIndexFromLocalStorage(startIndex);
     }
-  }, [name, getIndexFromSessionStorage, sessionStorageKey]);
+  }, [name, getIndexFromLocalStorage, localStorageKey]);
 
   const scrollPrev = useCallback(() => {
     if (emblaApi) {
@@ -71,15 +65,15 @@ export function SectionBooksShowcase({
         emblaApi.scrollPrev();
         const newIndex = index - 1;
         setIndex(newIndex);
-        setIndexToSessionStorage(newIndex);
+        setIndexToLocalStorage(newIndex);
       } else {
         const newIndex = count - 1;
         emblaApi.scrollTo(newIndex);
         setIndex(newIndex);
-        setIndexToSessionStorage(newIndex);
+        setIndexToLocalStorage(newIndex);
       }
     }
-  }, [emblaApi, index, count, setIndexToSessionStorage]);
+  }, [emblaApi, index, count, setIndexToLocalStorage]);
 
   const scrollNext = useCallback(() => {
     if (emblaApi) {
@@ -87,15 +81,15 @@ export function SectionBooksShowcase({
         emblaApi.scrollNext();
         const newIndex = index + 1;
         setIndex(newIndex);
-        setIndexToSessionStorage(newIndex);
+        setIndexToLocalStorage(newIndex);
       } else {
         const newIndex = 0;
         emblaApi.scrollTo(newIndex);
         setIndex(newIndex);
-        setIndexToSessionStorage(newIndex);
+        setIndexToLocalStorage(newIndex);
       }
     }
-  }, [emblaApi, index, count, setIndexToSessionStorage]);
+  }, [emblaApi, index, count, setIndexToLocalStorage]);
 
   return (
     <div className="w-full flex-col items-center" {...props}>
@@ -109,7 +103,7 @@ export function SectionBooksShowcase({
             className={cn("h-2 w-2 cursor-pointer rounded-full bg-secondary-300", { "bg-primary": i === index })}
             onClick={() => {
               setIndex(i);
-              setIndexToSessionStorage(i);
+              setIndexToLocalStorage(i);
               emblaApi?.scrollTo(i);
             }}
           ></div>

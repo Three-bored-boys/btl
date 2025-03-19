@@ -59,7 +59,7 @@ async function GetGenresWrapper() {
 
   return (
     <Suspense fallback={<LoadingSkeleton />}>
-      <SectionBooksShowcase name="genres" count={count} sessionStorageKey="genres-index">
+      <SectionBooksShowcase name="genres" count={count} localStorageKey="genres-index">
         {data.map(({ genre, possibleBooks }, i) => {
           return (
             <div className="w-full flex-[0_0_100%]" key={i}>
