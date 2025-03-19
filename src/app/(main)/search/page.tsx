@@ -9,8 +9,9 @@ import { SearchPageErrorBoundary } from "@/client/components/modules/search-page
 import { SearchPageQueryComponentWrapper } from "@/client/components/modules/search-page/search-page-query-component-wrapper";
 import { SearchPageResultsLoadingSkeleton } from "@/client/components/modules/search-page/search-page-results-loading-skeleton";
 
-function Search({ searchParams }: { searchParams: SearchObjectType & PaginationObjectType }) {
-  const originalSearchParamsObject = new URLSearchParams(searchParams);
+async function Search({ searchParams }: { searchParams: Promise<SearchObjectType & PaginationObjectType> }) {
+  const resolvedSearchParams = await searchParams;
+  const originalSearchParamsObject = new URLSearchParams(resolvedSearchParams);
   const newSearchParamsObject = new URLSearchParams();
 
   const searchObject: SearchObjectType = {};

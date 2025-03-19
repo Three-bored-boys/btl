@@ -200,7 +200,14 @@ export const logout = async function (): Promise<ServerResult<string>> {
       return responseData;
     }
 
-    const sessionId = await encryptAuthSessionToken(token, process.env.SESSION_SECRET_KEY!);
+    const sessionSecretKey = process.env.SESSION_SECRET_KEY;
+    if (!sessionSecretKey) {
+      const message = "Session Secret Key not correctly configured";
+      console.log(message);
+      return { success: false, errors: ["Something went wrong. Please try again."], status: 500 };
+    }
+
+    const sessionId = await encryptAuthSessionToken(token, sessionSecretKey);
 
     await invalidateSession(sessionId);
     await deleteSessionCookie(token);

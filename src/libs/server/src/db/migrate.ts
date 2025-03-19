@@ -7,8 +7,11 @@ config({ path: ".env" });
 
 const main = async () => {
   try {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const migrationClient = drizzle(postgres(process.env.DATABASE_URL!, { max: 1 }));
+    const connectionString = process.env.DATABASE_URL;
+    if (!connectionString) {
+      throw Error("Database URL not provided");
+    }
+    const migrationClient = drizzle(postgres(connectionString, { max: 1 }));
     await migrate(migrationClient, { migrationsFolder: "drizzle" });
     console.log("Migration complete");
   } catch (error) {

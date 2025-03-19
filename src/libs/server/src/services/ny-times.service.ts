@@ -24,7 +24,7 @@ export class NYTimesService {
               description: book.description,
               isbn13: book.primary_isbn13,
               isbn10: book.primary_isbn10,
-              price: Number(book.price) ?? 0,
+              price: Number.isNaN(Number(book.price)) ? 0 : Number(book.price),
               priceUnit: "GBP",
               publisher: book.publisher,
               createdAt: new Date(book.created_date),

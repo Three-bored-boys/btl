@@ -8,7 +8,13 @@ import { z } from "zod";
 import { fullSearchObjectSchema } from "@/shared/validators";
 
 const getNYTBestSellers = async function () {
-  const nytService = new NYTimesService(process.env.NY_TIMES_BOOKS_API_KEY!);
+  const nytBooksAPIKey = process.env.NY_TIMES_BOOKS_API_KEY;
+  if (!nytBooksAPIKey) {
+    const message = "Sessio";
+    console.log(message);
+    throw Error(message);
+  }
+  const nytService = new NYTimesService(nytBooksAPIKey);
   const bestSellers = await nytService.getBestSellers();
 
   if (bestSellers.length === 0) {
@@ -35,7 +41,13 @@ const getBooksByGenre = async function (genre: unknown) {
     return responseData;
   }
   const validGenre = validationResult.data;
-  const googleBooksService = new GoogleBooksService(process.env.GOOGLE_BOOKS_API_KEY!);
+  const googleBooksAPIKey = process.env.GOOGLE_BOOKS_API_KEY;
+  if (!googleBooksAPIKey) {
+    const message = "Sessio";
+    console.log(message);
+    throw Error(message);
+  }
+  const googleBooksService = new GoogleBooksService(googleBooksAPIKey);
   const returnedValue = await googleBooksService.getBooksByAllParameters({
     searchObject: { genre: validGenre },
     paginationObject: { maxResults: (6).toString() },
@@ -72,7 +84,13 @@ const getBooksByISBN = async function (isbn: unknown) {
 
   let book: Book[];
 
-  const googleBooksService = new GoogleBooksService(process.env.GOOGLE_BOOKS_API_KEY!);
+  const googleBooksAPIKey = process.env.GOOGLE_BOOKS_API_KEY;
+  if (!googleBooksAPIKey) {
+    const message = "Sessio";
+    console.log(message);
+    throw Error(message);
+  }
+  const googleBooksService = new GoogleBooksService(googleBooksAPIKey);
   book = await googleBooksService.getBookByISBN(validISBN);
 
   if (book.length === 0) {
@@ -127,7 +145,13 @@ const getQuickSearchResults = async function (search: unknown) {
     return responseData;
   }
   const validSearch = validationResult.data;
-  const googleBooksService = new GoogleBooksService(process.env.GOOGLE_BOOKS_API_KEY!);
+  const googleBooksAPIKey = process.env.GOOGLE_BOOKS_API_KEY;
+  if (!googleBooksAPIKey) {
+    const message = "Sessio";
+    console.log(message);
+    throw Error(message);
+  }
+  const googleBooksService = new GoogleBooksService(googleBooksAPIKey);
 
   const allBooksResults = await googleBooksService.getBooksByAllParameters({
     searchObject: { search: validSearch },
@@ -153,7 +177,13 @@ const getFullSearchResults = async function (fullSearchObject: unknown) {
 
   const { page, maxResults, ...search } = validation.data;
 
-  const googleBooksService = new GoogleBooksService(process.env.GOOGLE_BOOKS_API_KEY!);
+  const googleBooksAPIKey = process.env.GOOGLE_BOOKS_API_KEY;
+  if (!googleBooksAPIKey) {
+    const message = "Sessio";
+    console.log(message);
+    throw Error(message);
+  }
+  const googleBooksService = new GoogleBooksService(googleBooksAPIKey);
 
   const allBooksResults = await googleBooksService.getBooksByAllParameters({
     searchObject: search,
