@@ -11,7 +11,7 @@ export const fetchServiceData = async function <T>(url: string, options?: Reques
   console.log(res.ok, res.status, res.statusText);
 
   if (!res.ok) {
-    throw new Error();
+    throw new Error(res.statusText);
   }
 
   const data = (await res.json()) as T;
