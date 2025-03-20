@@ -1,3 +1,4 @@
+export * from "./book";
 export * from "./ny-times";
 export * from "./google-books";
 export * from "./best-sellers";
