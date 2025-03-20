@@ -9,11 +9,6 @@ import { PaginationObjectType, SearchObjectType, fullSearchObjectSchema } from "
 
 const getNYTBestSellers = async function () {
   const nytBooksAPIKey = process.env.NY_TIMES_BOOKS_API_KEY;
-  if (!nytBooksAPIKey) {
-    const message = "NY Times Books API key not provided";
-    console.log(message);
-    throw Error(message);
-  }
   const nytService = new NYTimesService(nytBooksAPIKey);
   const bestSellers = await nytService.getBestSellers();
 
@@ -49,11 +44,6 @@ export const getBooksByGenre = async function (genre: unknown) {
 
 const booksByGenre = async function (genre: string) {
   const googleBooksAPIKey = process.env.GOOGLE_BOOKS_API_KEY;
-  if (!googleBooksAPIKey) {
-    const message = "Google Books API key not provided";
-    console.log(message);
-    throw Error(message);
-  }
   const googleBooksService = new GoogleBooksService(googleBooksAPIKey);
   const returnedValue = await googleBooksService.getBooksByAllParameters({
     searchObject: { genre },
@@ -98,11 +88,6 @@ const bookByISBN = async function (isbn: string) {
   let book: Book[];
 
   const googleBooksAPIKey = process.env.GOOGLE_BOOKS_API_KEY;
-  if (!googleBooksAPIKey) {
-    const message = "Google Books API key not provided";
-    console.log(message);
-    throw Error(message);
-  }
   const googleBooksService = new GoogleBooksService(googleBooksAPIKey);
   // eslint-disable-next-line prefer-const
   book = await googleBooksService.getBookByISBN(isbn);
@@ -155,11 +140,6 @@ export const getQuickSearchResults = async function (search: unknown) {
 
 const quickSearchResults = async function (search: string) {
   const googleBooksAPIKey = process.env.GOOGLE_BOOKS_API_KEY;
-  if (!googleBooksAPIKey) {
-    const message = "Google Books API key not provided";
-    console.log(message);
-    throw Error(message);
-  }
   const googleBooksService = new GoogleBooksService(googleBooksAPIKey);
 
   const allBooksResults = await googleBooksService.getBooksByAllParameters({
@@ -194,11 +174,6 @@ export const getFullSearchResults = async function (fullSearchObject: unknown) {
 const fullSearchResults = async function (fullSearchObject: SearchObjectType & PaginationObjectType) {
   const { maxResults, page, ...searchObject } = fullSearchObject;
   const googleBooksAPIKey = process.env.GOOGLE_BOOKS_API_KEY;
-  if (!googleBooksAPIKey) {
-    const message = "Google Books API key not provided";
-    console.log(message);
-    throw Error(message);
-  }
   const googleBooksService = new GoogleBooksService(googleBooksAPIKey);
 
   const allBooksResults = await googleBooksService.getBooksByAllParameters({

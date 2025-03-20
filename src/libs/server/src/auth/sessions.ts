@@ -25,11 +25,6 @@ export function generateSessionToken() {
 
 export async function createSession(token: string, userId: number) {
   const sessionSecretKey = process.env.SESSION_SECRET_KEY;
-  if (!sessionSecretKey) {
-    const message = "Session Secret Key not correctly configured";
-    console.log(message);
-    throw Error(message);
-  }
   const sessionId = await encryptAuthSessionToken(token, sessionSecretKey);
   const session: Session = {
     id: sessionId,
@@ -45,11 +40,6 @@ export async function createSession(token: string, userId: number) {
 
 async function validateSessionToken(token: string): Promise<SessionValidationResult> {
   const sessionSecretKey = process.env.SESSION_SECRET_KEY;
-  if (!sessionSecretKey) {
-    const message = "Session Secret Key not correctly configured";
-    console.log(message);
-    throw Error(message);
-  }
   const sessionId = await encryptAuthSessionToken(token, sessionSecretKey);
 
   const result = await db
