@@ -10,7 +10,12 @@ import { z } from "zod";
 import { redirect } from "next/navigation";
 import { BadResponse, GoodResponse } from "@/shared/types";
 
-const getUserBookLibraryValue = async function (isbn: string, userId: number) {
+export const getUserBookLibraryValue = async function (isbn: string, userId: number) {
+  const cachedUserBookLibraryValue = await cacheUserBookLibraryValue(isbn, userId);
+  return cachedUserBookLibraryValue;
+};
+
+const userBookLibraryValue = async function (isbn: string, userId: number) {
   try {
     const [book] = await db
       .select()
@@ -23,7 +28,7 @@ const getUserBookLibraryValue = async function (isbn: string, userId: number) {
   }
 };
 
-export const getCachedUserBookLibraryValue = unstable_cache(getUserBookLibraryValue, ["user-book-library-value"], {
+const cacheUserBookLibraryValue = unstable_cache(userBookLibraryValue, ["user-book-library-value"], {
   tags: ["user-book-library-value"],
 });
 
