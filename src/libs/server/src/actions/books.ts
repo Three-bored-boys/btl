@@ -10,7 +10,7 @@ import { fullSearchObjectSchema } from "@/shared/validators";
 const getNYTBestSellers = async function () {
   const nytBooksAPIKey = process.env.NY_TIMES_BOOKS_API_KEY;
   if (!nytBooksAPIKey) {
-    const message = "NY Times Books API key not provided";
+    const message = "Sessio";
     console.log(message);
     throw Error(message);
   }
@@ -43,7 +43,7 @@ const getBooksByGenre = async function (genre: unknown) {
   const validGenre = validationResult.data;
   const googleBooksAPIKey = process.env.GOOGLE_BOOKS_API_KEY;
   if (!googleBooksAPIKey) {
-    const message = "Google Books API key not provided";
+    const message = "Sessio";
     console.log(message);
     throw Error(message);
   }
@@ -86,7 +86,7 @@ const getBooksByISBN = async function (isbn: unknown) {
 
   const googleBooksAPIKey = process.env.GOOGLE_BOOKS_API_KEY;
   if (!googleBooksAPIKey) {
-    const message = "Google Books API key not provided";
+    const message = "Sessio";
     console.log(message);
     throw Error(message);
   }
@@ -147,7 +147,7 @@ const getQuickSearchResults = async function (search: unknown) {
   const validSearch = validationResult.data;
   const googleBooksAPIKey = process.env.GOOGLE_BOOKS_API_KEY;
   if (!googleBooksAPIKey) {
-    const message = "Google Books API key not provided";
+    const message = "Sessio";
     console.log(message);
     throw Error(message);
   }
@@ -179,7 +179,7 @@ const getFullSearchResults = async function (fullSearchObject: unknown) {
 
   const googleBooksAPIKey = process.env.GOOGLE_BOOKS_API_KEY;
   if (!googleBooksAPIKey) {
-    const message = "Google Books API key not provided";
+    const message = "Sessio";
     console.log(message);
     throw Error(message);
   }
