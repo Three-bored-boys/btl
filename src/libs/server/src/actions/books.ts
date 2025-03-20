@@ -137,7 +137,7 @@ const cacheBookByISBN = unstable_cache(bookByISBN, ["isbn"], { revalidate: 17280
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const getQuickSearchResults = async function (search: unknown) {
+export const getQuickSearchResults = async function (search: unknown) {
   const validationResult = z.string().min(1).safeParse(search);
   if (!validationResult.success) {
     const responseData: BadResponse = {
@@ -148,6 +148,12 @@ const getQuickSearchResults = async function (search: unknown) {
     return responseData;
   }
   const validSearch = validationResult.data;
+
+  const cachedQuickSearchResults = await cacheQuickSearchResults(validSearch);
+  return cachedQuickSearchResults;
+};
+
+const quickSearchResults = async function (search: string) {
   const googleBooksAPIKey = process.env.GOOGLE_BOOKS_API_KEY;
   if (!googleBooksAPIKey) {
     const message = "Google Books API key not provided";
@@ -157,7 +163,7 @@ const getQuickSearchResults = async function (search: unknown) {
   const googleBooksService = new GoogleBooksService(googleBooksAPIKey);
 
   const allBooksResults = await googleBooksService.getBooksByAllParameters({
-    searchObject: { search: validSearch },
+    searchObject: { search },
     paginationObject: { maxResults: (8).toString() },
   });
 
@@ -165,7 +171,7 @@ const getQuickSearchResults = async function (search: unknown) {
   return responseData;
 };
 
-export const getCachedQuickSearchResults = unstable_cache(getQuickSearchResults, ["quick-search"], {
+const cacheQuickSearchResults = unstable_cache(quickSearchResults, ["quick-search"], {
   revalidate: 86400,
 });
 
