@@ -1,8 +1,8 @@
 export type OpenLibraryResponse = { records: OpenLibraryRecords; items: OpenLibraryItems };
 
-type OpenLibraryRecords = Record<string, OpenLibraryInnerRecords>;
+export type OpenLibraryRecords = Record<string, OpenLibraryInnerRecords>;
 
-type OpenLibraryInnerRecords = {
+export type OpenLibraryInnerRecords = {
   isbns: string[];
   issns: string[];
   lccns: string[];
@@ -35,7 +35,7 @@ type OpenLibraryInnerRecords = {
     subject_times: { name: string; url: string }[];
     excerpts: { text: string; comment: string }[];
     links: { title: string; url: string }[];
-    cover?: { small: string; medium: string; large: string };
+    cover?: { small?: string; medium?: string; large?: string };
   };
   details: {
     bib_key: string;
@@ -65,8 +65,8 @@ type OpenLibraryInnerRecords = {
       number_of_pages: number;
       latest_revision: number;
       revision: number;
-      created?: CreatedModifiedType;
-      last_modified?: CreatedModifiedType;
+      created?: CreatedOrLastModifiedType;
+      last_modified?: CreatedOrLastModifiedType;
     };
   };
 };
@@ -84,4 +84,4 @@ type OpenLibraryItems = {
   cover: { small: string; medium: string; large: string };
 }[];
 
-type CreatedModifiedType = { type: "/type/datetime"; value: Date } | { type: string; value: string };
+export type CreatedOrLastModifiedType = { type: "/type/datetime"; value: Date } | { type: string; value: string };
