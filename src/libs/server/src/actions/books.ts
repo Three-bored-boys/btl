@@ -34,13 +34,20 @@ export const getCachedNYTBestSellers = unstable_cache(getNYTBestSellers, ["best-
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const getBooksByGenre = async function (genre: unknown) {
+export const getBooksByGenre = async function (genre: unknown) {
   const validationResult = z.string().min(1).safeParse(genre);
   if (!validationResult.success) {
     const responseData: BadResponse = { success: false, errors: ["Invalid Input"], status: 404 };
     return responseData;
   }
   const validGenre = validationResult.data;
+
+  const cachedBooksByGenre = await cacheBooksByGenre(validGenre);
+
+  return cachedBooksByGenre;
+};
+
+const booksByGenre = async function (genre: string) {
   const googleBooksAPIKey = process.env.GOOGLE_BOOKS_API_KEY;
   if (!googleBooksAPIKey) {
     const message = "Google Books API key not provided";
@@ -49,7 +56,7 @@ const getBooksByGenre = async function (genre: unknown) {
   }
   const googleBooksService = new GoogleBooksService(googleBooksAPIKey);
   const returnedValue = await googleBooksService.getBooksByAllParameters({
-    searchObject: { genre: validGenre },
+    searchObject: { genre },
     paginationObject: { maxResults: (6).toString() },
   });
 
@@ -61,7 +68,7 @@ const getBooksByGenre = async function (genre: unknown) {
   return responseData;
 };
 
-export const getCachedBooksByGenre = unstable_cache(getBooksByGenre, ["genres"], { revalidate: 259200 });
+const cacheBooksByGenre = unstable_cache(booksByGenre, ["genres"], { revalidate: 259200 });
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
