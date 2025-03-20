@@ -5,7 +5,7 @@ import { NYTimesService } from "@/server/services/ny-times.service";
 import { GoogleBooksService } from "@/server/services/google.service";
 import { BadResponse, BestSeller, Book, GoodResponse } from "@/shared/types";
 import { z } from "zod";
-import { fullSearchObjectSchema } from "@/shared/validators";
+import { PaginationObjectType, SearchObjectType, fullSearchObjectSchema } from "@/shared/validators";
 
 const getNYTBestSellers = async function () {
   const nytBooksAPIKey = process.env.NY_TIMES_BOOKS_API_KEY;
@@ -177,15 +177,22 @@ const cacheQuickSearchResults = unstable_cache(quickSearchResults, ["quick-searc
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const getFullSearchResults = async function (fullSearchObject: unknown) {
+export const getFullSearchResults = async function (fullSearchObject: unknown) {
   const validation = fullSearchObjectSchema.safeParse(fullSearchObject);
   if (!validation.success) {
     const responseData: BadResponse = { success: false, errors: ["Invalid entry"], status: 400 };
     return responseData;
   }
 
-  const { page, maxResults, ...search } = validation.data;
+  const validFullSearchObject = validation.data;
 
+  const cachedFullSearchResults = await cacheFullSearchResults(validFullSearchObject);
+
+  return cachedFullSearchResults;
+};
+
+const fullSearchResults = async function (fullSearchObject: SearchObjectType & PaginationObjectType) {
+  const { maxResults, page, ...searchObject } = fullSearchObject;
   const googleBooksAPIKey = process.env.GOOGLE_BOOKS_API_KEY;
   if (!googleBooksAPIKey) {
     const message = "Google Books API key not provided";
@@ -195,7 +202,7 @@ const getFullSearchResults = async function (fullSearchObject: unknown) {
   const googleBooksService = new GoogleBooksService(googleBooksAPIKey);
 
   const allBooksResults = await googleBooksService.getBooksByAllParameters({
-    searchObject: search,
+    searchObject: searchObject,
     paginationObject: { maxResults, page },
   });
 
@@ -207,6 +214,6 @@ const getFullSearchResults = async function (fullSearchObject: unknown) {
   return responseData;
 };
 
-export const getCachedFullSearchResults = unstable_cache(getFullSearchResults, ["full-search"], {
+const cacheFullSearchResults = unstable_cache(fullSearchResults, ["full-search"], {
   revalidate: 86400,
 });
