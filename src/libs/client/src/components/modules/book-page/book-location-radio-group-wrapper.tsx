@@ -1,12 +1,12 @@
 import { getUserSession } from "@/server/actions";
-import { getCachedUserBookLibraryValue } from "@/root/src/libs/server/src/actions/userBooks";
+import { getUserBookLibraryValue } from "@/root/src/libs/server/src/actions/userBooks";
 import { BookLocationRadioGroup } from "./book-location-radio-group";
 
 const getLibraryValue = async function (isbn: string) {
   "use server";
   const { user } = await getUserSession();
   if (!user) return null;
-  return await getCachedUserBookLibraryValue(isbn, user.id);
+  return await getUserBookLibraryValue(isbn, user.id);
 };
 
 export async function BookLocationRadioGroupWrapper({ isbn }: { isbn: string }) {

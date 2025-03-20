@@ -5,12 +5,12 @@ import { NYTimesService } from "@/server/services/ny-times.service";
 import { GoogleBooksService } from "@/server/services/google.service";
 import { BadResponse, BestSeller, Book, GoodResponse } from "@/shared/types";
 import { z } from "zod";
-import { fullSearchObjectSchema } from "@/shared/validators";
+import { PaginationObjectType, SearchObjectType, fullSearchObjectSchema } from "@/shared/validators";
 
 const getNYTBestSellers = async function () {
   const nytBooksAPIKey = process.env.NY_TIMES_BOOKS_API_KEY;
   if (!nytBooksAPIKey) {
-    const message = "Sessio";
+    const message = "NY Times Books API key not provided";
     console.log(message);
     throw Error(message);
   }
@@ -34,22 +34,29 @@ export const getCachedNYTBestSellers = unstable_cache(getNYTBestSellers, ["best-
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const getBooksByGenre = async function (genre: unknown) {
+export const getBooksByGenre = async function (genre: unknown) {
   const validationResult = z.string().min(1).safeParse(genre);
   if (!validationResult.success) {
     const responseData: BadResponse = { success: false, errors: ["Invalid Input"], status: 404 };
     return responseData;
   }
   const validGenre = validationResult.data;
+
+  const cachedBooksByGenre = await cacheBooksByGenre(validGenre);
+
+  return cachedBooksByGenre;
+};
+
+const booksByGenre = async function (genre: string) {
   const googleBooksAPIKey = process.env.GOOGLE_BOOKS_API_KEY;
   if (!googleBooksAPIKey) {
-    const message = "Sessio";
+    const message = "Google Books API key not provided";
     console.log(message);
     throw Error(message);
   }
   const googleBooksService = new GoogleBooksService(googleBooksAPIKey);
   const returnedValue = await googleBooksService.getBooksByAllParameters({
-    searchObject: { genre: validGenre },
+    searchObject: { genre },
     paginationObject: { maxResults: (6).toString() },
   });
 
@@ -61,11 +68,11 @@ const getBooksByGenre = async function (genre: unknown) {
   return responseData;
 };
 
-export const getCachedBooksByGenre = unstable_cache(getBooksByGenre, ["genres"], { revalidate: 259200 });
+const cacheBooksByGenre = unstable_cache(booksByGenre, ["genres"], { revalidate: 259200 });
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const getBooksByISBN = async function (isbn: unknown) {
+export const getBookByISBN = async function (isbn: unknown) {
   const validationResult = z
     .string()
     .min(1)
@@ -82,18 +89,26 @@ const getBooksByISBN = async function (isbn: unknown) {
 
   const validISBN = validationResult.data;
 
+  const cachedBookByISBN = await cacheBookByISBN(validISBN);
+
+  return cachedBookByISBN;
+};
+
+const bookByISBN = async function (isbn: string) {
   let book: Book[];
 
   const googleBooksAPIKey = process.env.GOOGLE_BOOKS_API_KEY;
   if (!googleBooksAPIKey) {
-    const message = "Sessio";
+    const message = "Google Books API key not provided";
     console.log(message);
     throw Error(message);
   }
   const googleBooksService = new GoogleBooksService(googleBooksAPIKey);
-  book = await googleBooksService.getBookByISBN(validISBN);
+  // eslint-disable-next-line prefer-const
+  book = await googleBooksService.getBookByISBN(isbn);
 
-  if (book.length === 0) {
+  // The block below will be for OpenLibrary, when I implement the service API
+  /* if (book.length === 0) {
     const bookSearchResult = (
       await googleBooksService.getBooksByAllParameters({ searchObject: { isbn: validISBN }, paginationObject: {} })
     ).books.find((book) => book.isbn10 === isbn || book.isbn13 === isbn);
@@ -103,19 +118,7 @@ const getBooksByISBN = async function (isbn: unknown) {
     } else {
       book = [bookSearchResult];
     }
-  }
-
-  if (book.length === 0) {
-    const bookSearchResult = (
-      await googleBooksService.getBooksByAllParameters({ searchObject: { search: validISBN }, paginationObject: {} })
-    ).books.find((book) => book.isbn10 === isbn || book.isbn13 === isbn);
-
-    if (!bookSearchResult) {
-      book = [];
-    } else {
-      book = [bookSearchResult];
-    }
-  }
+  } */
 
   if (book.length === 0) {
     const responseData: BadResponse = {
@@ -130,11 +133,11 @@ const getBooksByISBN = async function (isbn: unknown) {
   return responseData;
 };
 
-export const getCachedBooksByISBN = unstable_cache(getBooksByISBN, ["isbn"], { revalidate: 172800 });
+const cacheBookByISBN = unstable_cache(bookByISBN, ["isbn"], { revalidate: 172800 });
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const getQuickSearchResults = async function (search: unknown) {
+export const getQuickSearchResults = async function (search: unknown) {
   const validationResult = z.string().min(1).safeParse(search);
   if (!validationResult.success) {
     const responseData: BadResponse = {
@@ -145,16 +148,22 @@ const getQuickSearchResults = async function (search: unknown) {
     return responseData;
   }
   const validSearch = validationResult.data;
+
+  const cachedQuickSearchResults = await cacheQuickSearchResults(validSearch);
+  return cachedQuickSearchResults;
+};
+
+const quickSearchResults = async function (search: string) {
   const googleBooksAPIKey = process.env.GOOGLE_BOOKS_API_KEY;
   if (!googleBooksAPIKey) {
-    const message = "Sessio";
+    const message = "Google Books API key not provided";
     console.log(message);
     throw Error(message);
   }
   const googleBooksService = new GoogleBooksService(googleBooksAPIKey);
 
   const allBooksResults = await googleBooksService.getBooksByAllParameters({
-    searchObject: { search: validSearch },
+    searchObject: { search },
     paginationObject: { maxResults: (8).toString() },
   });
 
@@ -162,31 +171,38 @@ const getQuickSearchResults = async function (search: unknown) {
   return responseData;
 };
 
-export const getCachedQuickSearchResults = unstable_cache(getQuickSearchResults, ["quick-search"], {
+const cacheQuickSearchResults = unstable_cache(quickSearchResults, ["quick-search"], {
   revalidate: 86400,
 });
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const getFullSearchResults = async function (fullSearchObject: unknown) {
+export const getFullSearchResults = async function (fullSearchObject: unknown) {
   const validation = fullSearchObjectSchema.safeParse(fullSearchObject);
   if (!validation.success) {
     const responseData: BadResponse = { success: false, errors: ["Invalid entry"], status: 400 };
     return responseData;
   }
 
-  const { page, maxResults, ...search } = validation.data;
+  const validFullSearchObject = validation.data;
 
+  const cachedFullSearchResults = await cacheFullSearchResults(validFullSearchObject);
+
+  return cachedFullSearchResults;
+};
+
+const fullSearchResults = async function (fullSearchObject: SearchObjectType & PaginationObjectType) {
+  const { maxResults, page, ...searchObject } = fullSearchObject;
   const googleBooksAPIKey = process.env.GOOGLE_BOOKS_API_KEY;
   if (!googleBooksAPIKey) {
-    const message = "Sessio";
+    const message = "Google Books API key not provided";
     console.log(message);
     throw Error(message);
   }
   const googleBooksService = new GoogleBooksService(googleBooksAPIKey);
 
   const allBooksResults = await googleBooksService.getBooksByAllParameters({
-    searchObject: search,
+    searchObject: searchObject,
     paginationObject: { maxResults, page },
   });
 
@@ -198,6 +214,6 @@ const getFullSearchResults = async function (fullSearchObject: unknown) {
   return responseData;
 };
 
-export const getCachedFullSearchResults = unstable_cache(getFullSearchResults, ["full-search"], {
+const cacheFullSearchResults = unstable_cache(fullSearchResults, ["full-search"], {
   revalidate: 86400,
 });

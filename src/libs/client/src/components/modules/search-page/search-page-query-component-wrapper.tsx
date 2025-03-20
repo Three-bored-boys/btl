@@ -1,7 +1,7 @@
 import { PaginationObjectType, SearchObjectType } from "@/root/src/libs/shared/src/validators";
 import React from "react";
 import { SearchPageQueryComponent } from "./search-page-query-component";
-import { getCachedFullSearchResults } from "@/server/actions";
+import { getFullSearchResults } from "@/server/actions";
 import { Container } from "@/client/components/layouts/container";
 import { LinkButton } from "@/client/components/ui/link-button";
 import Image from "next/image";
@@ -14,7 +14,7 @@ export async function SearchPageQueryComponentWrapper({
   searchObject: SearchObjectType;
   paginationObject: PaginationObjectType;
 }) {
-  const fetchDataResult = await getCachedFullSearchResults({ ...searchObject, ...paginationObject });
+  const fetchDataResult = await getFullSearchResults({ ...searchObject, ...paginationObject });
 
   if (!fetchDataResult.success) {
     const { errors, status } = fetchDataResult;
@@ -38,5 +38,4 @@ export async function SearchPageQueryComponentWrapper({
   }
 
   return <SearchPageQueryComponent fullSearchResult={fetchDataResult.data} />;
-  // return <div>Yooo</div>;
 }

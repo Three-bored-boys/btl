@@ -9,7 +9,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import { ErrorBoundaryRender } from "../error-boundary-render";
 import { ExclamationTriangle } from "@/client/components/ui/icons/exclamation-triangle";
 import { genres as genresList } from "@/root/src/libs/shared/src/data/genres";
-import { getCachedBooksByGenre } from "@/server/actions";
+import { getBooksByGenre } from "@/server/actions";
 
 export function GenresSection() {
   return (
@@ -32,7 +32,7 @@ async function GetGenresWrapper() {
   const genres = genresList.filter((genObj) => genObj.name !== "Non-fiction");
   const count = genres.length;
 
-  const getGenresBooksPromisesArray = genres.map((val) => getCachedBooksByGenre(val.name));
+  const getGenresBooksPromisesArray = genres.map((val) => getBooksByGenre(val.name));
 
   const allGenresBooksPromisesArrayResult = await Promise.all(getGenresBooksPromisesArray);
 

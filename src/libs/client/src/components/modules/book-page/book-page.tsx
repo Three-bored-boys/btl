@@ -5,10 +5,10 @@ import { BookLocationRadioGroupWrapper } from "./book-location-radio-group-wrapp
 import Image from "next/image";
 import notFoundImage from "@/public/assets/images/not-found.webp";
 import genericBookImage from "@/public/assets/images/generic-book.png";
-import { getCachedBooksByISBN } from "@/server/actions";
+import { getBookByISBN } from "@/server/actions";
 
 export async function BookPage({ params: { isbn } }: { params: { isbn: string } }) {
-  const fetchDataResult = await getCachedBooksByISBN(isbn);
+  const fetchDataResult = await getBookByISBN(isbn);
 
   if (fetchDataResult.success) {
     const {
