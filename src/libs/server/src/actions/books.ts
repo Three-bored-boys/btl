@@ -72,7 +72,7 @@ const cacheBooksByGenre = unstable_cache(booksByGenre, ["genres"], { revalidate:
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const getBooksByISBN = async function (isbn: unknown) {
+export const getBookByISBN = async function (isbn: unknown) {
   const validationResult = z
     .string()
     .min(1)
@@ -89,6 +89,12 @@ const getBooksByISBN = async function (isbn: unknown) {
 
   const validISBN = validationResult.data;
 
+  const cachedBookByISBN = await cacheBookByISBN(validISBN);
+
+  return cachedBookByISBN;
+};
+
+const bookByISBN = async function (isbn: string) {
   let book: Book[];
 
   const googleBooksAPIKey = process.env.GOOGLE_BOOKS_API_KEY;
@@ -98,9 +104,11 @@ const getBooksByISBN = async function (isbn: unknown) {
     throw Error(message);
   }
   const googleBooksService = new GoogleBooksService(googleBooksAPIKey);
-  book = await googleBooksService.getBookByISBN(validISBN);
+  // eslint-disable-next-line prefer-const
+  book = await googleBooksService.getBookByISBN(isbn);
 
-  if (book.length === 0) {
+  // The block below will be for OpenLibrary, when I implement the service API
+  /* if (book.length === 0) {
     const bookSearchResult = (
       await googleBooksService.getBooksByAllParameters({ searchObject: { isbn: validISBN }, paginationObject: {} })
     ).books.find((book) => book.isbn10 === isbn || book.isbn13 === isbn);
@@ -110,19 +118,7 @@ const getBooksByISBN = async function (isbn: unknown) {
     } else {
       book = [bookSearchResult];
     }
-  }
-
-  if (book.length === 0) {
-    const bookSearchResult = (
-      await googleBooksService.getBooksByAllParameters({ searchObject: { search: validISBN }, paginationObject: {} })
-    ).books.find((book) => book.isbn10 === isbn || book.isbn13 === isbn);
-
-    if (!bookSearchResult) {
-      book = [];
-    } else {
-      book = [bookSearchResult];
-    }
-  }
+  } */
 
   if (book.length === 0) {
     const responseData: BadResponse = {
@@ -137,7 +133,7 @@ const getBooksByISBN = async function (isbn: unknown) {
   return responseData;
 };
 
-export const getCachedBooksByISBN = unstable_cache(getBooksByISBN, ["isbn"], { revalidate: 172800 });
+const cacheBookByISBN = unstable_cache(bookByISBN, ["isbn"], { revalidate: 172800 });
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
