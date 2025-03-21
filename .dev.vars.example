@@ -1,5 +1,0 @@
-DATABASE_URL=
-GOOGLE_BOOKS_API_KEY=
-NY_TIMES_BOOKS_API_KEY=
-SESSION_SECRET_KEY=
-ENVIRONMENT="development" (for local dev) | "production" (for preview and production)
