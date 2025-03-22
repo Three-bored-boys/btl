@@ -1,7 +1,7 @@
 import { Client } from "pg";
 import dotenv from "dotenv";
 
-dotenv.config({ path: ".dev.vars" });
+dotenv.config({ path: ".env" });
 
 const client = new Client({
   connectionString: process.env.DATABASE_URL,
