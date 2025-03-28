@@ -85,7 +85,7 @@ export const getBookByISBN = async function (isbn: unknown) {
   return cachedBookByISBN;
 };
 
-const bookByISBN = async function (isbn: string) {
+export const bookByISBN = async function (isbn: string) {
   let book: Book[];
 
   const googleBooksAPIKey = process.env.GOOGLE_BOOKS_API_KEY;
@@ -106,7 +106,9 @@ const bookByISBN = async function (isbn: string) {
     return responseData;
   }
 
-  const responseData: GoodResponse<Book[]> = { success: true, data: book };
+  const [bookObj] = book;
+
+  const responseData: GoodResponse<Book> = { success: true, data: bookObj };
   return responseData;
 };
 
