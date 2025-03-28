@@ -1,4 +1,6 @@
-import { Book } from "@/root/src/libs/shared/src/types";
+"use client";
+
+import { BadResponse, Book, GoodResponse } from "@/root/src/libs/shared/src/types";
 import React from "react";
 import { SidebarContext } from "./collection-layout";
 import { cn } from "@/client/utils";
@@ -8,13 +10,13 @@ import { LinkButton } from "@/client/components/ui/link-button";
 type OverviewLibraryPreviewSectionProps = {
   name: string;
   slug: string;
-  books: Book[];
+  serverResult: GoodResponse<Book[]> | BadResponse;
 } & React.ComponentProps<"section">;
 
 export function OverviewLibraryPreviewSection({
   name,
   slug,
-  books,
+  serverResult,
   className,
   ...props
 }: OverviewLibraryPreviewSectionProps) {
@@ -25,6 +27,12 @@ export function OverviewLibraryPreviewSection({
   }
 
   const { showSidebar } = sidebarContextValue;
+
+  if (!serverResult.success) {
+    return <div>{serverResult.errors[0]}</div>;
+  }
+
+  const { data: books } = serverResult;
 
   const booksToRender = function (): Book[] {
     if (books.length <= 5) {

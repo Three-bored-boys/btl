@@ -8,7 +8,8 @@ import { revalidatePath, unstable_cache } from "next/cache";
 import { getUserSession } from "@/server/actions";
 import { z } from "zod";
 import { redirect } from "next/navigation";
-import { BadResponse, GoodResponse } from "@/shared/types";
+import { BadResponse, Book, GoodResponse } from "@/shared/types";
+import { bookByISBN } from "@/server/actions/books";
 
 export const getUserBookLibraryValue = async function (isbn: string, userId: number) {
   const cachedUserBookLibraryValue = await cacheUserBookLibraryValue(isbn, userId);
@@ -117,4 +118,40 @@ export const deleteUserBook = async function ({ isbn, redirectUrl }: { isbn: str
     };
     return responseData;
   }
+};
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const getUserBooksInALibrary = async function ({
+  library,
+  userId,
+  limit,
+}: {
+  library: unknown;
+  userId: number;
+  limit: number;
+}): Promise<BadResponse | GoodResponse<Book[]>> {
+  const validation = z.enum(bookLibraryValues).safeParse(library);
+
+  if (!validation.success) {
+    return { success: false, errors: [validation.error.message], status: 404 };
+  }
+
+  const { data: libraryValue } = validation;
+
+  const result = await db
+    .select({ isbn: userBooks.isbn })
+    .from(userBooks)
+    .where(and(eq(userBooks.libraryValue, libraryValue), eq(userBooks.userId, userId)))
+    .limit(limit);
+  const promiseBooksByISBN = result.map((obj) => obj.isbn).map((isbn) => bookByISBN(isbn));
+  const settledArray = await Promise.all(promiseBooksByISBN);
+  const hasBadResponse = settledArray.some((obj) => !obj.success);
+  if (hasBadResponse) {
+    return { success: false, errors: ["Something went wrong while getting the information"], status: 404 };
+  }
+  return {
+    success: true,
+    data: settledArray.filter((obj): obj is GoodResponse<Book> => obj.success).map((obj) => obj.data),
+  };
 };

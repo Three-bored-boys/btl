@@ -11,9 +11,7 @@ export async function BookPage({ params: { isbn } }: { params: { isbn: string } 
   const fetchDataResult = await getBookByISBN(isbn);
 
   if (fetchDataResult.success) {
-    const {
-      data: [book],
-    } = fetchDataResult;
+    const { data: book } = fetchDataResult;
 
     return (
       <div className="mt-5">
