@@ -22,6 +22,9 @@ const userBookLibraryValue = async function (isbn: string, userId: number) {
       .select()
       .from(userBooks)
       .where(and(eq(userBooks.userId, userId), eq(userBooks.isbn, isbn)));
+    if (!book) {
+      return null;
+    }
     return book.libraryValue;
   } catch (e) {
     console.log(e);
@@ -29,7 +32,7 @@ const userBookLibraryValue = async function (isbn: string, userId: number) {
   }
 };
 
-const cacheUserBookLibraryValue = unstable_cache(userBookLibraryValue, ["user-book-library-value"], {
+const cacheUserBookLibraryValue = unstable_cache(userBookLibraryValue, [], {
   tags: ["user-book-library-value"],
 });
 
