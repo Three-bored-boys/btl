@@ -26,7 +26,7 @@ const getNYTBestSellers = async function () {
   return responseData;
 };
 
-export const getCachedNYTBestSellers = unstable_cache(getNYTBestSellers, ["best-sellers"], { revalidate: 259200 });
+export const getCachedNYTBestSellers = unstable_cache(getNYTBestSellers, [], { revalidate: 259200 });
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -59,7 +59,7 @@ const booksByGenre = async function (genre: string) {
   return responseData;
 };
 
-const cacheBooksByGenre = unstable_cache(booksByGenre, ["genres"], { revalidate: 259200 });
+const cacheBooksByGenre = unstable_cache(booksByGenre, [], { revalidate: 259200 });
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -112,7 +112,7 @@ export const bookByISBN = async function (isbn: string) {
   return responseData;
 };
 
-const cacheBookByISBN = unstable_cache(bookByISBN, ["isbn"], { revalidate: 172800 });
+const cacheBookByISBN = unstable_cache(bookByISBN, [], { revalidate: 172800 });
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -145,7 +145,7 @@ const quickSearchResults = async function (search: string) {
   return responseData;
 };
 
-const cacheQuickSearchResults = unstable_cache(quickSearchResults, ["quick-search"], {
+const cacheQuickSearchResults = unstable_cache(quickSearchResults, [], {
   revalidate: 86400,
 });
 
@@ -183,6 +183,6 @@ const fullSearchResults = async function (fullSearchObject: SearchObjectType & P
   return responseData;
 };
 
-const cacheFullSearchResults = unstable_cache(fullSearchResults, ["full-search"], {
+const cacheFullSearchResults = unstable_cache(fullSearchResults, [], {
   revalidate: 86400,
 });
