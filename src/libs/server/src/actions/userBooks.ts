@@ -18,14 +18,17 @@ export const getUserBookLibraryValue = async function (isbn: string, userId: num
 
 const userBookLibraryValue = async function (isbn: string, userId: number) {
   try {
-    const [book] = await db
+    const book = await db
       .select()
       .from(userBooks)
       .where(and(eq(userBooks.userId, userId), eq(userBooks.isbn, isbn)));
     if (!book) {
       return null;
     }
-    return book.libraryValue;
+    if (book.length === 0) {
+      return null;
+    }
+    return book[0].libraryValue;
   } catch (e) {
     console.log(e);
     return null;
