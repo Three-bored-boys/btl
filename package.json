@@ -29,10 +29,10 @@
     "embla-carousel-autoplay": "^8.5.2",
     "embla-carousel-react": "^8.5.2",
     "geist": "^1.3.1",
-    "next": "15.2.2",
+    "next": "14.2.26",
     "pg": "^8.13.1",
-    "react": "19.0.0",
-    "react-dom": "19.0.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
     "react-error-boundary": "^4.0.13",
     "tailwind-merge": "^2.3.0",
     "ws": "^8.18.0",
@@ -44,8 +44,8 @@
     "@commitlint/config-conventional": "^19.2.2",
     "@eslint/js": "^9.22.0",
     "@types/node": "^20",
-    "@types/react": "19.0.10",
-    "@types/react-dom": "19.0.4",
+    "@types/react": "18.3.20",
+    "@types/react-dom": "18.3.5",
     "dotenv": "^16.4.7",
     "drizzle-kit": "^0.22.2",
     "eslint": "^9.22.0",
@@ -61,11 +61,5 @@
     "tsx": "^4.11.2",
     "typescript": "^5.4.5",
     "typescript-eslint": "^8.26.1"
-  },
-  "pnpm": {
-    "overrides": {
-      "@types/react": "19.0.10",
-      "@types/react-dom": "19.0.4"
-    }
   }
 }
