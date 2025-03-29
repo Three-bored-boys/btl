@@ -7,7 +7,6 @@ const nextConfig = {
       { hostname: "covers.openlibrary.org" },
     ],
   },
-  eslint: { dirs: ["src/app", "src/libs"] },
 };
 
 export default nextConfig;
