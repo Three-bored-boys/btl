@@ -26,18 +26,30 @@ export function SubmitButton({
       textSize={textSize}
       className={cn({
         "cursor-not-allowed": isSubmitting,
-        "bg-secondary-100 hover:bg-secondary-200": isSubmitting && background === "light",
-        "bg-primary-100 hover:bg-primary-200": isSubmitting && background === "dark",
+        "bg-secondary-100 hover:bg-secondary-200": background === "light",
+        "bg-primary-100 hover:bg-primary-200": background === "dark",
       })}
       {...props}
     >
       {isSubmitting ? (
-        <span className="mx-auto flex items-center justify-start gap-2">
+        <span
+          className={cn("mx-auto flex items-center justify-start gap-2", {
+            "text-secondary-50": background === "dark",
+            "text-primary": background === "light",
+          })}
+        >
           <span>{submittingText}</span>
           <Spinner size={"1"}></Spinner>
         </span>
       ) : (
-        <span className="mx-auto">{defaultText}</span>
+        <span
+          className={cn("mx-auto", {
+            "text-secondary-50": background === "dark",
+            "text-primary": background === "light",
+          })}
+        >
+          {defaultText}
+        </span>
       )}
     </Button>
   );
