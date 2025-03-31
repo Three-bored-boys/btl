@@ -8,7 +8,7 @@ import { revalidatePath, unstable_cache } from "next/cache";
 import { getUserSession } from "@/server/actions";
 import { z } from "zod";
 import { redirect } from "next/navigation";
-import { BadResponse, Book, GoodResponse } from "@/shared/types";
+import { BadResponse, Book, GoodResponse, ServerResult } from "@/shared/types";
 import { bookByISBN } from "@/server/actions/books";
 
 export const getUserBookLibraryValue = async function (isbn: string, userId: number) {
@@ -136,7 +136,7 @@ export const getUserBooksInALibrary = async function ({
   library: unknown;
   userId: number;
   limit: number;
-}): Promise<BadResponse | GoodResponse<Book[]>> {
+}): Promise<ServerResult<Book[]>> {
   const validation = z.enum(bookLibraryValues).safeParse(library);
 
   if (!validation.success) {
