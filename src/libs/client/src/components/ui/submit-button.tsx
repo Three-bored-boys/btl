@@ -31,26 +31,28 @@ export function SubmitButton({
       })}
       {...props}
     >
-      {isSubmitting ? (
-        <span
-          className={cn("mx-auto flex items-center justify-start gap-2", {
+      <span
+        className={cn(
+          "mx-auto flex items-center justify-start gap-2",
+          {
             "text-secondary-50": background === "dark",
             "text-primary": background === "light",
-          })}
-        >
-          <span>{submittingText}</span>
-          <Spinner size={"1"}></Spinner>
-        </span>
-      ) : (
-        <span
-          className={cn("mx-auto", {
-            "text-secondary-50": background === "dark",
-            "text-primary": background === "light",
-          })}
-        >
-          {defaultText}
-        </span>
-      )}
+          },
+          {
+            "text-secondary-50": background === "dark" && isSubmitting,
+            "text-primary": background === "light" && isSubmitting,
+          },
+        )}
+      >
+        {isSubmitting ? (
+          <>
+            {submittingText}
+            <Spinner size={"1"}></Spinner>
+          </>
+        ) : (
+          defaultText
+        )}
+      </span>
     </Button>
   );
 }
