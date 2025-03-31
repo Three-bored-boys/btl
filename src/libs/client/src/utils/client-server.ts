@@ -16,7 +16,7 @@ export const containerStyleClasses = cn(
 export const button = cva(["h-auto", "rounded-3xl", "border-2", "border-transparent", "px-6", "py-1", "font-normal"], {
   variants: {
     background: {
-      dark: ["bg-primary", "text-primary-50", "border-0", "hover:bg-primary-600"],
+      dark: ["bg-primary", "text-secondary-50", "border-0", "hover:bg-primary-600"],
       light: ["border-primary", "bg-secondary-300", "text-primary", "border-0", "hover:bg-secondary-400"],
     },
     textSize: {
