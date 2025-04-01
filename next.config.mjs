@@ -6,8 +6,8 @@ const nextConfig = {
       { hostname: "storage.googleapis.com" },
       { hostname: "covers.openlibrary.org" },
     ],
+    unoptimized: true,
   },
-  eslint: { dirs: ["src/app", "src/libs"] },
 };
 
 export default nextConfig;

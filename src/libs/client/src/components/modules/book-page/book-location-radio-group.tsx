@@ -1,18 +1,19 @@
 "use client";
 
-import { BadResponse, GoodResponse } from "@/root/src/libs/shared/src/types";
+import { ServerResult } from "@/shared/types";
 import { FormErrorListItem } from "@/client/components/ui/form-error-list-item";
 import { cn } from "@/client/utils";
-import { RadioCards } from "@radix-ui/themes";
-import { Button } from "@/client/components/ui/button";
 import { BookOpen } from "@/client/components/ui/icons/book-open";
+import { Button } from "@/client/components/ui/button";
 import { ListBullet } from "@/client/components/ui/icons/list-bullet";
 import { Check } from "@/client/components/ui/icons/check";
 import { Trash } from "@/client/components/ui/icons/trash";
 import { bookLibraries } from "@/shared/utils";
-import { ReactNode, useTransition, useState, useEffect } from "react";
-import { addUserBook, deleteUserBook } from "@/server/actions";
+import { ReactNode, useEffect, useState } from "react";
+import { mutateUserBook } from "@/server/actions";
 import { useWindowLocationHref } from "@/client/hooks/window-location-href";
+import { useActionState } from "react";
+import { Grid } from "@radix-ui/themes";
 
 const bookLibraryIcons: [ReactNode, ReactNode, ReactNode, ReactNode] = [
   <BookOpen key={0} />,
@@ -23,64 +24,56 @@ const bookLibraryIcons: [ReactNode, ReactNode, ReactNode, ReactNode] = [
 const bookLibrariesWithIcons = bookLibraries.map((obj, i) => ({ ...obj, icon: bookLibraryIcons[i] }));
 
 export const BookLocationRadioGroup = function ({ library, isbn }: { library: string | null; isbn: string }) {
-  const [settledResult, setSettledResult] = useState<BadResponse | GoodResponse<string> | null>(null);
-  const [isPending, startTransition] = useTransition();
   const redirectUrl = useWindowLocationHref();
+  const [state, action, isPending] = useActionState(mutateUserBook, null);
+  const [settledResult, setSettledResult] = useState<ServerResult<string> | null>(null);
 
   useEffect(() => {
-    if (settledResult?.success) {
-      const timer = setTimeout(() => setSettledResult(null), 3000);
-      return () => clearTimeout(timer);
+    setSettledResult(state);
+    let timer: NodeJS.Timeout;
+    if (state?.success) {
+      timer = setTimeout(() => setSettledResult(null), 3000);
     }
-  }, [settledResult]);
+    return () => clearTimeout(timer);
+  }, [state]);
 
   return (
-    <div className="pt-3">
+    <form className="block pt-3" action={action}>
+      <input type="hidden" name="isbn" value={isbn}></input>
+      <input type="hidden" name="redirect" value={redirectUrl}></input>
       <div>
-        <RadioCards.Root size={"1"} color="bronze" columns={{ initial: "1", xs: "2", lg: "4" }}>
+        <Grid columns={{ initial: "1", xs: "2", lg: "4" }} gap={{ initial: "2", xs: "3", lg: "4" }}>
           {bookLibrariesWithIcons.map((obj, i) => (
-            <RadioCards.Item
-              value={obj.value}
-              key={i}
-              className={cn("hover:cursor-pointer hover:bg-secondary-300")}
+            <Button
               title={`Add to '${obj.name}'`}
-              checked={obj.value === library}
-              onClick={() => {
-                startTransition(async () => {
-                  const result = await addUserBook({ isbn, library: obj.value, redirectUrl });
-                  setSettledResult(result);
-                });
-              }}
               disabled={isPending}
+              name={obj.value !== library ? "library" : undefined}
+              value={obj.value !== library ? obj.value : undefined}
+              type="submit"
+              className={cn(
+                "flex items-center justify-center gap-1 rounded-md bg-secondary-50 text-sm hover:cursor-pointer hover:bg-secondary-100 md:gap-2 md:text-base",
+                {
+                  "border-2 border-secondary-300 bg-secondary-100 hover:bg-secondary-200": obj.value === library,
+                  "bg-slate-50 hover:cursor-wait hover:bg-slate-100": isPending,
+                  "border-2 border-gray-300 hover:bg-gray-200": obj.value === library && isPending,
+                },
+              )}
+              key={i}
             >
               <span>{obj.name}</span>
               {obj.icon}
-            </RadioCards.Item>
+            </Button>
           ))}
-        </RadioCards.Root>
+        </Grid>
       </div>
       <div className="mt-6 flex flex-col items-start justify-start">
-        {library && (
-          <Button
-            background={"dark"}
-            className="text-sm"
-            onClick={() => {
-              startTransition(async () => {
-                const result = await deleteUserBook({ isbn, redirectUrl });
-                setSettledResult(result);
-              });
-            }}
-          >
-            Clear
-          </Button>
-        )}
         <ServerResultMessage serverResult={settledResult}></ServerResultMessage>
       </div>
-    </div>
+    </form>
   );
 };
 
-const ServerResultMessage = function ({ serverResult }: { serverResult: BadResponse | GoodResponse<string> | null }) {
+const ServerResultMessage = function ({ serverResult }: { serverResult: ServerResult<string> | null }) {
   if (!serverResult) return null;
   if (serverResult.success) {
     return (

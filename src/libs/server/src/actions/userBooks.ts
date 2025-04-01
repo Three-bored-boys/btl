@@ -8,7 +8,8 @@ import { revalidatePath, unstable_cache } from "next/cache";
 import { getUserSession } from "@/server/actions";
 import { z } from "zod";
 import { redirect } from "next/navigation";
-import { BadResponse, GoodResponse } from "@/shared/types";
+import { BadResponse, Book, GoodResponse, ServerResult } from "@/shared/types";
+import { bookByISBN } from "@/server/actions/books";
 
 export const getUserBookLibraryValue = async function (isbn: string, userId: number) {
   const cachedUserBookLibraryValue = await cacheUserBookLibraryValue(isbn, userId);
@@ -17,90 +18,63 @@ export const getUserBookLibraryValue = async function (isbn: string, userId: num
 
 const userBookLibraryValue = async function (isbn: string, userId: number) {
   try {
-    const [book] = await db
+    const book = await db
       .select()
       .from(userBooks)
       .where(and(eq(userBooks.userId, userId), eq(userBooks.isbn, isbn)));
-    return book.libraryValue;
+    if (!book) {
+      return null;
+    }
+    if (book.length === 0) {
+      return null;
+    }
+    return book[0].libraryValue;
   } catch (e) {
     console.log(e);
     return null;
   }
 };
 
-const cacheUserBookLibraryValue = unstable_cache(userBookLibraryValue, ["user-book-library-value"], {
+const cacheUserBookLibraryValue = unstable_cache(userBookLibraryValue, [], {
   tags: ["user-book-library-value"],
 });
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const addUserBook = async function ({
-  isbn,
-  library,
-  redirectUrl,
-}: {
-  isbn: unknown;
-  library: unknown;
-  redirectUrl: string;
-}): Promise<BadResponse | GoodResponse<string>> {
+export const mutateUserBook = async function (
+  _: ServerResult<string> | null,
+  formData: FormData,
+): Promise<ServerResult<string>> {
+  console.log("Currently In the root of mutateUserBook");
+  const redirectUrl = formData.get("redirect") as string | null;
+  const libraryRaw = formData.get("library");
+  const isbnRaw = formData.get("isbn");
   const { user } = await getUserSession();
   if (!user) {
-    redirect(`/login?redirect=${encodeURIComponent(redirectUrl)}`);
+    if (redirectUrl) {
+      redirect(`/login?redirect=${encodeURIComponent(redirectUrl)}`);
+    }
+    redirect("/login");
   }
 
-  const validation = z.object({ isbn: z.string(), library: z.enum(bookLibraryValues) }).safeParse({ isbn, library });
-
-  if (!validation.success) {
-    return { success: false, errors: ["Invalid entries"], status: 404 };
+  const validationForISBN = z.string().safeParse(isbnRaw);
+  if (!validationForISBN.success) {
+    return { success: false, errors: [validationForISBN.error.message], status: 404 };
   }
+  const isbn = validationForISBN.data;
 
-  const { isbn: validIsbn, library: validLibrary } = validation.data;
-
-  try {
-    const existingUserBookWithISBN = await db
-      .select()
-      .from(userBooks)
-      .where(and(eq(userBooks.userId, user.id), eq(userBooks.isbn, validIsbn)));
-
-    if (existingUserBookWithISBN.length === 0) {
-      await db.insert(userBooks).values({ isbn: validIsbn, libraryValue: validLibrary, userId: user.id });
-      const responseData: GoodResponse<string> = {
-        success: true,
-        data: `Added to ${bookLibraries.find((obj) => obj.value === library)?.name ?? "collection"}!`,
+  if (!libraryRaw) {
+    try {
+      await db.delete(userBooks).where(and(eq(userBooks.userId, user.id), eq(userBooks.isbn, isbn)));
+    } catch (e) {
+      console.log(e);
+      const responseData: BadResponse = {
+        success: false,
+        errors: ["There was an issue deleting the book from your collection"],
+        status: 500,
       };
       return responseData;
     }
-
-    await db
-      .update(userBooks)
-      .set({ libraryValue: validLibrary })
-      .where(and(eq(userBooks.userId, user.id), eq(userBooks.isbn, validIsbn)));
-
-    const responseData: GoodResponse<string> = {
-      success: true,
-      data: `Added to ${bookLibraries.find((obj) => obj.value === library)?.name ?? "collection"}!`,
-    };
-
-    revalidatePath(`/book/${validIsbn}`);
-    return responseData;
-  } catch (e) {
-    console.log(e);
-    const responseData: BadResponse = { success: false, errors: ["There was an issue adding book"], status: 500 };
-    return responseData;
-  }
-};
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export const deleteUserBook = async function ({ isbn, redirectUrl }: { isbn: string; redirectUrl: string }) {
-  const { user } = await getUserSession();
-  if (!user) {
-    redirect(`/login?redirect=${encodeURIComponent(redirectUrl)}`);
-  }
-
-  try {
-    await db.delete(userBooks).where(and(eq(userBooks.userId, user.id), eq(userBooks.isbn, isbn)));
-
     const responseData: GoodResponse<string> = {
       success: true,
       data: "Removed from collection!",
@@ -108,13 +82,74 @@ export const deleteUserBook = async function ({ isbn, redirectUrl }: { isbn: str
 
     revalidatePath(`/book/${isbn}`);
     return responseData;
+  }
+
+  const validationForLibrary = z.enum(bookLibraryValues).safeParse(libraryRaw);
+  if (!validationForLibrary.success) {
+    return { success: false, errors: [validationForLibrary.error.message], status: 404 };
+  }
+  const library = validationForLibrary.data;
+
+  try {
+    const existingUserBookWithISBN = await db
+      .select()
+      .from(userBooks)
+      .where(and(eq(userBooks.userId, user.id), eq(userBooks.isbn, isbn)));
+
+    if (existingUserBookWithISBN.length === 0) {
+      await db.insert(userBooks).values({ isbn, libraryValue: library, userId: user.id });
+    }
+
+    await db
+      .update(userBooks)
+      .set({ libraryValue: library })
+      .where(and(eq(userBooks.userId, user.id), eq(userBooks.isbn, isbn)));
   } catch (e) {
     console.log(e);
-    const responseData: BadResponse = {
-      success: false,
-      errors: ["There was an issue deleting the book from your collection"],
-      status: 500,
-    };
+    const responseData: BadResponse = { success: false, errors: ["There was an issue adding book"], status: 500 };
     return responseData;
+  }
+  const responseData: GoodResponse<string> = {
+    success: true,
+    data: `Added to ${bookLibraries.find((obj) => obj.value === library)?.name ?? "collection"}!`,
+  };
+
+  revalidatePath(`/book/${isbn}`);
+  return responseData;
+};
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const getUserBooksInALibrary = async function ({
+  library,
+  userId,
+  limit,
+}: {
+  library: unknown;
+  userId: number;
+  limit: number;
+}): Promise<ServerResult<Book[]>> {
+  const validation = z.enum(bookLibraryValues).safeParse(library);
+
+  if (!validation.success) {
+    return { success: false, errors: ["Input validation failed"], status: 404 };
+  }
+
+  const { data: libraryValue } = validation;
+
+  try {
+    const result = await db
+      .select({ isbn: userBooks.isbn })
+      .from(userBooks)
+      .where(and(eq(userBooks.libraryValue, libraryValue), eq(userBooks.userId, userId)))
+      .limit(limit);
+    const promiseBooksByISBN = result.map((obj) => obj.isbn).map((isbn) => bookByISBN(isbn));
+    const settledArray = await Promise.all(promiseBooksByISBN);
+    return {
+      success: true,
+      data: settledArray.filter((obj): obj is GoodResponse<Book> => obj.success).map((obj) => obj.data),
+    };
+  } catch (e) {
+    return { success: false, errors: ["Something went wrong while getting the information"], status: 404 };
   }
 };

@@ -1,20 +1,23 @@
-import { Book } from "@/root/src/libs/shared/src/types";
+"use client";
+
+import { BadResponse, Book, GoodResponse } from "@/root/src/libs/shared/src/types";
 import React from "react";
 import { SidebarContext } from "./collection-layout";
 import { cn } from "@/client/utils";
 import { LibraryBooksPreview } from "./library-books-preview";
 import { LinkButton } from "@/client/components/ui/link-button";
+import { ExclamationTriangle } from "@/client/components/ui/icons/exclamation-triangle";
 
 type OverviewLibraryPreviewSectionProps = {
   name: string;
   slug: string;
-  books: Book[];
+  serverResult: GoodResponse<Book[]> | BadResponse;
 } & React.ComponentProps<"section">;
 
 export function OverviewLibraryPreviewSection({
   name,
   slug,
-  books,
+  serverResult,
   className,
   ...props
 }: OverviewLibraryPreviewSectionProps) {
@@ -25,6 +28,22 @@ export function OverviewLibraryPreviewSection({
   }
 
   const { showSidebar } = sidebarContextValue;
+
+  if (!serverResult.success) {
+    const { errors, status } = serverResult;
+    return (
+      <section {...props} className={cn("mt-5 w-full sm:mt-7 md:mt-8 lg:mt-10")}>
+        <h2 className={cn("mb-1.5 text-2xl font-light sm:mb-2 sm:text-3xl md:mb-3 lg:mb-4 lg:text-4xl")}>{name}</h2>
+        <div className="my-2 flex w-full flex-col items-center justify-start gap-y-1">
+          <ExclamationTriangle />
+          <p className="text-xl font-semibold">Error {status}</p>
+          <p className="text-base font-normal">{errors[0]}</p>
+        </div>
+      </section>
+    );
+  }
+
+  const { data: books } = serverResult;
 
   const booksToRender = function (): Book[] {
     if (books.length <= 5) {
