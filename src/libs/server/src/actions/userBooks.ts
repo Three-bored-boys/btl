@@ -4,12 +4,14 @@ import { db } from "@/server/db/db";
 import { userBooks } from "@/server/db/schema";
 import { bookLibraries, bookLibraryValues } from "@/shared/utils";
 import { and, eq } from "drizzle-orm";
-import { revalidatePath, unstable_cache } from "next/cache";
+import { revalidateTag, unstable_cache } from "next/cache";
 import { getUserSession } from "@/server/actions";
 import { z } from "zod";
 import { redirect } from "next/navigation";
 import { BadResponse, Book, GoodResponse, ServerResult } from "@/shared/types";
-import { bookByISBN } from "@/server/actions/books";
+import { cacheBookByISBN } from "@/server/actions/books";
+
+const USER_BOOKS_CACHE_TAG = "user-books";
 
 export const getUserBookLibraryValue = async function (isbn: string, userId: number) {
   const cachedUserBookLibraryValue = await cacheUserBookLibraryValue(isbn, userId);
@@ -36,7 +38,7 @@ const userBookLibraryValue = async function (isbn: string, userId: number) {
 };
 
 const cacheUserBookLibraryValue = unstable_cache(userBookLibraryValue, [], {
-  tags: ["user-book-library-value"],
+  tags: [USER_BOOKS_CACHE_TAG],
 });
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -80,7 +82,7 @@ export const mutateUserBook = async function (
       data: "Removed from collection!",
     };
 
-    revalidatePath(`/book/${isbn}`);
+    revalidateTag(USER_BOOKS_CACHE_TAG);
     return responseData;
   }
 
@@ -114,7 +116,7 @@ export const mutateUserBook = async function (
     data: `Added to ${bookLibraries.find((obj) => obj.value === library)?.name ?? "collection"}!`,
   };
 
-  revalidatePath(`/book/${isbn}`);
+  revalidateTag(USER_BOOKS_CACHE_TAG);
   return responseData;
 };
 
@@ -138,12 +140,8 @@ export const getUserBooksInALibrary = async function ({
   const { data: libraryValue } = validation;
 
   try {
-    const result = await db
-      .select({ isbn: userBooks.isbn })
-      .from(userBooks)
-      .where(and(eq(userBooks.libraryValue, libraryValue), eq(userBooks.userId, userId)))
-      .limit(limit);
-    const promiseBooksByISBN = result.map((obj) => obj.isbn).map((isbn) => bookByISBN(isbn));
+    const result = await cacheUserBooksInALibrary(libraryValue, userId, limit);
+    const promiseBooksByISBN = result.map((obj) => obj.isbn).map((isbn) => cacheBookByISBN(isbn));
     const settledArray = await Promise.all(promiseBooksByISBN);
     return {
       success: true,
@@ -153,3 +151,17 @@ export const getUserBooksInALibrary = async function ({
     return { success: false, errors: ["Something went wrong while getting the information"], status: 404 };
   }
 };
+
+const userBooksInALibrary = async function (
+  library: (typeof bookLibraryValues)[number],
+  userId: number,
+  limit: number,
+) {
+  return await db
+    .select({ isbn: userBooks.isbn })
+    .from(userBooks)
+    .where(and(eq(userBooks.libraryValue, library), eq(userBooks.userId, userId)))
+    .limit(limit);
+};
+
+const cacheUserBooksInALibrary = unstable_cache(userBooksInALibrary, [], { tags: [USER_BOOKS_CACHE_TAG] });
