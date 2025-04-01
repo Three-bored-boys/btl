@@ -9,7 +9,7 @@ import { getUserSession } from "@/server/actions";
 import { z } from "zod";
 import { redirect } from "next/navigation";
 import { BadResponse, Book, GoodResponse, ServerResult } from "@/shared/types";
-import { bookByISBN } from "@/server/actions/books";
+import { cacheBookByISBN } from "@/server/actions/books";
 
 const USER_BOOKS_CACHE_TAG = "user-books";
 
@@ -141,7 +141,7 @@ export const getUserBooksInALibrary = async function ({
 
   try {
     const result = await cacheUserBooksInALibrary(libraryValue, userId, limit);
-    const promiseBooksByISBN = result.map((obj) => obj.isbn).map((isbn) => bookByISBN(isbn));
+    const promiseBooksByISBN = result.map((obj) => obj.isbn).map((isbn) => cacheBookByISBN(isbn));
     const settledArray = await Promise.all(promiseBooksByISBN);
     return {
       success: true,
