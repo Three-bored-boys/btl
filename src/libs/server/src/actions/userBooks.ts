@@ -4,7 +4,7 @@ import { db } from "@/server/db/db";
 import { userBooks } from "@/server/db/schema";
 import { bookLibraries, bookLibraryValues } from "@/shared/utils";
 import { and, eq } from "drizzle-orm";
-import { revalidatePath, revalidateTag, unstable_cache } from "next/cache";
+import { revalidateTag, unstable_cache } from "next/cache";
 import { getUserSession } from "@/server/actions";
 import { z } from "zod";
 import { redirect } from "next/navigation";
@@ -83,7 +83,6 @@ export const mutateUserBook = async function (
     };
 
     revalidateTag(USER_BOOKS_CACHE_TAG);
-    revalidatePath(`/book/${isbn}`);
     return responseData;
   }
 
@@ -118,7 +117,6 @@ export const mutateUserBook = async function (
   };
 
   revalidateTag(USER_BOOKS_CACHE_TAG);
-  revalidatePath(`/book/${isbn}`);
   return responseData;
 };
 
