@@ -24,7 +24,11 @@ export function SubmitButton({
       type="submit"
       disabled={isSubmitting}
       textSize={textSize}
-      className={cn({ "cursor-not-allowed bg-secondary-100 hover:bg-secondary-200": isSubmitting })}
+      className={cn({
+        "cursor-not-allowed": isSubmitting,
+        "bg-secondary-100 hover:bg-secondary-200": isSubmitting && background === "light",
+        "bg-primary-100 hover:bg-primary-200": isSubmitting && background === "dark",
+      })}
       {...props}
     >
       {isSubmitting ? (
