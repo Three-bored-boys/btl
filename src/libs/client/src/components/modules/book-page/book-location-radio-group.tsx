@@ -54,7 +54,7 @@ export const BookLocationRadioGroup = function ({ library, isbn }: { library: st
                 "flex items-center justify-center gap-1 rounded-md bg-secondary-50 text-sm hover:cursor-pointer hover:bg-secondary-100 md:gap-2 md:text-base",
                 {
                   "border-2 border-secondary-300 bg-secondary-100 hover:bg-secondary-200": obj.value === library,
-                  "bg-slate-50 hover:bg-slate-100": isPending,
+                  "bg-slate-50 hover:cursor-wait hover:bg-slate-100": isPending,
                   "border-2 border-gray-300 hover:bg-gray-200": obj.value === library && isPending,
                 },
               )}
