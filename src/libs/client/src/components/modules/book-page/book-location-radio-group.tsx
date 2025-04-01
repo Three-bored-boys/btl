@@ -4,7 +4,7 @@ import { ServerResult } from "@/shared/types";
 import { FormErrorListItem } from "@/client/components/ui/form-error-list-item";
 import { cn } from "@/client/utils";
 import { BookOpen } from "@/client/components/ui/icons/book-open";
-import { Button, ButtonProps } from "@/client/components/ui/button";
+import { Button } from "@/client/components/ui/button";
 import { ListBullet } from "@/client/components/ui/icons/list-bullet";
 import { Check } from "@/client/components/ui/icons/check";
 import { Trash } from "@/client/components/ui/icons/trash";
@@ -13,7 +13,7 @@ import { ReactNode, useEffect, useState } from "react";
 import { mutateUserBook } from "@/server/actions";
 import { useWindowLocationHref } from "@/client/hooks/window-location-href";
 import { useActionState } from "react";
-import { Grid, Spinner } from "@radix-ui/themes";
+import { Grid } from "@radix-ui/themes";
 
 const bookLibraryIcons: [ReactNode, ReactNode, ReactNode, ReactNode] = [
   <BookOpen key={0} />,
@@ -47,8 +47,8 @@ export const BookLocationRadioGroup = function ({ library, isbn }: { library: st
             <Button
               title={`Add to '${obj.name}'`}
               disabled={isPending}
-              name="library"
-              value={obj.value}
+              name={obj.value !== library ? "library" : undefined}
+              value={obj.value !== library ? obj.value : undefined}
               type="submit"
               className={cn(
                 "flex items-center justify-center gap-1 rounded-md bg-secondary-50 text-sm hover:cursor-pointer hover:bg-secondary-100 md:gap-2 md:text-base",
@@ -67,36 +67,9 @@ export const BookLocationRadioGroup = function ({ library, isbn }: { library: st
         </Grid>
       </div>
       <div className="mt-6 flex flex-col items-start justify-start">
-        {library && (
-          <ClearButton type="submit" background={"dark"} textSize={"small"} disabled={isPending} library={library} />
-        )}
         <ServerResultMessage serverResult={settledResult}></ServerResultMessage>
       </div>
     </form>
-  );
-};
-
-const ClearButton = function (props: ButtonProps & { library: string }) {
-  const { disabled, library, background, ...rest } = props;
-  return (
-    <Button
-      className={cn("text-sm", {
-        "bg-primary-300 hover:bg-primary-400": disabled && background === "dark",
-        "bg-secondary-200 hover:bg-secondary-300": disabled && background === "light",
-      })}
-      disabled={disabled}
-      background={background}
-      {...rest}
-    >
-      {!disabled ? (
-        `Remove from ${bookLibraries.find((obj) => obj.value === library)?.name ?? "collection"}`
-      ) : (
-        <span className="mx-auto flex items-center justify-start gap-2">
-          Submitting...
-          <Spinner size={"1"}></Spinner>
-        </span>
-      )}
-    </Button>
   );
 };
 
