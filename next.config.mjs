@@ -6,6 +6,7 @@ const nextConfig = {
       { hostname: "storage.googleapis.com" },
       { hostname: "covers.openlibrary.org" },
     ],
+    unoptimized: true,
   },
 };
 
