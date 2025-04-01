@@ -132,24 +132,24 @@ export const getUserBooksInALibrary = async function ({
   const validation = z.enum(bookLibraryValues).safeParse(library);
 
   if (!validation.success) {
-    return { success: false, errors: [validation.error.message], status: 404 };
+    return { success: false, errors: ["Input validation failed"], status: 404 };
   }
 
   const { data: libraryValue } = validation;
 
-  const result = await db
-    .select({ isbn: userBooks.isbn })
-    .from(userBooks)
-    .where(and(eq(userBooks.libraryValue, libraryValue), eq(userBooks.userId, userId)))
-    .limit(limit);
-  const promiseBooksByISBN = result.map((obj) => obj.isbn).map((isbn) => bookByISBN(isbn));
-  const settledArray = await Promise.all(promiseBooksByISBN);
-  const hasBadResponse = settledArray.some((obj) => !obj.success);
-  if (hasBadResponse) {
+  try {
+    const result = await db
+      .select({ isbn: userBooks.isbn })
+      .from(userBooks)
+      .where(and(eq(userBooks.libraryValue, libraryValue), eq(userBooks.userId, userId)))
+      .limit(limit);
+    const promiseBooksByISBN = result.map((obj) => obj.isbn).map((isbn) => bookByISBN(isbn));
+    const settledArray = await Promise.all(promiseBooksByISBN);
+    return {
+      success: true,
+      data: settledArray.filter((obj): obj is GoodResponse<Book> => obj.success).map((obj) => obj.data),
+    };
+  } catch (e) {
     return { success: false, errors: ["Something went wrong while getting the information"], status: 404 };
   }
-  return {
-    success: true,
-    data: settledArray.filter((obj): obj is GoodResponse<Book> => obj.success).map((obj) => obj.data),
-  };
 };
