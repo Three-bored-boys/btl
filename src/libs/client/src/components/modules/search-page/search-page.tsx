@@ -124,9 +124,3 @@ export const SearchPage = function ({
     </div>
   );
 };
-
-{
-  /* <Suspense fallback={<SearchPageResultsLoadingSkeleton />}>
-            <SearchPageQueryComponentWrapper />
-          </Suspense> */
-}
