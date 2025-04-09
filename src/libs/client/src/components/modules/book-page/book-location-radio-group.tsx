@@ -8,6 +8,7 @@ import { Button } from "@/client/components/ui/button";
 import { ListBullet } from "@/client/components/ui/icons/list-bullet";
 import { Check } from "@/client/components/ui/icons/check";
 import { Trash } from "@/client/components/ui/icons/trash";
+import { ExclamationTriangle } from "@/client/components/ui/icons/exclamation-triangle";
 import { bookLibraries } from "@/shared/utils";
 import { ReactNode, useEffect, useState } from "react";
 import { mutateUserBook } from "@/server/actions";
@@ -76,7 +77,12 @@ export const BookLocationRadioGroup = function ({
       </div>
       <div className="mt-6 flex flex-col items-start justify-start">
         <ServerResultMessage serverResult={settledResult}></ServerResultMessage>
-        {!libraryResponse.success && <div>{libraryResponse.errors[0]}</div>}
+        {!libraryResponse.success && (
+          <div className="flex w-full flex-col items-center justify-start gap-0">
+            <ExclamationTriangle className="aspect-square w-7" />
+            <span className="text-center text-red-400">{libraryResponse.errors[0]}</span>
+          </div>
+        )}
       </div>
     </form>
   );

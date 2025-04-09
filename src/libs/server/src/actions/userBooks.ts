@@ -17,9 +17,9 @@ export const getUserBookLibraryValue = async function (isbn: string): Promise<Se
   try {
     const { user } = await getUserSession();
     if (!user) {
-      // const responseObject: GoodResponse<string | null> = { success: true, data: null };
-      throw new Error("");
-      // return responseObject;
+      const responseObject: GoodResponse<string | null> = { success: true, data: null };
+      // throw new Error("");
+      return responseObject;
     }
 
     const cachedUserBookLibraryValue = await cacheUserBookLibraryValue(isbn, user.id);
@@ -28,7 +28,7 @@ export const getUserBookLibraryValue = async function (isbn: string): Promise<Se
   } catch (e) {
     const responseObject: BadResponse = {
       success: false,
-      errors: ["Something went wrong while retrieving information"],
+      errors: ["Something went wrong while retrieving library value from database."],
       status: 500,
     };
     return responseObject;
