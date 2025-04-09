@@ -23,7 +23,13 @@ const bookLibraryIcons: [ReactNode, ReactNode, ReactNode, ReactNode] = [
 ];
 const bookLibrariesWithIcons = bookLibraries.map((obj, i) => ({ ...obj, icon: bookLibraryIcons[i] }));
 
-export const BookLocationRadioGroup = function ({ library, isbn }: { library: string | null; isbn: string }) {
+export const BookLocationRadioGroup = function ({
+  libraryResponse,
+  isbn,
+}: {
+  libraryResponse: ServerResult<string | null>;
+  isbn: string;
+}) {
   const redirectUrl = useWindowLocationHref();
   const [state, action, isPending] = useActionState(mutateUserBook, null);
   const [settledResult, setSettledResult] = useState<ServerResult<string> | null>(null);
@@ -47,15 +53,17 @@ export const BookLocationRadioGroup = function ({ library, isbn }: { library: st
             <Button
               title={`Add to '${obj.name}'`}
               disabled={isPending}
-              name={obj.value !== library ? "library" : undefined}
-              value={obj.value !== library ? obj.value : undefined}
+              name={libraryResponse.success && obj.value !== libraryResponse.data ? "library" : undefined}
+              value={libraryResponse.success && obj.value !== libraryResponse.data ? obj.value : undefined}
               type="submit"
               className={cn(
                 "flex items-center justify-center gap-1 rounded-md bg-secondary-50 text-sm hover:cursor-pointer hover:bg-secondary-100 md:gap-2 md:text-base",
                 {
-                  "border-2 border-secondary-300 bg-secondary-100 hover:bg-secondary-200": obj.value === library,
+                  "border-2 border-secondary-300 bg-secondary-100 hover:bg-secondary-200":
+                    libraryResponse.success && obj.value === libraryResponse.data,
                   "bg-slate-50 hover:cursor-wait hover:bg-slate-100": isPending,
-                  "border-2 border-gray-300 hover:bg-gray-200": obj.value === library && isPending,
+                  "border-2 border-gray-300 hover:bg-gray-200":
+                    libraryResponse.success && obj.value === libraryResponse.data && isPending,
                 },
               )}
               key={i}
@@ -68,6 +76,7 @@ export const BookLocationRadioGroup = function ({ library, isbn }: { library: st
       </div>
       <div className="mt-6 flex flex-col items-start justify-start">
         <ServerResultMessage serverResult={settledResult}></ServerResultMessage>
+        {!libraryResponse.success && <div>{libraryResponse.errors[0]}</div>}
       </div>
     </form>
   );

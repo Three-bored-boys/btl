@@ -13,28 +13,37 @@ import { cacheBookByISBN } from "@/server/actions/books";
 
 const USER_BOOKS_CACHE_TAG = "user-books";
 
-export const getUserBookLibraryValue = async function (isbn: string, userId: number) {
-  const cachedUserBookLibraryValue = await cacheUserBookLibraryValue(isbn, userId);
-  return cachedUserBookLibraryValue;
+export const getUserBookLibraryValue = async function (isbn: string): Promise<ServerResult<string | null>> {
+  try {
+    const { user } = await getUserSession();
+    if (!user) {
+      // const responseObject: GoodResponse<string | null> = { success: true, data: null };
+      throw new Error("");
+      // return responseObject;
+    }
+
+    const cachedUserBookLibraryValue = await cacheUserBookLibraryValue(isbn, user.id);
+    const responseObject: GoodResponse<string | null> = { success: true, data: cachedUserBookLibraryValue };
+    return responseObject;
+  } catch (e) {
+    const responseObject: BadResponse = {
+      success: false,
+      errors: ["Something went wrong while retrieving information"],
+      status: 500,
+    };
+    return responseObject;
+  }
 };
 
 const userBookLibraryValue = async function (isbn: string, userId: number) {
-  try {
-    const book = await db
-      .select()
-      .from(userBooks)
-      .where(and(eq(userBooks.userId, userId), eq(userBooks.isbn, isbn)));
-    if (!book) {
-      return null;
-    }
-    if (book.length === 0) {
-      return null;
-    }
-    return book[0].libraryValue;
-  } catch (e) {
-    console.log(e);
+  const book = await db
+    .select()
+    .from(userBooks)
+    .where(and(eq(userBooks.userId, userId), eq(userBooks.isbn, isbn)));
+  if (book.length === 0) {
     return null;
   }
+  return book[0].libraryValue;
 };
 
 const cacheUserBookLibraryValue = unstable_cache(userBookLibraryValue, [], {
