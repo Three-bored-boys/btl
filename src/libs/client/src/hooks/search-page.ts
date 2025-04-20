@@ -1,33 +1,20 @@
 import { SearchObjectType } from "@/root/src/libs/shared/src/validators";
 import { getSearchObjectFromLocalStorage } from "@/client/utils";
 import { filterKeysArray } from "@/libs/shared/src/utils";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
-export function useSearchPage({
-  updatedSearchParams,
-  originalSearchParams,
-}: {
-  updatedSearchParams: string;
-  originalSearchParams: string;
-}) {
+export function useSearchPage() {
   const allInputElementRefsMap = useRef<Map<keyof SearchObjectType, HTMLSelectElement | null>>(
     new Map(filterKeysArray.map((str) => [str, null])),
   );
   const searchInputElement = useRef<HTMLInputElement | null>(null);
-
   const router = useRouter();
-  const [run, setRun] = useState(false);
+  const searchParams = useSearchParams();
+  const [run, setRun] = useState<boolean | null>(null);
 
   useEffect(() => {
-    if (updatedSearchParams !== originalSearchParams) {
-      router.replace(`/search?${updatedSearchParams}`);
-      return;
-    }
-
-    const updatedSearchParamsObject = new URLSearchParams(updatedSearchParams);
-
-    const searchQueryParam = updatedSearchParamsObject.get("search");
+    const searchQueryParam = searchParams.get("search");
     if (searchInputElement.current !== null) {
       if (searchQueryParam !== null) {
         searchInputElement.current.value = searchQueryParam;
@@ -42,7 +29,7 @@ export function useSearchPage({
     }
 
     allInputElementRefsMap.current.forEach((elem, key, _) => {
-      const queryParam = updatedSearchParamsObject.get(key);
+      const queryParam = searchParams.get(key);
       if (elem !== null) {
         if (queryParam !== null) {
           elem.value = queryParam;
@@ -53,7 +40,7 @@ export function useSearchPage({
     });
 
     setRun(true);
-  }, [updatedSearchParams, originalSearchParams]);
+  }, [searchParams]);
 
   return {
     allInputElementRefsMap,
@@ -61,5 +48,6 @@ export function useSearchPage({
     router,
     run,
     setRun,
+    searchParams,
   };
 }

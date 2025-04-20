@@ -12,25 +12,14 @@ import { SearchPageResultsLoadingSkeleton } from "./search-page-results-loading-
 import { DEFAULT_MAX_RESULTS, DEFAULT_PAGE_NUMBER, MAX_MAX_RESULTS, MIN_MAX_RESULTS } from "@/shared/utils";
 import { handleNumberSearchParam, editSearchObjectInLocalStorage } from "@/client/utils";
 
-export const SearchPage = function ({
-  updatedSearchParams,
-  originalSearchParams,
-  children,
-}: {
-  updatedSearchParams: string;
-  originalSearchParams: string;
-  children: React.ReactNode;
-}): ReactElement {
-  const { allInputElementRefsMap, searchInputElement, router, run, setRun } = useSearchPage({
-    updatedSearchParams,
-    originalSearchParams,
-  });
+export const SearchPage = function ({ children }: { children: React.ReactNode }): ReactElement {
+  const { allInputElementRefsMap, searchInputElement, router, run, setRun, searchParams } = useSearchPage();
 
   const handleOnSubmit = function (e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setRun(false);
 
-    const newSearchParamsObject = new URLSearchParams(updatedSearchParams);
+    const newSearchParamsObject = new URLSearchParams(searchParams);
 
     const maxResultsQueryParam = newSearchParamsObject.get("maxResults");
     const newMaxResultsQueryParam = handleNumberSearchParam(
@@ -67,7 +56,7 @@ export const SearchPage = function ({
       }
     });
 
-    if (updatedSearchParams.toString() !== newSearchParamsObject.toString()) {
+    if (searchParams.toString() !== newSearchParamsObject.toString()) {
       router.push(`/search?${newSearchParamsObject.toString()}`);
     } else {
       setRun(true);
@@ -119,7 +108,7 @@ export const SearchPage = function ({
             Submit
           </Button>
         </form>
-        {run ? children : <SearchPageResultsLoadingSkeleton />}
+        {run === true ? children : run === false ? <SearchPageResultsLoadingSkeleton /> : null}
       </Container>
     </div>
   );
