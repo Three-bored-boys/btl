@@ -1,7 +1,24 @@
-export default async function LibraryPage({ params }: { params: Promise<{ library: string }> }) {
-  const resolvedParams = await params;
+import { bookLibraryValues } from "@/shared/utils";
+import { notFound } from "next/navigation";
+import * as z from "zod";
 
+export default async function LibraryPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ library: (typeof bookLibraryValues)[number] }>;
+  searchParams: Promise<{ page: string }>;
+}) {
+  const [resolvedParams, resolvedSearchParams] = await Promise.all([params, searchParams]);
   const { library } = resolvedParams;
+  const { page } = resolvedSearchParams;
 
-  return <div>{library}</div>;
+  const validateLibrary = z.enum(bookLibraryValues).safeParse(library);
+  if (!validateLibrary.success) {
+    notFound();
+  }
+
+  const validLibrary = validateLibrary.data;
+
+  return <div>{validLibrary}</div>;
 }
