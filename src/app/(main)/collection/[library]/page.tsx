@@ -2,6 +2,10 @@ import { bookLibraryValues } from "@/shared/utils";
 import { notFound } from "next/navigation";
 import * as z from "zod";
 
+export function generateStaticParams() {
+  return bookLibraryValues.map((library) => ({ library }));
+}
+
 export default async function LibraryPage({
   params,
   searchParams,
