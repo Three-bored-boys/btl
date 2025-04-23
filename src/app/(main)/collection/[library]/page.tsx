@@ -15,7 +15,9 @@ export default async function LibraryPage({
 }) {
   const [resolvedParams, resolvedSearchParams] = await Promise.all([params, searchParams]);
   const { library } = resolvedParams;
+
   const { page } = resolvedSearchParams;
+  console.log(page);
 
   const validateLibrary = z.enum(bookLibraryValues).safeParse(library);
   if (!validateLibrary.success) {
