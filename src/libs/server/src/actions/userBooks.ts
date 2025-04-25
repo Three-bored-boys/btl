@@ -135,10 +135,12 @@ export const getUserBooksInALibrary = async function ({
   library,
   userId,
   limit,
+  page = 1,
 }: {
   library: unknown;
   userId: number;
   limit: number;
+  page: number;
 }): Promise<ServerResult<Book[]>> {
   const validation = z.enum(bookLibraryValues).safeParse(library);
 
@@ -149,7 +151,7 @@ export const getUserBooksInALibrary = async function ({
   const { data: libraryValue } = validation;
 
   try {
-    const result = await cacheUserBooksInALibrary(libraryValue, userId, limit);
+    const result = await cacheUserBooksInALibrary(libraryValue, userId, limit, page);
     const promiseBooksByISBN = result.map((obj) => obj.isbn).map((isbn) => cacheBookByISBN(isbn));
     const settledArray = await Promise.all(promiseBooksByISBN);
     return {
@@ -165,12 +167,15 @@ const userBooksInALibrary = async function (
   library: (typeof bookLibraryValues)[number],
   userId: number,
   limit: number,
+  page: number,
 ) {
+  const offset = (page - 1) * limit;
   return await db
     .select({ isbn: userBooks.isbn })
     .from(userBooks)
     .where(and(eq(userBooks.libraryValue, library), eq(userBooks.userId, userId)))
-    .limit(limit);
+    .limit(limit)
+    .offset(offset);
 };
 
 const cacheUserBooksInALibrary = unstable_cache(userBooksInALibrary, [], { tags: [USER_BOOKS_CACHE_TAG] });
