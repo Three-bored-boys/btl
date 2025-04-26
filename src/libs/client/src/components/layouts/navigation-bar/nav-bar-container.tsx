@@ -22,30 +22,3 @@ export const NavBarContainer = function ({ children }: { children: React.ReactNo
     </Container>
   );
 };
-
-/* <div className="flex items-center justify-center">
-        <Logo className="hidden md:block" onClick={() => setShowMobileMenu(false)} />
-        {showMobileMenu ? (
-          <Close className="block md:hidden" onClick={() => setShowMobileMenu(false)} />
-        ) : (
-          <Hamburger className="block md:hidden" onClick={() => setShowMobileMenu(true)} />
-        )}
-      </div>
-
-      {rootPathname !== "/search" ? (
-        <div className="flex items-center justify-center">
-          <QuickSearch className="w-full" />
-        </div>
-      ) : (
-        <div className="hidden">
-          <Logo className="block md:hidden" />
-        </div>
-      )}
-
-      <div className="hidden md:flex md:items-center">
-        <NavLinks device={"no-mobile"} routesArr={navLinkArr} rootPathname={rootPathname} className="w-full" />
-      </div>
-
-      <div className="flex items-center">
-        <NavBarRight routesArr={navAuthLinkArr} />
-      </div> */

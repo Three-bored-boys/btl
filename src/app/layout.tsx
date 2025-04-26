@@ -2,14 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import "@radix-ui/themes/styles.css";
 import { ReactElement } from "react";
-import {
-  ReactQueryProvider,
-  RadixProvider,
-  AuthContextProvider,
-  MobileMenuContextProvider,
-  RootPathnameContextProvider,
-} from "@/client/providers";
-import { getUserSession } from "@/server/actions";
+import { RadixProvider, MobileMenuContextProvider, RootPathnameContextProvider } from "@/client/providers";
 
 export const metadata: Metadata = {
   title: "BTL (Book Tracker Library)",
@@ -21,22 +14,16 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>): Promise<ReactElement> {
-  const { user } = await getUserSession();
-
   return (
     <html lang="en" suppressHydrationWarning={true}>
       <body suppressHydrationWarning={true}>
-        <ReactQueryProvider>
-          <RadixProvider>
-            <AuthContextProvider initialUser={user}>
-              <RootPathnameContextProvider>
-                <MobileMenuContextProvider>
-                  <main>{children}</main>
-                </MobileMenuContextProvider>
-              </RootPathnameContextProvider>
-            </AuthContextProvider>
-          </RadixProvider>
-        </ReactQueryProvider>
+        <RadixProvider>
+          <RootPathnameContextProvider>
+            <MobileMenuContextProvider>
+              <main>{children}</main>
+            </MobileMenuContextProvider>
+          </RootPathnameContextProvider>
+        </RadixProvider>
       </body>
     </html>
   );

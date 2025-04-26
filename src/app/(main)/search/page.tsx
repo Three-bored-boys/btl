@@ -8,6 +8,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import { SearchPageErrorBoundary } from "@/client/components/modules/search-page/search-page-error-boundary";
 import { SearchPageQueryComponentWrapper } from "@/client/components/modules/search-page/search-page-query-component-wrapper";
 import { SearchPageResultsLoadingSkeleton } from "@/client/components/modules/search-page/search-page-results-loading-skeleton";
+import { permanentRedirect } from "next/navigation";
 
 async function Search({ searchParams }: { searchParams: Promise<SearchObjectType & PaginationObjectType> }) {
   const resolvedSearchParams = await searchParams;
@@ -59,11 +60,12 @@ async function Search({ searchParams }: { searchParams: Promise<SearchObjectType
 
   const noFormInput = !searchObject.genre && !searchObject.publisher && !searchObject.search;
 
+  if (newSearchParamsObject.toString() !== originalSearchParamsObject.toString()) {
+    permanentRedirect(`/search?${newSearchParamsObject.toString()}`);
+  }
+
   return (
-    <SearchPage
-      updatedSearchParams={newSearchParamsObject.toString()}
-      originalSearchParams={originalSearchParamsObject.toString()}
-    >
+    <SearchPage>
       {noFormInput ? (
         <div>Please enter a search term or select a filter and click &quot;Submit&quot;</div>
       ) : (
