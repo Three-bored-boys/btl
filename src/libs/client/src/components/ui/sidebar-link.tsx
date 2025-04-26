@@ -9,8 +9,8 @@ export function SidebarLink({ currentPathname, name, href, ...props }: SidebarLi
     <Link
       href={href}
       className={cn("rounded-xl px-4 py-1", {
-        "bg-secondary-200": currentPathname === href,
-        "hover:bg-secondary-100": currentPathname !== href,
+        "bg-secondary-200": currentPathname === href.split("?")[0],
+        "hover:bg-secondary-100": currentPathname !== href.split("?")[0],
       })}
       title={name}
       {...props}
