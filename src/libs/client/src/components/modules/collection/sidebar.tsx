@@ -11,7 +11,12 @@ export function Sidebar(props: React.ComponentProps<"nav">) {
       <SidebarLink href="/collection" currentPathname={pathname} name="Overview" />
       <h2 className="mt-5 text-2xl font-medium italic">Libraries</h2>
       {bookLibraries.map((library, i) => (
-        <SidebarLink href={`/collection/${library.value}`} key={i} name={library.name} currentPathname={pathname} />
+        <SidebarLink
+          href={`/collection/${library.value}?page=1`}
+          key={i}
+          name={library.name}
+          currentPathname={pathname}
+        />
       ))}
     </nav>
   );
