@@ -4,6 +4,7 @@ import { cva, VariantProps } from "class-variance-authority";
 import type { GoodResponse, BadResponse } from "@/root/src/libs/shared/src/types";
 import type { SearchObjectType } from "@/root/src/libs/shared/src/validators";
 import { FetchDataResult } from "@/shared/types/response";
+import { BTL_LOCAL_STORAGE_SEARCH_OBJECT } from "@/shared/utils";
 
 export function cn(...inputs: ClassValue[]): string {
   return twMerge(clsx(inputs));
@@ -39,8 +40,6 @@ export const fetchData = async function <T>(url: string, options?: RequestInit):
   const data = (await res.json()) as GoodResponse<T>;
   return { fetchDataResult: data, res };
 };
-
-export const BTL_LOCAL_STORAGE_SEARCH_OBJECT = "btlSearchObject";
 
 export const getSearchObjectFromLocalStorage = function () {
   if (window) {
