@@ -1,5 +1,8 @@
 import { SearchObjectType } from "./validators";
 
+export const BTL_LOCAL_STORAGE_SEARCH_OBJECT = "btlSearchObject";
+export const BTL_LOCAL_STORAGE_COLLECTION_SIDEBAR = "btlCollectionSidebar";
+
 export const filterKeysArray: (keyof SearchObjectType)[] = ["genre", "publisher"];
 
 export const DEFAULT_MAX_RESULTS = 20;

@@ -29,6 +29,10 @@ export function OverviewLibraryPreviewSection({
 
   const { showSidebar } = sidebarContextValue;
 
+  if (showSidebar === null) {
+    return <></>;
+  }
+
   if (!serverResult.success) {
     const { errors, status } = serverResult;
     return (
