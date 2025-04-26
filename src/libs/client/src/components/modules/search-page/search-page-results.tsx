@@ -16,7 +16,7 @@ export function SearchPageResults({ books }: { books: Book[] }) {
   }
 
   return (
-    <div className="my-6 grid px-12 xs:grid-cols-2 xs:px-5 radix-xs:px-12 md:grid-cols-4 md:px-1 lg:px-12 xl:px-32">
+    <div className="my-6 grid w-full px-12 xs:grid-cols-2 xs:px-5 radix-xs:px-12 md:grid-cols-4 md:px-1 lg:px-12 xl:px-32">
       {booksWithISBN.map((book, i) => (
         <Link
           href={`/book/${book.isbn13 || book.isbn10}`}
