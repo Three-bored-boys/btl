@@ -140,7 +140,7 @@ export const getUserBooksInALibrary = async function ({
   library: unknown;
   userId: number;
   limit: number;
-  page: number;
+  page?: number;
 }): Promise<ServerResult<Book[]>> {
   const validation = z.enum(bookLibraryValues).safeParse(library);
 
