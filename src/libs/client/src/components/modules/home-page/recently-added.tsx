@@ -1,6 +1,11 @@
 import { SanitizedUser } from "@/root/src/libs/shared/src/db/schema";
 import React from "react";
+import { Container } from "@/client/components/layouts/container";
 
-export function RecentlyAdded({ user }: { user: SanitizedUser }) {
-  return <div>recently added</div>;
+export async function RecentlyAdded({ user }: { user: SanitizedUser }) {
+  return (
+    <section className="w-full py-10">
+      <Container>Recently added</Container>
+    </section>
+  );
 }
