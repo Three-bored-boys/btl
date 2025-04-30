@@ -4,6 +4,7 @@ import { Container } from "@/client/components/layouts/container";
 
 export async function RecentlyAdded({ user }: { user: SanitizedUser }) {
   console.log("Currently in the RecentlyAdded component");
+  console.log("Currently in the RecentlyAdded component");
 
   return (
     <section className="w-full py-10">
