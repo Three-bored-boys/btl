@@ -3,6 +3,8 @@ import React from "react";
 import { Container } from "@/client/components/layouts/container";
 
 export async function RecentlyAdded({ user }: { user: SanitizedUser }) {
+  console.log("Here in Recently Added.");
+
   return (
     <section className="w-full py-10">
       <Container>Recently added</Container>
