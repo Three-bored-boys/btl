@@ -199,10 +199,10 @@ export const getRecentlyAddedBooks = async function ({
     const recentlyAddedUserBooksWithDates = await Promise.all(recentlyAddedUserBooksWithPromises);
     return {
       success: true,
-      data: recentlyAddedUserBooksWithDates.filter((obj): obj is { book: Book; date: Date } => obj != null),
+      data: recentlyAddedUserBooksWithDates.filter((obj): obj is { book: Book; date: Date } => obj !== null),
     };
   } catch (e) {
-    return { success: false, status: 500, errors: ["Something went wrong while getting the information"] };
+    return { success: false, status: 500, errors: ["Something went wrong while getting the recently added books"] };
   }
 };
 
