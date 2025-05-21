@@ -1,9 +1,9 @@
 "use server";
 
 import { db } from "@/server/db/db";
-import { userBooks } from "@/server/db/schema";
+import { SanitizedUser, userBooks } from "@/server/db/schema";
 import { bookLibraries, bookLibraryValues } from "@/shared/utils";
-import { and, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import { revalidateTag, unstable_cache } from "next/cache";
 import { getUserSession } from "@/server/actions";
 import { z } from "zod";
@@ -179,3 +179,26 @@ const userBooksInALibrary = async function (
 };
 
 const cacheUserBooksInALibrary = unstable_cache(userBooksInALibrary, [], { tags: [USER_BOOKS_CACHE_TAG] });
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const getRecentlyAddedBooks = async function ({ user }: { user: SanitizedUser }) {
+  try {
+    return await cacheRecentlyAddedBooks({ userId: user.id });
+  } catch (e) {
+    return [];
+  }
+};
+
+const recentlyAddedBooks = async function ({ userId }: { userId: number }) {
+  const books = await db
+    .select()
+    .from(userBooks)
+    .where(eq(userBooks.userId, userId))
+    .limit(5)
+    .orderBy(desc(userBooks.updatedAt));
+
+  return books;
+};
+
+const cacheRecentlyAddedBooks = unstable_cache(recentlyAddedBooks, [], { tags: [USER_BOOKS_CACHE_TAG] });
