@@ -182,11 +182,27 @@ const cacheUserBooksInALibrary = unstable_cache(userBooksInALibrary, [], { tags:
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const getRecentlyAddedBooks = async function ({ user }: { user: SanitizedUser }) {
+export const getRecentlyAddedBooks = async function ({
+  user,
+}: {
+  user: SanitizedUser;
+}): Promise<ServerResult<{ book: Book; date: Date }[]>> {
   try {
-    return await cacheRecentlyAddedBooks({ userId: user.id });
+    const userBooksQueryResults = await cacheRecentlyAddedBooks({ userId: user.id });
+    const recentlyAddedUserBooksWithPromises = userBooksQueryResults.map(async (userBook) => {
+      const bookResult = await cacheBookByISBN(userBook.isbn);
+      if (!bookResult.success) {
+        return null;
+      }
+      return { book: bookResult.data, date: userBook.updatedAt };
+    });
+    const recentlyAddedUserBooksWithDates = await Promise.all(recentlyAddedUserBooksWithPromises);
+    return {
+      success: true,
+      data: recentlyAddedUserBooksWithDates.filter((obj): obj is { book: Book; date: Date } => obj != null),
+    };
   } catch (e) {
-    return [];
+    return { success: false, status: 500, errors: ["Something went wrong while getting the information"] };
   }
 };
 
