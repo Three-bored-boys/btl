@@ -23,6 +23,7 @@ export async function RecentlyAdded({ user }: { user: SanitizedUser }) {
 
   const { data } = result;
   if (data.length === 0) {
+    console.log(data.length);
     return (
       <RecentlyAddedLayout>
         <div>No books in recently added</div>
