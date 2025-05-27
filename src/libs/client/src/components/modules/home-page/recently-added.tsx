@@ -32,6 +32,7 @@ export async function RecentlyAdded({ user }: { user: SanitizedUser }) {
       </RecentlyAddedLayout>
     );
   }
+  console.log(5);
 
   return (
     <RecentlyAddedLayout>
