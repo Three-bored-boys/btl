@@ -28,7 +28,7 @@ export async function RecentlyAdded({ user }: { user: SanitizedUser }) {
   if (data.length === 0) {
     return (
       <RecentlyAddedLayout>
-        <div>No books in recently added</div>
+        <div className="w-full text-center">No books in recently added</div>
       </RecentlyAddedLayout>
     );
   }
@@ -63,7 +63,7 @@ export async function RecentlyAdded({ user }: { user: SanitizedUser }) {
 
 const RecentlyAddedLayout = function ({ children }: { children: React.ReactNode }) {
   return (
-    <section className="mb-20 w-full py-10">
+    <section className="mb-5 w-full pb-5 pt-5">
       <Container>
         <SectionPreamble title="Recently Added Books To Collection">
           A brief overview of the latest books added to your collection
