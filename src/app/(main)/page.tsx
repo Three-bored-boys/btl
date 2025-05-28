@@ -5,11 +5,14 @@ import { QuotesSection } from "@/libs/client/src/components/modules/home-page/qu
 
 export default function Home() {
   return (
-    <>
+    <div className="w-full">
       <HeroSection />
+      <hr className="mx-auto w-1/2 min-w-[15rem]" />
       <QuotesSection />
+      <hr className="mx-auto w-1/2 min-w-[15rem]" />
       <GenresSection />
+      <hr className="mx-auto w-1/2 min-w-[15rem]" />
       <NYTBestSellersSection />
-    </>
+    </div>
   );
 }

@@ -1,9 +1,9 @@
 "use server";
 
 import { db } from "@/server/db/db";
-import { userBooks } from "@/server/db/schema";
+import { SanitizedUser, userBooks } from "@/server/db/schema";
 import { bookLibraries, bookLibraryValues } from "@/shared/utils";
-import { and, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import { revalidateTag, unstable_cache } from "next/cache";
 import { getUserSession } from "@/server/actions";
 import { z } from "zod";
@@ -179,3 +179,42 @@ const userBooksInALibrary = async function (
 };
 
 const cacheUserBooksInALibrary = unstable_cache(userBooksInALibrary, [], { tags: [USER_BOOKS_CACHE_TAG] });
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const getRecentlyAddedBooks = async function ({
+  user,
+}: {
+  user: SanitizedUser;
+}): Promise<ServerResult<{ book: Book; date: Date }[]>> {
+  try {
+    const userBooksQueryResults = await cacheRecentlyAddedBooks({ userId: user.id });
+    const recentlyAddedUserBooksWithPromises = userBooksQueryResults.map(async (userBook) => {
+      const bookResult = await cacheBookByISBN(userBook.isbn);
+      if (!bookResult.success) {
+        return null;
+      }
+      return { book: bookResult.data, date: userBook.updatedAt };
+    });
+    const recentlyAddedUserBooksWithDates = await Promise.all(recentlyAddedUserBooksWithPromises);
+    return {
+      success: true,
+      data: recentlyAddedUserBooksWithDates.filter((obj): obj is { book: Book; date: Date } => obj !== null),
+    };
+  } catch (e) {
+    return { success: false, status: 500, errors: ["Something went wrong while getting the recently added books"] };
+  }
+};
+
+const recentlyAddedBooks = async function ({ userId }: { userId: number }) {
+  const books = await db
+    .select()
+    .from(userBooks)
+    .where(eq(userBooks.userId, userId))
+    .limit(5)
+    .orderBy(desc(userBooks.updatedAt));
+
+  return books;
+};
+
+const cacheRecentlyAddedBooks = unstable_cache(recentlyAddedBooks, [], { tags: [USER_BOOKS_CACHE_TAG] });
