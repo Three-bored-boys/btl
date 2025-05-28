@@ -51,7 +51,7 @@ export function QuotesSection() {
 
   return (
     <section>
-      <Container>
+      <Container className="py-10">
         <div ref={emblaRef} className="overflow-hidden">
           <div className={cn("flex")}>
             {quotes.map((obj, i) => {
