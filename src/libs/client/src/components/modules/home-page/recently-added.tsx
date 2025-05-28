@@ -32,14 +32,17 @@ export async function RecentlyAdded({ user }: { user: SanitizedUser }) {
       </RecentlyAddedLayout>
     );
   }
-  console.log(5);
 
   return (
     <RecentlyAddedLayout>
-      <div className="flex w-full items-start justify-between gap-10 overflow-x-auto">
+      <div className="flex w-full items-start justify-start gap-10 overflow-x-auto md:gap-28">
         {data.map(({ book, date }, i) => (
           <div key={i} className="min-w-40 max-w-40">
-            <Link href={`/book/${book.isbn13 ? book.isbn13 : book.isbn10}`} className="w-full">
+            <Link
+              href={`/book/${book.isbn13 ? book.isbn13 : book.isbn10}`}
+              className="w-full"
+              title={`${book.title} by ${book.author}`}
+            >
               <Image
                 src={book.image ? book.image : genericBookImage}
                 alt={`${book.title} by ${book.author}`}
@@ -50,7 +53,7 @@ export async function RecentlyAdded({ user }: { user: SanitizedUser }) {
             </Link>
             <h4 className="truncate font-semibold">{book.title}</h4>
             <p className="truncate">{book.author}</p>
-            <p className="mt-4 text-sm italic">Added to collection at {date.toString()}</p>
+            <p className="mt-1 text-sm italic">Added {date.toString().split("T")[0]}</p>
           </div>
         ))}
       </div>
