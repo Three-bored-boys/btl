@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import "@radix-ui/themes/styles.css";
 import { ReactElement } from "react";
-import { RadixProvider, MobileMenuContextProvider, RootPathnameContextProvider } from "@/client/providers";
+import { Wrapper } from "@/client/providers";
 
 export const metadata: Metadata = {
   title: "BTL (Book Tracker Library)",
@@ -17,13 +17,9 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning={true}>
       <body suppressHydrationWarning={true}>
-        <RadixProvider>
-          <RootPathnameContextProvider>
-            <MobileMenuContextProvider>
-              <main>{children}</main>
-            </MobileMenuContextProvider>
-          </RootPathnameContextProvider>
-        </RadixProvider>
+        <Wrapper>
+          <main>{children}</main>
+        </Wrapper>
       </body>
     </html>
   );
