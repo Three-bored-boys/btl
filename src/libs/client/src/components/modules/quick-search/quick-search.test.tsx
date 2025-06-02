@@ -4,7 +4,7 @@ import { QuickSearch } from "./quick-search";
 import { beforeAll, afterAll, vi } from "vitest";
 import * as clientUtils from "@/client/utils";
 
-describe("Quick Search", () => {
+describe("Quick Search Component", () => {
   beforeAll(() => {
     console.log("Before all the tests");
   });
@@ -13,6 +13,7 @@ describe("Quick Search", () => {
     vi.resetAllMocks();
     console.log("After all the tests");
   });
+
   test("Renders properly", async () => {
     render(<QuickSearch></QuickSearch>);
     const container = screen.getByTestId("quick-search-container");
