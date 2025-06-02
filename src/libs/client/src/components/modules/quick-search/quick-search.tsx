@@ -79,7 +79,7 @@ export function QuickSearch({ className }: ComponentProps<"div">) {
   };
 
   return (
-    <div className={cn("relative", className)}>
+    <div className={cn("relative", className)} data-testid="quick-search-container">
       <SearchInput
         ref={searchInputElement}
         onChange={(e) => handleOnChange(e, "search")}
