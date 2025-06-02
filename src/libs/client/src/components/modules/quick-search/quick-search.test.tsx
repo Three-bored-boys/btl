@@ -80,7 +80,7 @@ describe("Quick Search Component", () => {
     expect(noBooksFoundElement).toBeInTheDocument();
   });
 
-  test.only("Display error message when result success is false", async () => {
+  test("Display error message when result success is false", async () => {
     vi.spyOn(serverActions, "getQuickSearchResults").mockImplementation(async (search) => {
       return { success: false, errors: ["Error"], status: 500 };
     });
