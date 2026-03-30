@@ -9,5 +9,7 @@ declare namespace NodeJS {
     readonly GOOGLE_BOOKS_API_KEY: string;
     readonly NY_TIMES_BOOKS_API_KEY: string;
     readonly SESSION_SECRET_KEY: string;
+    readonly BEARER_AUTH_TOKEN: string;
+    readonly USER_EMAIL: string;
   }
 }
