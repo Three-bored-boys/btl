@@ -2,10 +2,11 @@
 
 import { Container } from "@/libs/client/src/components/layouts/container";
 import { Button } from "@/libs/client/src/components/ui/button";
-import Image from "next/image";
+import NextImage from "next/image";
 import notFoundImage from "@/public/assets/images/not-found.webp";
+import { NOT_FOUND_IMAGE_ALT } from "@/shared/utils";
 
-export default function GlobalError({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
+export default function GlobalError({ reset }: { error: Error & { digest?: string }; reset: () => void }) {
   return (
     <>
       <div className="relative min-h-screen w-full">
@@ -19,7 +20,7 @@ export default function GlobalError({ error, reset }: { error: Error & { digest?
               Try again
             </Button>
             <div>
-              <Image src={notFoundImage} alt="Cartoon image of man sitting on floor and reading a book"></Image>
+              <NextImage src={notFoundImage} alt={NOT_FOUND_IMAGE_ALT}></NextImage>
             </div>
           </div>
         </Container>

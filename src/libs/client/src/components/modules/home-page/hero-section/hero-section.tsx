@@ -1,9 +1,10 @@
 import { Container } from "@/client/components/layouts/container";
-import Image from "next/image";
+import NextImage from "next/image";
 import heroImage from "@/public/assets/images/hero-section.png";
 import { LinkButton } from "@/client/components/ui/link-button";
 import { RecentlyAdded } from "../recently-added";
 import { getUserSession } from "@/server/actions";
+import { HERO_SECTION_IMAGE_ALT } from "@/shared/utils";
 
 export async function HeroSection() {
   const { user } = await getUserSession();
@@ -33,7 +34,13 @@ export async function HeroSection() {
             </div>
           </div>
           <div className="hidden items-center justify-center md:flex">
-            <Image src={heroImage} alt="" width={1000} height={1000} className="w-full object-cover" />
+            <NextImage
+              src={heroImage}
+              alt={HERO_SECTION_IMAGE_ALT}
+              width={1000}
+              height={1000}
+              className="w-full object-cover"
+            />
           </div>
         </div>
       </Container>

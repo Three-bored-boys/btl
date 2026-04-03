@@ -1,7 +1,8 @@
 import { Container } from "@/libs/client/src/components/layouts/container";
 import { Button } from "@/root/src/libs/client/src/components/ui/button";
 import notFoundImage from "@/public/assets/images/not-found.webp";
-import Image from "next/image";
+import NextImage from "next/image";
+import { NOT_FOUND_IMAGE_ALT } from "@/shared/utils";
 
 export function BookPageErrorBoundaryRender({ error, reset }: { error: Error; reset: () => void }) {
   return (
@@ -14,7 +15,7 @@ export function BookPageErrorBoundaryRender({ error, reset }: { error: Error; re
             Try again
           </Button>
           <div>
-            <Image src={notFoundImage} alt="Cartoon image of man sitting on floor and reading a book"></Image>
+            <NextImage src={notFoundImage} alt={NOT_FOUND_IMAGE_ALT}></NextImage>
           </div>
         </div>
       </Container>

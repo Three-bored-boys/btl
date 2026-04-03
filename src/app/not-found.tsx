@@ -1,10 +1,11 @@
 import React from "react";
-import Image from "next/image";
+import NextImage from "next/image";
 import { Container } from "../libs/client/src/components/layouts/container";
 import { LinkButton } from "../libs/client/src/components/ui/link-button";
 import notFoundImage from "@/public/assets/images/not-found.webp";
 import { NavBar } from "@/client/components/layouts/navigation-bar/nav-bar";
 import { Footer } from "@/client/components/layouts/footer/footer";
+import { NOT_FOUND_IMAGE_ALT } from "@/shared/utils";
 
 export default function NotFound() {
   return (
@@ -21,7 +22,7 @@ export default function NotFound() {
             Return Home
           </LinkButton>
           <div>
-            <Image src={notFoundImage} alt="Cartoon image of man sitting on floor and reading a book"></Image>
+            <NextImage src={notFoundImage} alt={NOT_FOUND_IMAGE_ALT}></NextImage>
           </div>
         </div>
       </Container>
