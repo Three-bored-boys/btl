@@ -8,10 +8,9 @@ import { ArrowLeftCircle } from "@/client/components/ui/icons/arrow-left-circle"
 import { ArrowRightCircle } from "@/client/components/ui/icons/arrow-right-circle";
 import { CollectionLibraryLoadingSkeleton } from "./collection-library-loading-skeleton";
 import { LinkButton } from "@/client/components/ui/link-button";
-import { bookLibraryValues, GENERIC_BOOK_IMAGE_ALT, imageKitProps, imageWH } from "@/shared/utils";
+import { bookLibraryValues, GENERIC_BOOK_IMAGE_ALT, imageWH } from "@/shared/utils";
 import Link from "next/link";
 import NextImage from "next/image";
-import { Image } from "@imagekit/next";
 import genericBookImage from "@/public/assets/images/generic-book.png";
 
 export function CollectionLibrary({
@@ -54,22 +53,16 @@ export function CollectionLibrary({
                 title={`"${book.title}" by ${book.author}`}
               >
                 <div className="h-4/5 w-full px-[28%]">
-                  {book.image && book.image.length > 0 ? (
-                    <Image
-                      src={book.image}
-                      alt={`Book cover for ${book.title} by ${book.author}`}
-                      {...imageWH}
-                      {...imageKitProps}
-                      className="h-full w-full border object-cover"
-                    />
-                  ) : (
-                    <NextImage
-                      src={genericBookImage}
-                      alt={GENERIC_BOOK_IMAGE_ALT}
-                      {...imageWH}
-                      className="h-full w-full border object-cover"
-                    />
-                  )}
+                  <NextImage
+                    src={book.image && book.image.length > 0 ? book.image : genericBookImage}
+                    alt={
+                      book.title && book.author && book.image
+                        ? `Book cover for ${book.title} by ${book.author}`
+                        : GENERIC_BOOK_IMAGE_ALT
+                    }
+                    {...imageWH}
+                    className="h-full w-full border object-cover"
+                  />
                 </div>
                 <p className="line-clamp-1 px-1 text-center text-xs font-medium lg:text-sm xl:text-base">
                   {book.title}

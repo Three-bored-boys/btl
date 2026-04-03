@@ -6,7 +6,7 @@ import NextImage from "next/image";
 import notFoundImage from "@/public/assets/images/not-found.webp";
 import genericBookImage from "@/public/assets/images/generic-book.png";
 import { getBookByISBN } from "@/server/actions";
-import { NOT_FOUND_IMAGE_ALT } from "@/shared/utils";
+import { NOT_FOUND_IMAGE_ALT, GENERIC_BOOK_IMAGE_ALT, imageWH } from "@/shared/utils";
 
 export async function BookPage({ params: { isbn } }: { params: { isbn: string } }) {
   const fetchDataResult = await getBookByISBN(isbn);
@@ -20,11 +20,14 @@ export async function BookPage({ params: { isbn } }: { params: { isbn: string } 
           <div className="grid w-full grid-cols-1 gap-4 px-6 sm:grid-cols-[11rem_1fr] sm:gap-7 sm:px-3 md:grid-cols-[12rem_1fr] md:gap-10 lg:grid-cols-[14.5rem_1fr] lg:gap-16 xl:grid-cols-[16rem_1fr] xl:gap-20 2xl:grid-cols-[18rem_1fr] 2xl:gap-28">
             <div className="mx-auto aspect-[10/16] w-2/4 border-[1px] border-gray-950 sm:w-full">
               <NextImage
-                src={book.image || genericBookImage}
-                alt={`${book.title} by ${book.author}`}
+                src={book.image && book.image.length > 0 ? book.image : genericBookImage}
+                alt={
+                  book.title && book.author && book.image
+                    ? `Book cover for ${book.title} by ${book.author}`
+                    : GENERIC_BOOK_IMAGE_ALT
+                }
+                {...imageWH}
                 className="mx-auto h-full w-full object-cover"
-                width={500}
-                height={500}
               />
             </div>
             <div className="truncate text-pretty">

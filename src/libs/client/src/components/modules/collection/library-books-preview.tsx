@@ -2,10 +2,9 @@ import { Book } from "@/root/src/libs/shared/src/types";
 import Link from "next/link";
 import React from "react";
 import NextImage from "next/image";
-import { Image } from "@imagekit/next";
 import genericBookImage from "@/public/assets/images/generic-book.png";
 import { cn } from "@/client/utils";
-import { GENERIC_BOOK_IMAGE_ALT, imageKitProps, imageWH } from "@/shared/utils";
+import { GENERIC_BOOK_IMAGE_ALT, imageWH } from "@/shared/utils";
 
 export function LibraryBooksPreview({ books, showSidebar }: { books: Book[]; showSidebar: boolean }) {
   if (books.length === 0) {
@@ -36,22 +35,16 @@ export function LibraryBooksPreview({ books, showSidebar }: { books: Book[]; sho
             title={`"${book.title}" by ${book.author}`}
           >
             <div className="mb-1 w-full sm:mb-2">
-              {book.image && book.image.length > 0 ? (
-                <Image
-                  src={book.image}
-                  alt={`Book cover for ${book.title} by ${book.author}`}
-                  {...imageWH}
-                  {...imageKitProps}
-                  className="aspect-[10/16] w-full rounded-lg object-cover"
-                />
-              ) : (
-                <NextImage
-                  src={genericBookImage}
-                  alt={GENERIC_BOOK_IMAGE_ALT}
-                  {...imageWH}
-                  className="aspect-[10/16] w-full rounded-lg object-cover"
-                />
-              )}
+              <NextImage
+                src={book.image && book.image.length > 0 ? book.image : genericBookImage}
+                alt={
+                  book.title && book.author && book.image
+                    ? `Book cover for ${book.title} by ${book.author}`
+                    : GENERIC_BOOK_IMAGE_ALT
+                }
+                {...imageWH}
+                className="aspect-[10/16] w-full rounded-lg object-cover"
+              />
             </div>
             <p
               className={cn(

@@ -1,14 +1,7 @@
 import React from "react";
 // import { book } from "./data";
 import NextImage from "next/image";
-import { Image } from "@imagekit/next";
-import {
-  DEFAULT_MAX_RESULTS,
-  DEFAULT_PAGE_NUMBER,
-  GENERIC_BOOK_IMAGE_ALT,
-  imageKitProps,
-  imageWH,
-} from "@/shared/utils";
+import { DEFAULT_MAX_RESULTS, DEFAULT_PAGE_NUMBER, GENERIC_BOOK_IMAGE_ALT, imageWH } from "@/shared/utils";
 import Link from "next/link";
 import genericBookImage from "@/public/assets/images/generic-book.png";
 import { ExclamationTriangle } from "@/client/components/ui/icons/exclamation-triangle";
@@ -58,22 +51,16 @@ export function QuickSearchResults({
           }}
         >
           <div className="aspect-square">
-            {book.image && book.image.length > 0 ? (
-              <Image
-                src={book.image}
-                alt={`Book cover for ${book.title} by ${book.author}`}
-                {...imageWH}
-                {...imageKitProps}
-                className="mx-auto h-full w-full rounded-lg object-cover"
-              />
-            ) : (
-              <NextImage
-                src={genericBookImage}
-                alt={GENERIC_BOOK_IMAGE_ALT}
-                {...imageWH}
-                className="mx-auto h-full w-full rounded-lg object-cover"
-              />
-            )}
+            <NextImage
+              src={book.image && book.image.length > 0 ? book.image : genericBookImage}
+              alt={
+                book.title && book.author && book.image
+                  ? `Book cover for ${book.title} by ${book.author}`
+                  : GENERIC_BOOK_IMAGE_ALT
+              }
+              {...imageWH}
+              className="mx-auto h-full w-full rounded-lg object-cover"
+            />
           </div>
           <div className="truncate text-sm">
             <p className="mb-1 truncate font-medium leading-4">{book.title}</p>

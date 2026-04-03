@@ -32,7 +32,7 @@ export const imageWH = {
   height: 500,
 };
 
-export const imageKitProps: Pick<IKImageProps, "transformation" | "unoptimized"> = {
+export const imageKitProps: Pick<IKImageProps, "transformation" | "unoptimized" | "urlEndpoint"> = {
   transformation: [{ quality: 10, format: "orig" }],
-  unoptimized: false,
+  urlEndpoint: process.env.IMAGEKIT_URL_ENDPOINT,
 };
