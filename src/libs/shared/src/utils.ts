@@ -1,4 +1,5 @@
 import { SearchObjectType } from "./validators";
+import type { IKImageProps } from "@imagekit/next";
 
 export const BTL_LOCAL_STORAGE_SEARCH_OBJECT = "btlSearchObject";
 export const BTL_LOCAL_STORAGE_COLLECTION_SIDEBAR = "btlCollectionSidebar";
@@ -24,3 +25,14 @@ export const BTL_AUTH_SESSION_COOKIE_NAME = "btl_auth_session";
 export const NOT_FOUND_IMAGE_ALT = "Cartoon image of man sitting on floor and reading a book";
 export const HERO_SECTION_IMAGE_ALT =
   "Cartoon image of various people sitting and standing on and around a stack of books, each reading a book";
+export const GENERIC_BOOK_IMAGE_ALT = "Generic Book Cover";
+
+export const imageWH = {
+  width: 500,
+  height: 500,
+};
+
+export const imageKitProps: Pick<IKImageProps, "transformation" | "unoptimized"> = {
+  transformation: [{ quality: 10, format: "orig" }],
+  unoptimized: false,
+};

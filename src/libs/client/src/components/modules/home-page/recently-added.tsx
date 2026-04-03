@@ -5,7 +5,9 @@ import { ExclamationTriangle } from "@/client/components/ui/icons/exclamation-tr
 import { getRecentlyAddedBooks } from "@/server/actions";
 import { SectionPreamble } from "./section-preamble";
 import Link from "next/link";
-import Image from "next/image";
+import NextImage from "next/image";
+import { Image } from "@imagekit/next";
+import { GENERIC_BOOK_IMAGE_ALT, imageKitProps, imageWH } from "@/shared/utils";
 
 const genericBookImage = "/assets/images/generic-book.png";
 
@@ -43,13 +45,22 @@ export async function RecentlyAdded({ user }: { user: SanitizedUser }) {
               className="w-full"
               title={`${book.title} by ${book.author}`}
             >
-              <Image
-                src={book.image ? book.image : genericBookImage}
-                alt={`${book.title} by ${book.author}`}
-                className="h-60 w-full rounded-lg object-cover"
-                width={500}
-                height={500}
-              />
+              {book.image && book.image.length > 0 ? (
+                <Image
+                  src={book.image}
+                  alt={`Book cover for ${book.title} by ${book.author}`}
+                  {...imageWH}
+                  {...imageKitProps}
+                  className="h-60 w-full rounded-lg object-cover"
+                />
+              ) : (
+                <NextImage
+                  src={genericBookImage}
+                  alt={GENERIC_BOOK_IMAGE_ALT}
+                  {...imageWH}
+                  className="h-60 w-full rounded-lg object-cover"
+                />
+              )}
             </Link>
             <h4 className="truncate font-semibold">{book.title}</h4>
             <p className="truncate">{book.author}</p>
