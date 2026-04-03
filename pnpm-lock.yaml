@@ -12,9 +12,6 @@ importers:
 
   .:
     dependencies:
-      '@imagekit/next':
-        specifier: ^2.1.5
-        version: 2.1.5(next@15.2.6(@babel/core@7.27.3)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))
       '@neondatabase/serverless':
         specifier: ^0.10.4
         version: 0.10.4
@@ -1025,14 +1022,6 @@ packages:
   '@humanwhocodes/retry@0.4.2':
     resolution: {integrity: sha512-xeO57FpIu4p1Ri3Jq/EXq4ClRm86dVF2z/+kvFnyqVYRavTZmaFaUBbWCOuuTh0o/g7DSsk6kc2vrS4Vl5oPOQ==}
     engines: {node: '>=18.18'}
-
-  '@imagekit/javascript@5.2.2':
-    resolution: {integrity: sha512-TbfOSbBhDc7wD+TJ2H+7wICLjhC5pY5dXKIV+6Iiwl/8OyOj+ZgCt/DL679eOikUw42+iIozKf86AKT5AL7wNA==}
-
-  '@imagekit/next@2.1.5':
-    resolution: {integrity: sha512-fvUEqAcq+krrMvn9Yb9fiq6q6ezbVuHvcvJJ606PzmaeBPFcsTU0FZAWW9TRr0cyj4i+4RfzurSy4GfK9RwjOg==}
-    peerDependencies:
-      next: '>= 13'
 
   '@img/sharp-darwin-arm64@0.33.5':
     resolution: {integrity: sha512-UT4p+iz/2H4twwAoLCqfA9UH5pI6DggwKEGuaPy7nCVQ8ZsiY5PIcrRvD1DzuY3qYL07NtIQcWnBSY/heikIFQ==}
@@ -4825,13 +4814,6 @@ snapshots:
   '@humanwhocodes/retry@0.3.1': {}
 
   '@humanwhocodes/retry@0.4.2': {}
-
-  '@imagekit/javascript@5.2.2': {}
-
-  '@imagekit/next@2.1.5(next@15.2.6(@babel/core@7.27.3)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))':
-    dependencies:
-      '@imagekit/javascript': 5.2.2
-      next: 15.2.6(@babel/core@7.27.3)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
 
   '@img/sharp-darwin-arm64@0.33.5':
     optionalDependencies:

@@ -1,5 +1,4 @@
 import { SearchObjectType } from "./validators";
-import type { IKImageProps } from "@imagekit/next";
 
 export const BTL_LOCAL_STORAGE_SEARCH_OBJECT = "btlSearchObject";
 export const BTL_LOCAL_STORAGE_COLLECTION_SIDEBAR = "btlCollectionSidebar";
@@ -30,9 +29,4 @@ export const GENERIC_BOOK_IMAGE_ALT = "Generic Book Cover";
 export const imageWH = {
   width: 500,
   height: 500,
-};
-
-export const imageKitProps: Pick<IKImageProps, "transformation" | "unoptimized" | "urlEndpoint"> = {
-  transformation: [{ quality: 10, format: "orig" }],
-  urlEndpoint: process.env.IMAGEKIT_URL_ENDPOINT,
 };
