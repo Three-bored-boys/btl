@@ -8,6 +8,7 @@ export class NYTimesService {
     try {
       const data = await fetchServiceData<NYTimesBestSellersResponse>(
         `https://api.nytimes.com/svc/books/v3/lists/overview.json?api-key=${this.apiKey}`,
+        { next: { revalidate: 5184000 } },
       );
 
       const bestSellers = data.results.lists.map((list) => {

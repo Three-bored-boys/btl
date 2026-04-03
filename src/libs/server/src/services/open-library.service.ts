@@ -6,6 +6,7 @@ export class OpenLibraryService {
     try {
       const data = await fetchServiceData<OpenLibraryResponse>(
         `https://openlibrary.org/api/volumes/brief/isbn/${isbn}.json`,
+        { next: { revalidate: 5184000 } },
       );
 
       const [recordsObj] = Object.values(data.records);
