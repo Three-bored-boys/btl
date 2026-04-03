@@ -7,6 +7,7 @@ const nextConfig = {
       { hostname: "covers.openlibrary.org" },
     ],
     minimumCacheTTL: 5184000,
+    qualities: [20],
   },
 };
 
