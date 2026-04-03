@@ -20,3 +20,5 @@ export const bookLibraries = [
 export const bookLibraryValues = ["currently-reading", "want-to-read", "finished", "did-not-finish"] as const;
 
 export const BTL_AUTH_SESSION_COOKIE_NAME = "btl_auth_session";
+
+export const NOT_FOUND_IMAGE_ALT = "Cartoon image of man sitting on floor and reading a book";
