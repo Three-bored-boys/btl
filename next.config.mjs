@@ -6,7 +6,7 @@ const nextConfig = {
       { hostname: "storage.googleapis.com" },
       { hostname: "covers.openlibrary.org" },
     ],
-    unoptimized: true,
+    minimumCacheTTL: 5184000,
   },
 };
 
