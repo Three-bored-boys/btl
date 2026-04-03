@@ -15,7 +15,7 @@ export function BookPageErrorBoundaryRender({ error, reset }: { error: Error; re
             Try again
           </Button>
           <div>
-            <NextImage src={notFoundImage} alt={NOT_FOUND_IMAGE_ALT}></NextImage>
+            <NextImage src={notFoundImage} alt={NOT_FOUND_IMAGE_ALT} />
           </div>
         </div>
       </Container>

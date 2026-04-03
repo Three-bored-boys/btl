@@ -67,7 +67,7 @@ export default async function LibraryPage({
             Return Home
           </LinkButton>
           <div>
-            <NextImage src={notFoundImage} alt={NOT_FOUND_IMAGE_ALT}></NextImage>
+            <NextImage src={notFoundImage} alt={NOT_FOUND_IMAGE_ALT} />
           </div>
         </div>
       </div>

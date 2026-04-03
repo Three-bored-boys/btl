@@ -20,7 +20,7 @@ export default function GlobalError({ reset }: { error: Error & { digest?: strin
               Try again
             </Button>
             <div>
-              <NextImage src={notFoundImage} alt={NOT_FOUND_IMAGE_ALT}></NextImage>
+              <NextImage src={notFoundImage} alt={NOT_FOUND_IMAGE_ALT} />
             </div>
           </div>
         </Container>
