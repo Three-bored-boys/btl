@@ -5,6 +5,7 @@ const nextConfig = {
       { hostname: "books.google.com" },
       { hostname: "storage.googleapis.com" },
       { hostname: "covers.openlibrary.org" },
+      { hostname: "static01.nyt.com" },
     ],
     minimumCacheTTL: 5184000,
     qualities: [20],
