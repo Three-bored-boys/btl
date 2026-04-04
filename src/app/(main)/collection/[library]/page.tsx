@@ -4,8 +4,9 @@ import { getUserSession, getUserBooksInALibrary } from "@/server/actions";
 import { redirect } from "next/navigation";
 import { CollectionLibrary } from "@/client/components/modules/collection/collection-library";
 import { LinkButton } from "@/client/components/ui/link-button";
-import Image from "next/image";
+import NextImage from "next/image";
 import notFoundImage from "@/public/assets/images/not-found.webp";
+import { NOT_FOUND_IMAGE_ALT } from "@/shared/utils";
 
 export function generateStaticParams() {
   return bookLibraryValues.map((library) => ({ library }));
@@ -66,7 +67,7 @@ export default async function LibraryPage({
             Return Home
           </LinkButton>
           <div>
-            <Image src={notFoundImage} alt="Cartoon image of man sitting on floor and reading a book"></Image>
+            <NextImage src={notFoundImage} alt={NOT_FOUND_IMAGE_ALT} />
           </div>
         </div>
       </div>

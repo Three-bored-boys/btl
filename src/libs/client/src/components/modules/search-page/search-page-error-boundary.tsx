@@ -1,9 +1,10 @@
 "use client";
 
 import { Button } from "@/libs/client/src/components/ui/button";
-import Image from "next/image";
+import NextImage from "next/image";
 import notFoundImage from "@/public/assets/images/not-found.webp";
 import { ExclamationTriangle } from "@/client/components/ui/icons/exclamation-triangle";
+import { NOT_FOUND_IMAGE_ALT } from "@/shared/utils";
 
 export function SearchPageErrorBoundary({
   error,
@@ -29,7 +30,7 @@ export function SearchPageErrorBoundary({
           Try again
         </Button>
         <div>
-          <Image src={notFoundImage} alt="Cartoon image of man sitting on floor and reading a book"></Image>
+          <NextImage src={notFoundImage} alt={NOT_FOUND_IMAGE_ALT} />
         </div>
       </div>
     </div>

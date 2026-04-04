@@ -1,7 +1,8 @@
 import { Book } from "@/root/src/libs/shared/src/types";
 import Link from "next/link";
 import React from "react";
-import Image from "next/image";
+import NextImage from "next/image";
+import { GENERIC_BOOK_IMAGE_ALT, imageWH } from "@/shared/utils";
 import genericBookImage from "@/public/assets/images/generic-book.png";
 
 export function SearchPageResults({ books }: { books: Book[] }) {
@@ -25,11 +26,14 @@ export function SearchPageResults({ books }: { books: Book[] }) {
           title={`"${book.title}" by ${book.author}`}
         >
           <div className="h-4/5 w-full px-[28%]">
-            <Image
-              alt={book.image.length > 0 ? `Book cover for ${book.title} by ${book.author}` : "Generic book cover"}
-              src={book.image || genericBookImage.src}
-              width={500}
-              height={500}
+            <NextImage
+              src={book.image && book.image.length > 0 ? book.image : genericBookImage}
+              alt={
+                book.title && book.author && book.image
+                  ? `Book cover for ${book.title} by ${book.author}`
+                  : GENERIC_BOOK_IMAGE_ALT
+              }
+              {...imageWH}
               className="h-full w-full border object-cover"
             />
           </div>

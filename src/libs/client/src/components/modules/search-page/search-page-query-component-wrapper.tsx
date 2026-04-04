@@ -3,8 +3,9 @@ import React from "react";
 import { SearchPageQueryComponent } from "./search-page-query-component";
 import { getFullSearchResults } from "@/server/actions";
 import { LinkButton } from "@/client/components/ui/link-button";
-import Image from "next/image";
+import NextImage from "next/image";
 import notFoundImage from "@/public/assets/images/not-found.webp";
+import { NOT_FOUND_IMAGE_ALT } from "@/shared/utils";
 
 export async function SearchPageQueryComponentWrapper({
   searchObject,
@@ -27,7 +28,7 @@ export async function SearchPageQueryComponentWrapper({
             Return Home
           </LinkButton>
           <div>
-            <Image src={notFoundImage} alt="Cartoon image of man sitting on floor and reading a book"></Image>
+            <NextImage src={notFoundImage} alt={NOT_FOUND_IMAGE_ALT} />
           </div>
         </div>
       </div>
