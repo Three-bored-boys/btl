@@ -11,7 +11,7 @@ export class GoogleBooksService {
   private async fetchBooks(url: string): Promise<{ books: Book[]; totalItems: number }> {
     try {
       console.log(url);
-      const data = await fetchServiceData<GoogleBooksResponse>(url, { next: { revalidate: 5184000 } });
+      const data = await fetchServiceData<GoogleBooksResponse>(url, { next: { revalidate: 172800 } });
       return { books: data.items.map((item) => this.mapBook(item)), totalItems: data.totalItems };
     } catch (error) {
       console.error("Problem getting books:", JSON.stringify(error, null, 2));
