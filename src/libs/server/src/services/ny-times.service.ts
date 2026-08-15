@@ -25,13 +25,7 @@ export class NYTimesService {
               description: book.description,
               isbn13: book.primary_isbn13,
               isbn10: book.primary_isbn10,
-              price: Number.isNaN(Number(book.price)) ? 0 : Number(book.price),
-              priceUnit: "GBP",
               publisher: book.publisher,
-              createdAt: new Date(book.created_date),
-              updatedAt: new Date(book.updated_date),
-              rank: book.rank,
-              ageGroup: book.age_group,
               categories: [],
             };
           }),

@@ -8,10 +8,6 @@ export const testBook: Book = {
   description: "No description available",
   isbn13: "9780871299840",
   isbn10: "0871299844",
-  price: 0,
-  priceUnit: "GBP",
   categories: ["Drama"],
   publisher: "Dramatic Publishing",
-  createdAt: new Date(),
-  updatedAt: new Date(),
 };

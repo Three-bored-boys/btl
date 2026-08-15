@@ -27,12 +27,8 @@ export class GoogleBooksService {
       description: item.volumeInfo.description ?? "No description available",
       isbn13: this.findIdentifier(item, "ISBN_13") ?? "N/A",
       isbn10: this.findIdentifier(item, "ISBN_10") ?? "N/A",
-      price: item.saleInfo.retailPrice?.amount ?? item.saleInfo.listPrice?.amount ?? 0,
-      priceUnit: item.saleInfo.retailPrice?.currencyCode ?? "GBP",
       categories: item.volumeInfo.categories ?? [],
       publisher: item.volumeInfo.publisher ?? "N/A",
-      createdAt: new Date(item.volumeInfo.publishedDate),
-      updatedAt: new Date(item.volumeInfo.publishedDate),
     };
   }
 

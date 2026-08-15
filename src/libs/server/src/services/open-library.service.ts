@@ -1,4 +1,4 @@
-import type { Book, OpenLibraryResponse, OpenLibraryInnerRecords, CreatedOrLastModifiedType } from "@/shared/types";
+import type { Book, OpenLibraryResponse, OpenLibraryInnerRecords } from "@/shared/types";
 import { fetchServiceData } from "@/server/utils";
 
 export class OpenLibraryService {
@@ -26,22 +26,13 @@ export class OpenLibraryService {
       description: records.details.details.description?.value ?? "No description",
       isbn13: records.details.details.isbn_13?.[0] ?? "N/A",
       isbn10: records.details.details.isbn_10?.[0] ?? "N/A",
-      price: 0,
-      priceUnit: "GBP",
       publisher: records.data.publishers?.[0].name ?? "N/A",
       categories: [records.data.subjects?.[0].name ?? ""],
-      createdAt: this.mapDate(records.details.details.created),
-      updatedAt: this.mapDate(records.details.details.last_modified),
     };
   }
 
   private mapAuthors(authors?: { url: string; name: string }[]) {
     if (!authors) return "";
     return authors.map(({ name }) => name).join("; ");
-  }
-
-  private mapDate(obj?: CreatedOrLastModifiedType) {
-    if (!obj) return new Date();
-    return obj.type === "/type/datetime" && obj.value instanceof Date ? obj.value : new Date(obj.value);
   }
 }
