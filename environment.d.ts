@@ -11,6 +11,5 @@ declare namespace NodeJS {
     readonly SESSION_SECRET_KEY: string;
     readonly BEARER_AUTH_TOKEN: string;
     readonly USER_EMAIL: string;
-    readonly IMAGEKIT_URL_ENDPOINT: string;
   }
 }
