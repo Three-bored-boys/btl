@@ -3,8 +3,6 @@ declare namespace NodeJS {
   interface ProcessEnv {
     readonly URL: string;
     readonly NEXT_PUBLIC_URL: string;
-    readonly API_URL: string;
-    readonly NEXT_PUBLIC_API_URL: string;
     readonly DATABASE_URL: string;
     readonly GOOGLE_BOOKS_API_KEY: string;
     readonly NY_TIMES_BOOKS_API_KEY: string;
