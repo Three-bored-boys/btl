@@ -21,14 +21,14 @@ export class GoogleBooksService {
 
   private mapBook(item: Item): Book {
     return {
-      title: item.volumeInfo.title,
-      author: item.volumeInfo.authors?.join(", ") ?? "Unknown Author",
-      image: item.volumeInfo.imageLinks?.thumbnail ?? "",
-      description: item.volumeInfo.description ?? "No description available",
-      isbn13: this.findIdentifier(item, "ISBN_13") ?? "N/A",
-      isbn10: this.findIdentifier(item, "ISBN_10") ?? "N/A",
-      categories: item.volumeInfo.categories ?? [],
-      publisher: item.volumeInfo.publisher ?? "N/A",
+      title: item.volumeInfo.title || null,
+      author: item.volumeInfo.authors?.join(", ") || null,
+      image: item.volumeInfo.imageLinks?.thumbnail || item.volumeInfo.imageLinks?.smallThumbnail || null,
+      description: item.volumeInfo.description || null,
+      isbn13: this.findIdentifier(item, "ISBN_13") || null,
+      isbn10: this.findIdentifier(item, "ISBN_10") || null,
+      categories: item.volumeInfo.categories,
+      publisher: item.volumeInfo.publisher ?? null,
     };
   }
 

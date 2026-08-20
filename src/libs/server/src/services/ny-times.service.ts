@@ -19,13 +19,13 @@ export class NYTimesService {
           image: list.list_image,
           books: list.books.map((book) => {
             return {
-              title: book.title,
-              author: book.author,
-              image: book.book_image,
-              description: book.description,
-              isbn13: book.primary_isbn13,
-              isbn10: book.primary_isbn10,
-              publisher: book.publisher,
+              title: book.title || null,
+              author: book.author || null,
+              image: book.book_image || null,
+              description: book.description || null,
+              isbn13: book.primary_isbn13 || null,
+              isbn10: book.primary_isbn10 || null,
+              publisher: book.publisher || null,
               categories: [],
             };
           }),
