@@ -6,7 +6,7 @@ import { BookCoverImage } from "@/client/components/ui/book-cover-image";
 import { getRecentlyAddedBooks } from "@/server/actions";
 import { SectionPreamble } from "./section-preamble";
 import Link from "next/link";
-import { imageWH } from "@/shared/utils";
+import { getUIForBook, imageWH } from "@/shared/utils";
 
 export async function RecentlyAdded({ user }: { user: SanitizedUser }) {
   const result = await getRecentlyAddedBooks({ user });
@@ -40,12 +40,12 @@ export async function RecentlyAdded({ user }: { user: SanitizedUser }) {
             <Link
               href={`/book/${book.isbn13 ? book.isbn13 : book.isbn10}`}
               className="w-full"
-              title={`${book.title} by ${book.author}`}
+              title={`${getUIForBook(book).title} by ${getUIForBook(book).author}`}
             >
               <BookCoverImage book={book} {...imageWH} className="h-60 w-full rounded-lg object-cover" />
             </Link>
-            <h4 className="truncate font-semibold">{book.title}</h4>
-            <p className="truncate">{book.author}</p>
+            <h4 className="truncate font-semibold">{getUIForBook(book).title}</h4>
+            <p className="truncate">{getUIForBook(book).author}</p>
             <p className="mt-1 text-sm italic">Added {date.toString().split("T")[0]}</p>
           </div>
         ))}

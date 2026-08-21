@@ -6,7 +6,7 @@ import { BookLocationRadioGroupWrapper } from "./book-location-radio-group-wrapp
 import NextImage from "next/image";
 import notFoundImage from "@/public/assets/images/not-found.webp";
 import { getBookByISBN } from "@/server/actions";
-import { NOT_FOUND_IMAGE_ALT, imageWH } from "@/shared/utils";
+import { NOT_FOUND_IMAGE_ALT, imageWH, getUIForBook } from "@/shared/utils";
 
 export async function BookPage({ params: { isbn } }: { params: { isbn: string } }) {
   const fetchDataResult = await getBookByISBN(isbn);
@@ -29,8 +29,8 @@ export async function BookPage({ params: { isbn } }: { params: { isbn: string } 
                   </div>
                 ))}
               </div>
-              <h2 className="mb-3 text-center font-semibold sm:text-left">{book.title}</h2>
-              <h3 className="mb-4 text-center italic sm:text-left">{book.author}</h3>
+              <h2 className="mb-3 text-center font-semibold sm:text-left">{getUIForBook(book).title}</h2>
+              <h3 className="mb-4 text-center italic sm:text-left">{getUIForBook(book).author}</h3>
               <BookInformation book={book} />
               <BookLocationRadioGroupWrapper isbn={isbn} />
             </div>

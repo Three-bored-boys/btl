@@ -1,6 +1,6 @@
 import React from "react";
 import { BookCoverImage } from "@/client/components/ui/book-cover-image";
-import { DEFAULT_MAX_RESULTS, DEFAULT_PAGE_NUMBER, imageWH } from "@/shared/utils";
+import { DEFAULT_MAX_RESULTS, DEFAULT_PAGE_NUMBER, getUIForBook, imageWH } from "@/shared/utils";
 import Link from "next/link";
 import { ExclamationTriangle } from "@/client/components/ui/icons/exclamation-triangle";
 import { BadResponse, GoodResponse, Book } from "@/shared/types";
@@ -32,7 +32,7 @@ export function QuickSearchResults({
   }
 
   const { data } = fetchDataResult;
-  const booksWithISBN = data.filter((book) => book.isbn10 !== "" || book.isbn13 !== "");
+  const booksWithISBN = data.filter((book) => book.isbn10 !== null || book.isbn13 !== null);
   if (data.length === 0 || booksWithISBN.length === 0) {
     return <div>No books found from search :(</div>;
   }
@@ -42,7 +42,7 @@ export function QuickSearchResults({
       {booksWithISBN.map((book, i) => (
         <Link
           className="grid w-full grid-cols-[40px_1fr] grid-rows-[auto] gap-1 rounded-xl py-2 hover:bg-secondary-100 xs:grid-cols-[45px_1fr] max-lg:md:grid-cols-[40px_1fr]"
-          href={`/book/${book.isbn13 || book.isbn10}`}
+          href={`/book/${book.isbn13 ?? book.isbn10}`}
           key={i}
           onClick={() => {
             setSearchResultsVisible(false);
@@ -52,8 +52,8 @@ export function QuickSearchResults({
             <BookCoverImage book={book} {...imageWH} className="mx-auto h-full w-full rounded-lg object-cover" />
           </div>
           <div className="truncate text-sm">
-            <p className="mb-1 truncate font-medium leading-4">{book.title}</p>
-            <p className="truncate font-light leading-4">{book.author}</p>
+            <p className="mb-1 truncate font-medium leading-4">{getUIForBook(book).title}</p>
+            <p className="truncate font-light leading-4">{getUIForBook(book).author}</p>
           </div>
         </Link>
       ))}

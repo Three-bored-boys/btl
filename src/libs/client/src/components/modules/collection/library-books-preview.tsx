@@ -3,7 +3,7 @@ import Link from "next/link";
 import React from "react";
 import { cn } from "@/client/utils";
 import { BookCoverImage } from "@/client/components/ui/book-cover-image";
-import { imageWH } from "@/shared/utils";
+import { imageWH, getUIForBook } from "@/shared/utils";
 
 export function LibraryBooksPreview({ books, showSidebar }: { books: Book[]; showSidebar: boolean }) {
   if (books.length === 0) {
@@ -26,12 +26,12 @@ export function LibraryBooksPreview({ books, showSidebar }: { books: Book[]; sho
       {books.map((book, i) => (
         <div key={i}>
           <Link
-            href={`/book/${book.isbn13 || book.isbn10}`}
+            href={`/book/${book.isbn13 ? book.isbn13 : book.isbn10}`}
             className={cn("block w-full sm:w-28", {
               "md:w-24 min-[896px]:w-28 lg:w-32 xl:w-40": showSidebar,
               "md:w-28 min-[896px]:w-36 lg:w-40 xl:w-44": !showSidebar,
             })}
-            title={`"${book.title}" by ${book.author}`}
+            title={`"${getUIForBook(book).title}" by ${getUIForBook(book).author}`}
           >
             <div className="mb-1 w-full sm:mb-2">
               <BookCoverImage book={book} {...imageWH} className="aspect-[10/16] w-full rounded-lg object-cover" />
@@ -41,7 +41,7 @@ export function LibraryBooksPreview({ books, showSidebar }: { books: Book[]; sho
                 "text-wrap text-sm font-medium leading-none lg:text-base lg:leading-tight xl:text-lg xl:leading-snug",
               )}
             >
-              {book.title}
+              {getUIForBook(book).title}
             </p>
           </Link>
         </div>
