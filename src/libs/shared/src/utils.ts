@@ -49,3 +49,11 @@ export const getUIForBook = function (book: Book): BookUI {
 
   return { title, author, description, isbn10, isbn13, publisher };
 };
+
+export const getImageAltFromBook = function (book: Book): string {
+  if (!book.image) return GENERIC_BOOK_IMAGE_ALT;
+  if (book.title && book.author && book.image) return `Book cover for ${book.title} by ${book.author}`;
+  if (!book.title && book.author && book.image) return `Book cover for unknown book title by ${book.author}`;
+  if (book.title && !book.author && book.image) return `Book cover for book title '${book.title}'`;
+  return "Book cover for unknown book by unknown title";
+};

@@ -1,12 +1,12 @@
 import { Container } from "@/client/components/layouts/container";
 import { LinkButton } from "@/client/components/ui/link-button";
+import { BookCoverImage } from "@/client/components/ui/book-cover-image";
 import { BookInformation } from "./book-information";
 import { BookLocationRadioGroupWrapper } from "./book-location-radio-group-wrapper";
 import NextImage from "next/image";
 import notFoundImage from "@/public/assets/images/not-found.webp";
-import genericBookImage from "@/public/assets/images/generic-book.png";
 import { getBookByISBN } from "@/server/actions";
-import { NOT_FOUND_IMAGE_ALT, GENERIC_BOOK_IMAGE_ALT, imageWH } from "@/shared/utils";
+import { NOT_FOUND_IMAGE_ALT, imageWH } from "@/shared/utils";
 
 export async function BookPage({ params: { isbn } }: { params: { isbn: string } }) {
   const fetchDataResult = await getBookByISBN(isbn);
@@ -19,20 +19,11 @@ export async function BookPage({ params: { isbn } }: { params: { isbn: string } 
         <Container>
           <div className="grid w-full grid-cols-1 gap-4 px-6 sm:grid-cols-[11rem_1fr] sm:gap-7 sm:px-3 md:grid-cols-[12rem_1fr] md:gap-10 lg:grid-cols-[14.5rem_1fr] lg:gap-16 xl:grid-cols-[16rem_1fr] xl:gap-20 2xl:grid-cols-[18rem_1fr] 2xl:gap-28">
             <div className="mx-auto aspect-[10/16] w-2/4 border-[1px] border-gray-950 sm:w-full">
-              <NextImage
-                src={book.image && book.image.length > 0 ? book.image : genericBookImage}
-                alt={
-                  book.title && book.author && book.image
-                    ? `Book cover for ${book.title} by ${book.author}`
-                    : GENERIC_BOOK_IMAGE_ALT
-                }
-                {...imageWH}
-                className="mx-auto h-full w-full object-cover"
-              />
+              <BookCoverImage book={book} {...imageWH} className="mx-auto h-full w-full object-cover"></BookCoverImage>
             </div>
             <div className="truncate text-pretty">
               <div className="mb-3 flex items-center justify-center sm:block">
-                {book.categories?.map((category, i) => (
+                {book.categories.map((category, i) => (
                   <div key={i} className="inline-block rounded-xl bg-secondary-50 px-3 py-0.5 text-secondary-300">
                     {category}
                   </div>
