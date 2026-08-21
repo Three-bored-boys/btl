@@ -1,9 +1,7 @@
 import React from "react";
-// import { book } from "./data";
-import NextImage from "next/image";
-import { DEFAULT_MAX_RESULTS, DEFAULT_PAGE_NUMBER, GENERIC_BOOK_IMAGE_ALT, imageWH } from "@/shared/utils";
+import { BookCoverImage } from "@/client/components/ui/book-cover-image";
+import { DEFAULT_MAX_RESULTS, DEFAULT_PAGE_NUMBER, imageWH } from "@/shared/utils";
 import Link from "next/link";
-import genericBookImage from "@/public/assets/images/generic-book.png";
 import { ExclamationTriangle } from "@/client/components/ui/icons/exclamation-triangle";
 import { BadResponse, GoodResponse, Book } from "@/shared/types";
 
@@ -51,16 +49,7 @@ export function QuickSearchResults({
           }}
         >
           <div className="aspect-square">
-            <NextImage
-              src={book.image && book.image.length > 0 ? book.image : genericBookImage}
-              alt={
-                book.title && book.author && book.image
-                  ? `Book cover for ${book.title} by ${book.author}`
-                  : GENERIC_BOOK_IMAGE_ALT
-              }
-              {...imageWH}
-              className="mx-auto h-full w-full rounded-lg object-cover"
-            />
+            <BookCoverImage book={book} {...imageWH} className="mx-auto h-full w-full rounded-lg object-cover" />
           </div>
           <div className="truncate text-sm">
             <p className="mb-1 truncate font-medium leading-4">{book.title}</p>

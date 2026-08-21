@@ -2,13 +2,11 @@ import { SanitizedUser } from "@/root/src/libs/shared/src/db/schema";
 import React from "react";
 import { Container } from "@/client/components/layouts/container";
 import { ExclamationTriangle } from "@/client/components/ui/icons/exclamation-triangle";
+import { BookCoverImage } from "@/client/components/ui/book-cover-image";
 import { getRecentlyAddedBooks } from "@/server/actions";
 import { SectionPreamble } from "./section-preamble";
 import Link from "next/link";
-import NextImage from "next/image";
-import { GENERIC_BOOK_IMAGE_ALT, imageWH } from "@/shared/utils";
-
-const genericBookImage = "/assets/images/generic-book.png";
+import { imageWH } from "@/shared/utils";
 
 export async function RecentlyAdded({ user }: { user: SanitizedUser }) {
   const result = await getRecentlyAddedBooks({ user });
@@ -44,16 +42,7 @@ export async function RecentlyAdded({ user }: { user: SanitizedUser }) {
               className="w-full"
               title={`${book.title} by ${book.author}`}
             >
-              <NextImage
-                src={book.image && book.image.length > 0 ? book.image : genericBookImage}
-                alt={
-                  book.title && book.author && book.image
-                    ? `Book cover for ${book.title} by ${book.author}`
-                    : GENERIC_BOOK_IMAGE_ALT
-                }
-                {...imageWH}
-                className="h-60 w-full rounded-lg object-cover"
-              />
+              <BookCoverImage book={book} {...imageWH} className="h-60 w-full rounded-lg object-cover" />
             </Link>
             <h4 className="truncate font-semibold">{book.title}</h4>
             <p className="truncate">{book.author}</p>
