@@ -9,7 +9,7 @@ import { ArrowRightCircle } from "@/client/components/ui/icons/arrow-right-circl
 import { BookCoverImage } from "@/client/components/ui/book-cover-image";
 import { CollectionLibraryLoadingSkeleton } from "./collection-library-loading-skeleton";
 import { LinkButton } from "@/client/components/ui/link-button";
-import { bookLibraryValues, imageWH, getUIForBook } from "@/shared/utils";
+import { bookLibraryValues, imageWH, getUIForBook, getBookCoverLinkHrefFromBook } from "@/shared/utils";
 import Link from "next/link";
 
 export function CollectionLibrary({
@@ -46,7 +46,7 @@ export function CollectionLibrary({
           <div className="my-6 grid w-full px-12 xs:grid-cols-2 xs:px-5 radix-xs:px-12 md:grid-cols-4 md:px-1 lg:px-12 xl:px-32">
             {books.map((book, i) => (
               <Link
-                href={`/book/${book.isbn13 ? book.isbn13 : book.isbn10}`}
+                href={getBookCoverLinkHrefFromBook(book)}
                 key={i}
                 className="aspect-auto border py-4 hover:border-primary"
                 title={`"${getUIForBook(book).title}" by ${getUIForBook(book).author}`}

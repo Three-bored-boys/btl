@@ -6,7 +6,7 @@ import { BookCoverImage } from "@/client/components/ui/book-cover-image";
 import { getRecentlyAddedBooks } from "@/server/actions";
 import { SectionPreamble } from "./section-preamble";
 import Link from "next/link";
-import { getUIForBook, imageWH } from "@/shared/utils";
+import { getBookCoverLinkHrefFromBook, getUIForBook, imageWH } from "@/shared/utils";
 
 export async function RecentlyAdded({ user }: { user: SanitizedUser }) {
   const result = await getRecentlyAddedBooks({ user });
@@ -38,7 +38,7 @@ export async function RecentlyAdded({ user }: { user: SanitizedUser }) {
         {data.map(({ book, date }, i) => (
           <div key={i} className="min-w-40 max-w-40">
             <Link
-              href={`/book/${book.isbn13 ? book.isbn13 : book.isbn10}`}
+              href={getBookCoverLinkHrefFromBook(book)}
               className="w-full"
               title={`${getUIForBook(book).title} by ${getUIForBook(book).author}`}
             >

@@ -1,6 +1,12 @@
 import React from "react";
 import { BookCoverImage } from "@/client/components/ui/book-cover-image";
-import { DEFAULT_MAX_RESULTS, DEFAULT_PAGE_NUMBER, getUIForBook, imageWH } from "@/shared/utils";
+import {
+  DEFAULT_MAX_RESULTS,
+  DEFAULT_PAGE_NUMBER,
+  getBookCoverLinkHrefFromBook,
+  getUIForBook,
+  imageWH,
+} from "@/shared/utils";
 import Link from "next/link";
 import { ExclamationTriangle } from "@/client/components/ui/icons/exclamation-triangle";
 import { BadResponse, GoodResponse, Book } from "@/shared/types";
@@ -42,7 +48,7 @@ export function QuickSearchResults({
       {booksWithISBN.map((book, i) => (
         <Link
           className="grid w-full grid-cols-[40px_1fr] grid-rows-[auto] gap-1 rounded-xl py-2 hover:bg-secondary-100 xs:grid-cols-[45px_1fr] max-lg:md:grid-cols-[40px_1fr]"
-          href={`/book/${book.isbn13 ?? book.isbn10}`}
+          href={getBookCoverLinkHrefFromBook(book)}
           key={i}
           onClick={() => {
             setSearchResultsVisible(false);

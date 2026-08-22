@@ -57,3 +57,9 @@ export const getBookCoverImageAltFromBook = function (book: Book): string {
   if (book.title && !book.author && book.image) return `Book cover for book title '${book.title}'`;
   return "Book cover for unknown book by unknown title";
 };
+
+export const getBookCoverLinkHrefFromBook = function (book: Book) {
+  if (book.isbn13 !== null) return `/book/${book.isbn13}`;
+  if (book.isbn10 !== null) return `/book/${book.isbn10}`;
+  return "/";
+};

@@ -2,7 +2,7 @@ import { Book } from "@/root/src/libs/shared/src/types";
 import Link from "next/link";
 import React from "react";
 import { BookCoverImage } from "@/client/components/ui/book-cover-image";
-import { getUIForBook, imageWH } from "@/shared/utils";
+import { getBookCoverLinkHrefFromBook, getUIForBook, imageWH } from "@/shared/utils";
 
 export function SearchPageResults({ books }: { books: Book[] }) {
   if (books.length === 0) {
@@ -19,7 +19,7 @@ export function SearchPageResults({ books }: { books: Book[] }) {
     <div className="my-6 grid w-full px-12 xs:grid-cols-2 xs:px-5 radix-xs:px-12 md:grid-cols-4 md:px-1 lg:px-12 xl:px-32">
       {booksWithISBN.map((book, i) => (
         <Link
-          href={`/book/${book.isbn13 ?? book.isbn10}`}
+          href={getBookCoverLinkHrefFromBook(book)}
           key={i}
           className="aspect-auto border py-4 hover:border-primary"
           title={`"${getUIForBook(book).title}" by ${getUIForBook(book).author}`}
