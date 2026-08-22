@@ -55,7 +55,7 @@ const booksByGenre = async function (genre: string) {
 
   const responseData: GoodResponse<Book[]> = {
     success: true,
-    data: returnedValue.books.filter((book) => book.isbn10 !== "" && book.isbn13 !== ""),
+    data: returnedValue.books.filter((book) => book.isbn10 !== null && book.isbn13 !== null),
   };
 
   return responseData;

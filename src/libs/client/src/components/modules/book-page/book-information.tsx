@@ -3,6 +3,7 @@
 import type { Book } from "@/root/src/libs/shared/src/types";
 import { ComponentProps, useState } from "react";
 import { cn } from "@/client/utils";
+import { getUIForBook } from "@/root/src/libs/shared/src/utils";
 
 type BookInformationProps = { book: Book } & ComponentProps<"div">;
 
@@ -12,14 +13,14 @@ export function BookInformation({ book, ...props }: BookInformationProps) {
   return (
     <div className="mt-5 w-full" {...props}>
       <div className={cn("mb-2 w-full", { "line-clamp-2": !isExpanded, "h-auto": isExpanded })}>
-        <p className="text-wrap">{book.description}</p>
+        <p className="text-wrap">{getUIForBook(book).description}</p>
         <div className={cn("mt-5 grid-cols-[150px_1fr] gap-2", { "hidden": !isExpanded, "grid": isExpanded })}>
           <div>ISBN 10</div>
-          <div>{book.isbn10}</div>
+          <div>{getUIForBook(book).isbn10}</div>
           <div>ISBN 13</div>
-          <div>{book.isbn13}</div>
+          <div>{getUIForBook(book).isbn13}</div>
           <div>Publisher</div>
-          <div>{book.publisher}</div>
+          <div>{getUIForBook(book).publisher}</div>
         </div>
       </div>
       {!isExpanded && (

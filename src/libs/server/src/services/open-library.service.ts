@@ -18,16 +18,23 @@ export class OpenLibraryService {
     }
   }
 
+  private mapCategories(records: OpenLibraryInnerRecords): string[] {
+    if (records.data.subjects === undefined) {
+      return [];
+    }
+    return records.data.subjects.map((obj) => obj.name);
+  }
+
   private mapBook(records: OpenLibraryInnerRecords): Book {
     return {
-      title: records.data.title ?? "Unknown Title",
-      author: this.mapAuthors(records.data.authors) || "Unknown Authors",
-      image: records.data.cover?.large ?? records.data.cover?.medium ?? records.data.cover?.small ?? "",
-      description: records.details.details.description?.value ?? "No description",
-      isbn13: records.details.details.isbn_13?.[0] ?? "N/A",
-      isbn10: records.details.details.isbn_10?.[0] ?? "N/A",
-      publisher: records.data.publishers?.[0].name ?? "N/A",
-      categories: [records.data.subjects?.[0].name ?? ""],
+      title: records.data.title ?? null,
+      author: this.mapAuthors(records.data.authors) || null,
+      image: records.data.cover?.large ?? records.data.cover?.medium ?? records.data.cover?.small ?? null,
+      description: records.details.details.description?.value ?? null,
+      isbn13: records.details.details.isbn_13?.[0] ?? null,
+      isbn10: records.details.details.isbn_10?.[0] ?? null,
+      publisher: records.data.publishers?.[0].name ?? null,
+      categories: this.mapCategories(records),
     };
   }
 
