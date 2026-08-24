@@ -22,6 +22,9 @@ export class OpenLibraryService {
     if (records.data.subjects === undefined) {
       return [];
     }
+    if (records.data.subjects.length === 0) {
+      return [];
+    }
     return records.data.subjects.map((obj) => obj.name);
   }
 
@@ -34,7 +37,7 @@ export class OpenLibraryService {
       isbn13: records.details.details.isbn_13?.[0] ?? null,
       isbn10: records.details.details.isbn_10?.[0] ?? null,
       publisher: records.data.publishers?.[0].name ?? null,
-      categories: this.mapCategories(records),
+      categories: this.mapCategories(records) ?? [],
     };
   }
 

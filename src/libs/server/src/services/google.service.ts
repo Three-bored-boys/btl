@@ -27,7 +27,7 @@ export class GoogleBooksService {
       description: item.volumeInfo.description || null,
       isbn13: this.findIdentifier(item, "ISBN_13") || null,
       isbn10: this.findIdentifier(item, "ISBN_10") || null,
-      categories: item.volumeInfo.categories,
+      categories: item.volumeInfo.categories ?? [],
       publisher: item.volumeInfo.publisher ?? null,
     };
   }
