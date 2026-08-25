@@ -1,6 +1,7 @@
 import { pgTable, serial, text, timestamp, integer, unique, pgEnum } from "drizzle-orm/pg-core";
 import { bookLibraries } from "@/libs/shared/src/utils";
 import { users } from "./auth";
+import { books } from "./books";
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
 const libraryValues = bookLibraries.map((lib) => lib.value) as [string, ...string[]];
@@ -19,9 +20,10 @@ export const userBooks = pgTable(
       .notNull()
       .defaultNow()
       .$onUpdate(() => new Date()),
+    bookId: integer("book_id").references(() => books.id),
   },
   (t) => ({
-    unq: unique().on(t.userId, t.isbn),
+    unq: unique().on(t.userId, t.isbn, t.bookId),
   }),
 );
 

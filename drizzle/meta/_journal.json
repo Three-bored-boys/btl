@@ -43,6 +43,13 @@
       "when": 1787415776154,
       "tag": "0005_windy_wolfpack",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1787694290974,
+      "tag": "0006_windy_bloodaxe",
+      "breakpoints": true
     }
   ]
 }
