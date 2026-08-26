@@ -7,6 +7,9 @@ import { OpenLibraryService } from "@/server/services/open-library.service";
 import { BadResponse, BestSeller, Book, GoodResponse } from "@/shared/types";
 import { z } from "zod";
 import { PaginationObjectType, SearchObjectType, fullSearchObjectSchema } from "@/shared/validators";
+import { books } from "@/shared/db/schema";
+import { db } from "@/server/db/db";
+import { eq, or } from "drizzle-orm";
 
 const getNYTBestSellers = async function () {
   const nytBooksAPIKey = process.env.NY_TIMES_BOOKS_API_KEY;
@@ -89,6 +92,18 @@ export const getBookByISBN = async function (isbn: unknown) {
 
 export const bookByISBN = async function (isbn: string) {
   let book: Book[];
+
+  const arrBookWithIsbn = await db
+    .select()
+    .from(books)
+    .where(or(eq(books.isbn10, isbn), eq(books.isbn13, isbn)));
+
+  if (arrBookWithIsbn.length !== 0) {
+    const [bookWithIsbn] = arrBookWithIsbn;
+    const { id, ...book } = bookWithIsbn;
+    const responseData: GoodResponse<Book> = { success: true, data: book };
+    return responseData;
+  }
 
   const googleBooksAPIKey = process.env.GOOGLE_BOOKS_API_KEY;
   const googleBooksService = new GoogleBooksService(googleBooksAPIKey);
