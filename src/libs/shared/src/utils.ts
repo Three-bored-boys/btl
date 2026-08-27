@@ -63,3 +63,14 @@ export const getBookCoverLinkHrefFromBook = function (book: Book) {
   if (book.isbn10 !== null) return `/book/${book.isbn10}`;
   return "/";
 };
+
+export const bookFormNames: BookUI & { image: string; categories: string } = {
+  author: "bookAuthor",
+  title: "bookTitle",
+  description: "bookDescription",
+  publisher: "bookPublisher",
+  image: "bookImage",
+  isbn10: "bookIsbn10",
+  isbn13: "bookIsbn13",
+  categories: "bookCategories",
+};

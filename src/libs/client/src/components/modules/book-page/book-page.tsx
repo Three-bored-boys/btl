@@ -32,7 +32,7 @@ export async function BookPage({ params: { isbn } }: { params: { isbn: string } 
               <h2 className="mb-3 text-center font-semibold sm:text-left">{getUIForBook(book).title}</h2>
               <h3 className="mb-4 text-center italic sm:text-left">{getUIForBook(book).author}</h3>
               <BookInformation book={book} />
-              <BookLocationRadioGroupWrapper isbn={isbn} />
+              <BookLocationRadioGroupWrapper isbn={isbn} book={book} />
             </div>
           </div>
         </Container>
