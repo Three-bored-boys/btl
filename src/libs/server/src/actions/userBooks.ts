@@ -10,6 +10,7 @@ import { z } from "zod";
 import { redirect } from "next/navigation";
 import { BadResponse, Book, GoodResponse, ServerResult } from "@/shared/types";
 import { cacheBookByISBN } from "@/server/actions/books";
+import { bookSchema } from "@/shared/validators";
 
 const USER_BOOKS_CACHE_TAG = "user-books";
 
@@ -78,7 +79,7 @@ export const mutateUserBook = async function (
   const bookIsbn10Raw = formData.get(bookFormNames.isbn10) as string | null;
   const bookCategoriesRaw = formData.getAll(bookFormNames.categories) as string[];
 
-  const bookObject = {
+  const bookObjectRaw = {
     title: bookTitleRaw,
     author: bookAuthorRaw,
     description: bookDescriptionRaw,
@@ -140,6 +141,12 @@ export const mutateUserBook = async function (
     return { success: false, errors: [validationForLibrary.error.message], status: 404 };
   }
   const library = validationForLibrary.data;
+
+  const validationForBookObject = bookSchema.safeParse(bookObjectRaw);
+  if (!validationForBookObject.success) {
+    return { success: false, errors: [validationForBookObject.error.message], status: 404 };
+  }
+  const bookObject = validationForBookObject.data;
 
   try {
     const { isbn13 } = bookObject;

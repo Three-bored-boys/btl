@@ -7,7 +7,7 @@ export const bookSchema = z.object({
   publisher: z.string().nullable(),
   image: z.string().nullable(),
   isbn10: z.string().nullable(),
-  isn13: z.string().nullable(),
+  isbn13: z.string().nullable(),
   categories: z.string().array(),
 });
 
