@@ -85,8 +85,8 @@ export const BookLocationRadioGroup = function ({
         name={book.publisher ? bookFormNames.publisher : undefined}
         value={book.author ? book.author : undefined}
       />
-      {book.categories.map((cat) => (
-        <input type="hidden" name={bookFormNames.categories} value={cat} />
+      {book.categories.map((cat, i) => (
+        <input type="hidden" name={bookFormNames.categories} value={cat} key={i} />
       ))}
       <div>
         <Grid columns={{ initial: "1", xs: "2", lg: "4" }} gap={{ initial: "2", xs: "3", lg: "4" }}>
