@@ -1,15 +1,16 @@
 "use server";
 
 import { db } from "@/server/db/db";
-import { SanitizedUser, userBooks } from "@/server/db/schema";
-import { bookLibraries, bookLibraryValues } from "@/shared/utils";
-import { and, desc, eq } from "drizzle-orm";
+import { SanitizedUser, userBooks, books } from "@/server/db/schema";
+import { bookLibraries, bookLibraryValues, bookFormNames } from "@/shared/utils";
+import { and, desc, eq, inArray, or, sql } from "drizzle-orm";
 import { revalidateTag, unstable_cache } from "next/cache";
 import { getUserSession } from "@/server/actions";
 import { z } from "zod";
 import { redirect } from "next/navigation";
 import { BadResponse, Book, GoodResponse, ServerResult } from "@/shared/types";
 import { cacheBookByISBN } from "@/server/actions/books";
+import { bookSchema } from "@/shared/validators";
 
 const USER_BOOKS_CACHE_TAG = "user-books";
 
@@ -36,14 +37,22 @@ export const getUserBookLibraryValue = async function (isbn: string): Promise<Se
 };
 
 const userBookLibraryValue = async function (isbn: string, userId: number) {
-  const book = await db
+  const bookSqFromISBN = db
     .select()
+    .from(books)
+    .where(or(eq(books.isbn10, isbn), eq(books.isbn13, isbn)))
+    .as("book_sq");
+
+  const [userBook] = await db
+    .select({ libraryValue: userBooks.libraryValue })
     .from(userBooks)
-    .where(and(eq(userBooks.userId, userId), eq(userBooks.isbn, isbn)));
-  if (book.length === 0) {
+    .innerJoin(bookSqFromISBN, eq(userBooks.bookId, bookSqFromISBN.id))
+    .where(eq(userBooks.userId, userId))
+    .limit(1);
+  if (!userBook) {
     return null;
   }
-  return book[0].libraryValue;
+  return userBook.libraryValue;
 };
 
 const cacheUserBookLibraryValue = unstable_cache(userBookLibraryValue, [], {
@@ -60,6 +69,27 @@ export const mutateUserBook = async function (
   const redirectUrl = formData.get("redirect") as string | null;
   const libraryRaw = formData.get("library");
   const isbnRaw = formData.get("isbn");
+
+  const bookAuthorRaw = formData.get(bookFormNames.author) as string | null;
+  const bookTitleRaw = formData.get(bookFormNames.title) as string | null;
+  const bookDescriptionRaw = formData.get(bookFormNames.description) as string | null;
+  const bookImageRaw = formData.get(bookFormNames.image) as string | null;
+  const bookPublisherRaw = formData.get(bookFormNames.publisher) as string | null;
+  const bookIsbn13Raw = formData.get(bookFormNames.isbn13) as string | null;
+  const bookIsbn10Raw = formData.get(bookFormNames.isbn10) as string | null;
+  const bookCategoriesRaw = formData.getAll(bookFormNames.categories) as string[];
+
+  const bookObjectRaw = {
+    title: bookTitleRaw,
+    author: bookAuthorRaw,
+    description: bookDescriptionRaw,
+    image: bookImageRaw,
+    publisher: bookPublisherRaw,
+    isbn13: bookIsbn13Raw,
+    isbn10: bookIsbn10Raw,
+    categories: bookCategoriesRaw,
+  };
+
   const { user } = await getUserSession();
   if (!user) {
     if (redirectUrl) {
@@ -76,7 +106,18 @@ export const mutateUserBook = async function (
 
   if (!libraryRaw) {
     try {
-      await db.delete(userBooks).where(and(eq(userBooks.userId, user.id), eq(userBooks.isbn, isbn)));
+      await db.delete(userBooks).where(
+        and(
+          eq(userBooks.userId, user.id),
+          inArray(
+            userBooks.bookId,
+            db
+              .select({ id: books.id })
+              .from(books)
+              .where(or(eq(books.isbn10, isbn), eq(books.isbn13, isbn))),
+          ),
+        ),
+      );
     } catch (e) {
       console.log(e);
       const responseData: BadResponse = {
@@ -101,25 +142,46 @@ export const mutateUserBook = async function (
   }
   const library = validationForLibrary.data;
 
-  try {
-    const existingUserBookWithISBN = await db
-      .select()
-      .from(userBooks)
-      .where(and(eq(userBooks.userId, user.id), eq(userBooks.isbn, isbn)));
+  const validationForBookObject = bookSchema.safeParse(bookObjectRaw);
+  if (!validationForBookObject.success) {
+    return { success: false, errors: [validationForBookObject.error.message], status: 404 };
+  }
+  const bookObject = validationForBookObject.data;
 
-    if (existingUserBookWithISBN.length === 0) {
-      await db.insert(userBooks).values({ isbn, libraryValue: library, userId: user.id });
-    }
+  try {
+    const { isbn13 } = bookObject;
+    const isIsbn13 = isbn13 === isbn;
+
+    const [{ id: bookId }] = await db
+      .insert(books)
+      .values(bookObject)
+      .onConflictDoUpdate({ target: isIsbn13 ? books.isbn13 : books.isbn10, set: { isbn13: sql`${books.isbn13}` } })
+      .returning({ id: books.id });
 
     await db
-      .update(userBooks)
-      .set({ libraryValue: library })
-      .where(and(eq(userBooks.userId, user.id), eq(userBooks.isbn, isbn)));
+      .insert(userBooks)
+      .values({
+        isbn,
+        libraryValue: library,
+        userId: user.id,
+        bookId,
+      })
+      .onConflictDoUpdate({
+        target: [userBooks.userId, userBooks.bookId],
+        set: {
+          libraryValue: library,
+        },
+      });
   } catch (e) {
-    console.log(e);
-    const responseData: BadResponse = { success: false, errors: ["There was an issue adding book"], status: 500 };
-    return responseData;
+    console.error(e);
+
+    return {
+      success: false,
+      errors: ["There was an issue adding book"],
+      status: 500,
+    };
   }
+
   const responseData: GoodResponse<string> = {
     success: true,
     data: `Added to ${bookLibraries.find((obj) => obj.value === library)?.name ?? "collection"}!`,

@@ -23,7 +23,7 @@ export const userBooks = pgTable(
     bookId: integer("book_id").references(() => books.id),
   },
   (t) => ({
-    unq: unique().on(t.userId, t.isbn, t.bookId),
+    unq: unique().on(t.userId, t.bookId),
   }),
 );
 

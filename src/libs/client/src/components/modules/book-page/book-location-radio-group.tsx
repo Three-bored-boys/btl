@@ -1,6 +1,6 @@
 "use client";
 
-import { ServerResult } from "@/shared/types";
+import { ServerResult, Book } from "@/shared/types";
 import { FormErrorListItem } from "@/client/components/ui/form-error-list-item";
 import { cn } from "@/client/utils";
 import { BookOpen } from "@/client/components/ui/icons/book-open";
@@ -9,7 +9,7 @@ import { ListBullet } from "@/client/components/ui/icons/list-bullet";
 import { Check } from "@/client/components/ui/icons/check";
 import { Trash } from "@/client/components/ui/icons/trash";
 import { ExclamationTriangle } from "@/client/components/ui/icons/exclamation-triangle";
-import { bookLibraries } from "@/shared/utils";
+import { bookLibraries, bookFormNames } from "@/shared/utils";
 import { ReactNode, useEffect, useState } from "react";
 import { mutateUserBook } from "@/server/actions";
 import { useWindowLocationHref } from "@/client/hooks/window-location-href";
@@ -27,9 +27,11 @@ const bookLibrariesWithIcons = bookLibraries.map((obj, i) => ({ ...obj, icon: bo
 export const BookLocationRadioGroup = function ({
   libraryResponse,
   isbn,
+  book,
 }: {
   libraryResponse: ServerResult<string | null>;
   isbn: string;
+  book: Book;
 }) {
   const redirectUrl = useWindowLocationHref();
   const [state, action, isPending] = useActionState(mutateUserBook, null);
@@ -48,6 +50,44 @@ export const BookLocationRadioGroup = function ({
     <form className="block pt-3" action={action}>
       <input type="hidden" name="isbn" value={isbn}></input>
       <input type="hidden" name="redirect" value={redirectUrl}></input>
+      <input
+        type="hidden"
+        name={book.title ? bookFormNames.title : undefined}
+        value={book.title ? book.title : undefined}
+      />
+      <input
+        type="hidden"
+        name={book.author ? bookFormNames.author : undefined}
+        value={book.author ? book.author : undefined}
+      />
+      <input
+        type="hidden"
+        name={book.image ? bookFormNames.image : undefined}
+        value={book.image ? book.image : undefined}
+      />
+      <input
+        type="hidden"
+        name={book.description ? bookFormNames.description : undefined}
+        value={book.description ? book.description : undefined}
+      />
+      <input
+        type="hidden"
+        name={book.isbn13 ? bookFormNames.isbn13 : undefined}
+        value={book.isbn13 ? book.isbn13 : undefined}
+      />
+      <input
+        type="hidden"
+        name={book.isbn10 ? bookFormNames.isbn10 : undefined}
+        value={book.isbn10 ? book.isbn10 : undefined}
+      />
+      <input
+        type="hidden"
+        name={book.publisher ? bookFormNames.publisher : undefined}
+        value={book.author ? book.author : undefined}
+      />
+      {book.categories.map((cat, i) => (
+        <input type="hidden" name={bookFormNames.categories} value={cat} key={i} />
+      ))}
       <div>
         <Grid columns={{ initial: "1", xs: "2", lg: "4" }} gap={{ initial: "2", xs: "3", lg: "4" }}>
           {bookLibrariesWithIcons.map((obj, i) => (
