@@ -1,16 +1,13 @@
 "use server";
 
 import { unstable_cache } from "next/cache";
-import { NYTimesService } from "@/server/services/ny-times.service";
 import { GoogleBooksService } from "@/server/services/google.service";
-import { OpenLibraryService } from "@/server/services/open-library.service";
-import { BadResponse, BestSeller, Book, GoodResponse } from "@/shared/types";
+import { BadResponse, Book, GoodResponse } from "@/shared/types";
 import { z } from "zod";
 import { PaginationObjectType, SearchObjectType, fullSearchObjectSchema } from "@/shared/validators";
-import { books } from "@/shared/db/schema";
-import { db } from "@/server/db/db";
-import { eq, or } from "drizzle-orm";
-import { cacheBookByISBN, cacheNYTBestSellers } from "@/server/cache/books";
+import { cacheNYTBestSellers, cacheBookByISBN } from "@/server/cache/books";
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const getNYTBestSellers = async function () {
   try {
@@ -25,19 +22,6 @@ export const getNYTBestSellers = async function () {
     };
     return responseData;
   }
-};
-
-export const nytBestSellers = async function () {
-  const nytBooksAPIKey = process.env.NY_TIMES_BOOKS_API_KEY;
-  const nytService = new NYTimesService(nytBooksAPIKey);
-  const bestSellers = await nytService.getBestSellers();
-
-  if (bestSellers.length === 0) {
-    throw new Error("Trouble getting NYT Best Sellers List");
-  }
-
-  const responseData: GoodResponse<BestSeller[]> = { success: true, data: bestSellers };
-  return responseData;
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -92,7 +76,7 @@ export const getBookByISBN = async function (isbn: unknown) {
 
   const validISBN = validationResult.data;
   try {
-    const cachedBookByISBN = await cacheBookByISBN(validISBN)(validISBN);
+    const cachedBookByISBN = await cacheBookByISBN(validISBN);
 
     return cachedBookByISBN;
   } catch (er) {
@@ -104,40 +88,6 @@ export const getBookByISBN = async function (isbn: unknown) {
     };
     return responseData;
   }
-};
-
-export const bookByISBN = async function (isbn: string) {
-  let book: Book[];
-
-  const arrBookWithIsbn = await db
-    .select()
-    .from(books)
-    .where(or(eq(books.isbn10, isbn), eq(books.isbn13, isbn)));
-
-  if (arrBookWithIsbn.length !== 0) {
-    const [bookWithIsbn] = arrBookWithIsbn;
-    const { id, ...book } = bookWithIsbn;
-    const responseData: GoodResponse<Book> = { success: true, data: book };
-    return responseData;
-  }
-
-  const googleBooksAPIKey = process.env.GOOGLE_BOOKS_API_KEY;
-  const googleBooksService = new GoogleBooksService(googleBooksAPIKey);
-  book = await googleBooksService.getBookByISBN(isbn);
-
-  if (book.length === 0) {
-    const openLibraryService = new OpenLibraryService();
-    book = await openLibraryService.getBookByISBN(isbn);
-  }
-
-  if (book.length === 0) {
-    throw new Error("The book you are currently looking for could not be found.");
-  }
-
-  const [bookObj] = book;
-
-  const responseData: GoodResponse<Book> = { success: true, data: bookObj };
-  return responseData;
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
