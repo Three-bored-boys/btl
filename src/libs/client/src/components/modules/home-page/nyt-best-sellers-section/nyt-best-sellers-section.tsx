@@ -7,7 +7,7 @@ import { BookCard } from "../book-card";
 import { ErrorBoundary } from "react-error-boundary";
 import { ErrorBoundaryRender } from "../error-boundary-render";
 import { ExclamationTriangle } from "@/client/components/ui/icons/exclamation-triangle";
-import { getCachedNYTBestSellers } from "@/server/actions";
+import { getNYTBestSellers } from "@/server/actions";
 
 export function NYTBestSellersSection() {
   return (
@@ -27,7 +27,7 @@ export function NYTBestSellersSection() {
 }
 
 async function GetBestSellersWrapper() {
-  const fetchDataResult = await getCachedNYTBestSellers();
+  const fetchDataResult = await getNYTBestSellers();
 
   if (!fetchDataResult.success) {
     const { errors } = fetchDataResult;

@@ -10,28 +10,35 @@ import { PaginationObjectType, SearchObjectType, fullSearchObjectSchema } from "
 import { books } from "@/shared/db/schema";
 import { db } from "@/server/db/db";
 import { eq, or } from "drizzle-orm";
+import { cacheBookByISBN, cacheNYTBestSellers } from "@/server/cache/books";
 
-const getNYTBestSellers = async function () {
+export const getNYTBestSellers = async function () {
+  try {
+    const bestSellers = await cacheNYTBestSellers();
+    return bestSellers;
+  } catch (er) {
+    const e = er as Error;
+    const responseData: BadResponse = {
+      success: false,
+      errors: [e.message],
+      status: 404,
+    };
+    return responseData;
+  }
+};
+
+export const nytBestSellers = async function () {
   const nytBooksAPIKey = process.env.NY_TIMES_BOOKS_API_KEY;
   const nytService = new NYTimesService(nytBooksAPIKey);
   const bestSellers = await nytService.getBestSellers();
 
   if (bestSellers.length === 0) {
-    const responseData: BadResponse = {
-      success: false,
-      errors: ["Trouble getting NYT Best Sellers List"],
-      status: 400,
-    };
-    return responseData;
+    throw new Error("Trouble getting NYT Best Sellers List");
   }
 
   const responseData: GoodResponse<BestSeller[]> = { success: true, data: bestSellers };
   return responseData;
 };
-
-export const getCachedNYTBestSellers = unstable_cache(getNYTBestSellers, [], {
-  tags: ["best-sellers"],
-});
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -84,10 +91,19 @@ export const getBookByISBN = async function (isbn: unknown) {
   }
 
   const validISBN = validationResult.data;
+  try {
+    const cachedBookByISBN = await cacheBookByISBN(validISBN)(validISBN);
 
-  const cachedBookByISBN = await cacheBookByISBN(validISBN);
-
-  return cachedBookByISBN;
+    return cachedBookByISBN;
+  } catch (er) {
+    const e = er as Error;
+    const responseData: BadResponse = {
+      success: false,
+      errors: [e.message],
+      status: 404,
+    };
+    return responseData;
+  }
 };
 
 export const bookByISBN = async function (isbn: string) {
@@ -115,12 +131,7 @@ export const bookByISBN = async function (isbn: string) {
   }
 
   if (book.length === 0) {
-    const responseData: BadResponse = {
-      success: false,
-      errors: ["The book you are currently looking for could not be found."],
-      status: 404,
-    };
-    return responseData;
+    throw new Error("The book you are currently looking for could not be found.");
   }
 
   const [bookObj] = book;
@@ -128,8 +139,6 @@ export const bookByISBN = async function (isbn: string) {
   const responseData: GoodResponse<Book> = { success: true, data: bookObj };
   return responseData;
 };
-
-export const cacheBookByISBN = unstable_cache(bookByISBN, [], { tags: ["isbn"] });
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
