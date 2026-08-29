@@ -5,7 +5,7 @@ import { GoogleBooksService } from "@/server/services/google.service";
 import { BadResponse, Book, GoodResponse } from "@/shared/types";
 import { z } from "zod";
 import { PaginationObjectType, SearchObjectType, fullSearchObjectSchema } from "@/shared/validators";
-import { cacheNYTBestSellers, cacheBookByISBN } from "@/server/cache/books";
+import { cacheNYTBestSellers, cacheBookByISBN, cacheBooksByGenre } from "@/server/cache";
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -34,28 +34,20 @@ export const getBooksByGenre = async function (genre: unknown) {
   }
   const validGenre = validationResult.data;
 
-  const cachedBooksByGenre = await cacheBooksByGenre(validGenre);
+  try {
+    const cachedBooksByGenre = await cacheBooksByGenre(validGenre);
 
-  return cachedBooksByGenre;
+    return cachedBooksByGenre;
+  } catch (er) {
+    const e = er as Error;
+    const responseData: BadResponse = {
+      success: false,
+      errors: [e.message],
+      status: 404,
+    };
+    return responseData;
+  }
 };
-
-const booksByGenre = async function (genre: string) {
-  const googleBooksAPIKey = process.env.GOOGLE_BOOKS_API_KEY;
-  const googleBooksService = new GoogleBooksService(googleBooksAPIKey);
-  const returnedValue = await googleBooksService.getBooksByAllParameters({
-    searchObject: { genre },
-    paginationObject: { maxResults: (6).toString() },
-  });
-
-  const responseData: GoodResponse<Book[]> = {
-    success: true,
-    data: returnedValue.books.filter((book) => book.isbn10 !== null && book.isbn13 !== null),
-  };
-
-  return responseData;
-};
-
-const cacheBooksByGenre = unstable_cache(booksByGenre, [], { tags: ["genres"] });
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 

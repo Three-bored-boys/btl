@@ -26,7 +26,33 @@ export const cacheNYTBestSellers = unstable_cache(nytBestSellers, ["nyt-best-sel
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const bookByISBN = async function (isbn: string) {
+const booksByGenre = async function (genre: string) {
+  const googleBooksAPIKey = process.env.GOOGLE_BOOKS_API_KEY;
+  const googleBooksService = new GoogleBooksService(googleBooksAPIKey);
+  const returnedValue = await googleBooksService.getBooksByAllParameters({
+    searchObject: { genre },
+    paginationObject: { maxResults: (6).toString() },
+  });
+
+  const validBooksWithIsbn = returnedValue.books.filter((book) => book.isbn10 !== null && book.isbn13 !== null);
+
+  if (validBooksWithIsbn.length === 0) {
+    throw new Error(`Trouble getting valid books of genre: ${genre}`);
+  }
+
+  const responseData: GoodResponse<Book[]> = {
+    success: true,
+    data: validBooksWithIsbn,
+  };
+
+  return responseData;
+};
+
+export const cacheBooksByGenre = unstable_cache(booksByGenre, ["books-genre"], { revalidate: 259200 });
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+const bookByISBN = async function (isbn: string) {
   let book: Book[];
 
   const arrBookWithIsbn = await db
