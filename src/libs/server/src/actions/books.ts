@@ -1,11 +1,15 @@
 "use server";
 
-import { unstable_cache } from "next/cache";
-import { GoogleBooksService } from "@/server/services/google.service";
-import { BadResponse, Book, GoodResponse } from "@/shared/types";
+import { BadResponse } from "@/shared/types";
 import { z } from "zod";
-import { PaginationObjectType, SearchObjectType, fullSearchObjectSchema } from "@/shared/validators";
-import { cacheNYTBestSellers, cacheBookByISBN, cacheBooksByGenre, cacheQuickSearchResults } from "@/server/cache";
+import { fullSearchObjectSchema } from "@/shared/validators";
+import {
+  cacheNYTBestSellers,
+  cacheBookByISBN,
+  cacheBooksByGenre,
+  cacheQuickSearchResults,
+  cacheFullSearchResults,
+} from "@/server/cache";
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -122,29 +126,17 @@ export const getFullSearchResults = async function (fullSearchObject: unknown) {
 
   const validFullSearchObject = validation.data;
 
-  const cachedFullSearchResults = await cacheFullSearchResults(validFullSearchObject);
+  try {
+    const cachedFullSearchResults = await cacheFullSearchResults(validFullSearchObject);
 
-  return cachedFullSearchResults;
+    return cachedFullSearchResults;
+  } catch (er) {
+    const e = er as Error;
+    const responseData: BadResponse = {
+      success: false,
+      errors: [e.message],
+      status: 404,
+    };
+    return responseData;
+  }
 };
-
-const fullSearchResults = async function (fullSearchObject: SearchObjectType & PaginationObjectType) {
-  const { maxResults, page, ...searchObject } = fullSearchObject;
-  const googleBooksAPIKey = process.env.GOOGLE_BOOKS_API_KEY;
-  const googleBooksService = new GoogleBooksService(googleBooksAPIKey);
-
-  const allBooksResults = await googleBooksService.getBooksByAllParameters({
-    searchObject: searchObject,
-    paginationObject: { maxResults, page },
-  });
-
-  const responseData: GoodResponse<{ books: Book[]; totalItems: number }> = {
-    success: true,
-    data: allBooksResults,
-  };
-
-  return responseData;
-};
-
-const cacheFullSearchResults = unstable_cache(fullSearchResults, [], {
-  tags: ["full-search"],
-});
