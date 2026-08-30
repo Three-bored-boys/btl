@@ -6,6 +6,7 @@ import { eq, or } from "drizzle-orm";
 import { books } from "@/shared/db/schema";
 import { GoogleBooksService } from "@/server/services/google.service";
 import { OpenLibraryService } from "@/server/services/open-library.service";
+import { PaginationObjectType, SearchObjectType } from "@/shared/validators";
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -87,5 +88,64 @@ const bookByISBN = async function (isbn: string) {
 };
 
 export const cacheBookByISBN = unstable_cache(bookByISBN, ["book-isbn"], { revalidate: 604800 });
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+const quickSearchResults = async function (search: string) {
+  const googleBooksAPIKey = process.env.GOOGLE_BOOKS_API_KEY;
+  const googleBooksService = new GoogleBooksService(googleBooksAPIKey);
+
+  const allBooksResults = await googleBooksService.getBooksByAllParameters({
+    searchObject: { search },
+    paginationObject: { maxResults: (8).toString() },
+  });
+
+  const validBooksWithIsbn = allBooksResults.books.filter((book) => book.isbn10 !== null && book.isbn13 !== null);
+
+  if (validBooksWithIsbn.length === 0) {
+    throw new Error(`Trouble getting valid books for the search: ${search}`);
+  }
+
+  const responseData: GoodResponse<Book[]> = {
+    success: true,
+    data: validBooksWithIsbn,
+  };
+
+  return responseData;
+};
+
+export const cacheQuickSearchResults = unstable_cache(quickSearchResults, ["books-quick-search-results"], {
+  revalidate: 3600,
+});
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+const fullSearchResults = async function (fullSearchObject: SearchObjectType & PaginationObjectType) {
+  const { maxResults, page, ...searchObject } = fullSearchObject;
+  const googleBooksAPIKey = process.env.GOOGLE_BOOKS_API_KEY;
+  const googleBooksService = new GoogleBooksService(googleBooksAPIKey);
+
+  const allBooksResults = await googleBooksService.getBooksByAllParameters({
+    searchObject: searchObject,
+    paginationObject: { maxResults, page },
+  });
+
+  const validBooksWithIsbn = allBooksResults.books.filter((book) => book.isbn10 !== null && book.isbn13 !== null);
+
+  if (validBooksWithIsbn.length === 0) {
+    throw new Error("Trouble getting valid books for the full search");
+  }
+
+  const responseData: GoodResponse<{ books: Book[]; totalItems: number }> = {
+    success: true,
+    data: { books: validBooksWithIsbn, totalItems: validBooksWithIsbn.length },
+  };
+
+  return responseData;
+};
+
+export const cacheFullSearchResults = unstable_cache(fullSearchResults, ["books-full-search-results"], {
+  revalidate: 3600,
+});
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
