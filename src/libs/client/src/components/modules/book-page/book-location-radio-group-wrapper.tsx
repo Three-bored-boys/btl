@@ -1,4 +1,4 @@
-import { getUserBookLibraryValue } from "@/root/src/libs/server/src/actions/userBooks";
+import { getUserBookLibraryValue } from "@/server/actions";
 import { BookLocationRadioGroup } from "./book-location-radio-group";
 import { type Book } from "@/shared/types";
 

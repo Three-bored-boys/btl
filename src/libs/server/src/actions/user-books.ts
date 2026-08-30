@@ -3,23 +3,22 @@
 import { db } from "@/server/db/db";
 import { SanitizedUser, userBooks, books } from "@/server/db/schema";
 import { bookLibraries, bookLibraryValues, bookFormNames } from "@/shared/utils";
-import { and, desc, eq, inArray, or, sql } from "drizzle-orm";
-import { revalidateTag, unstable_cache } from "next/cache";
+import { and, eq, inArray, or, sql } from "drizzle-orm";
+import { revalidateTag } from "next/cache";
 import { getUserSession } from "@/server/actions";
 import { z } from "zod";
 import { redirect } from "next/navigation";
 import { BadResponse, Book, GoodResponse, ServerResult } from "@/shared/types";
 import { getBookByISBN } from "@/server/actions";
 import { bookSchema } from "@/shared/validators";
-
-const USER_BOOKS_CACHE_TAG = "user-books";
+import { cacheUserBookLibraryValue, cacheUserBooksInALibrary, cacheRecentlyAddedBooks } from "@/server/cache";
+import { USER_BOOKS_CACHE_TAG_KEY } from "@/shared/utils";
 
 export const getUserBookLibraryValue = async function (isbn: string): Promise<ServerResult<string | null>> {
   try {
     const { user } = await getUserSession();
     if (!user) {
       const responseObject: GoodResponse<string | null> = { success: true, data: null };
-      // throw new Error("");
       return responseObject;
     }
 
@@ -29,35 +28,12 @@ export const getUserBookLibraryValue = async function (isbn: string): Promise<Se
   } catch (e) {
     const responseObject: BadResponse = {
       success: false,
-      errors: ["Something went wrong while retrieving library value from database."],
+      errors: ["Something went wrong while retrieving library value"],
       status: 500,
     };
     return responseObject;
   }
 };
-
-const userBookLibraryValue = async function (isbn: string, userId: number) {
-  const bookSqFromISBN = db
-    .select()
-    .from(books)
-    .where(or(eq(books.isbn10, isbn), eq(books.isbn13, isbn)))
-    .as("book_sq");
-
-  const [userBook] = await db
-    .select({ libraryValue: userBooks.libraryValue })
-    .from(userBooks)
-    .innerJoin(bookSqFromISBN, eq(userBooks.bookId, bookSqFromISBN.id))
-    .where(eq(userBooks.userId, userId))
-    .limit(1);
-  if (!userBook) {
-    return null;
-  }
-  return userBook.libraryValue;
-};
-
-const cacheUserBookLibraryValue = unstable_cache(userBookLibraryValue, [], {
-  tags: [USER_BOOKS_CACHE_TAG],
-});
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -132,7 +108,7 @@ export const mutateUserBook = async function (
       data: "Removed from collection!",
     };
 
-    revalidateTag(USER_BOOKS_CACHE_TAG);
+    revalidateTag(USER_BOOKS_CACHE_TAG_KEY);
     return responseData;
   }
 
@@ -187,7 +163,7 @@ export const mutateUserBook = async function (
     data: `Added to ${bookLibraries.find((obj) => obj.value === library)?.name ?? "collection"}!`,
   };
 
-  revalidateTag(USER_BOOKS_CACHE_TAG);
+  revalidateTag(USER_BOOKS_CACHE_TAG_KEY);
   return responseData;
 };
 
@@ -225,23 +201,6 @@ export const getUserBooksInALibrary = async function ({
   }
 };
 
-const userBooksInALibrary = async function (
-  library: (typeof bookLibraryValues)[number],
-  userId: number,
-  limit: number,
-  page: number,
-) {
-  const offset = (page - 1) * limit;
-  return await db
-    .select({ isbn: userBooks.isbn })
-    .from(userBooks)
-    .where(and(eq(userBooks.libraryValue, library), eq(userBooks.userId, userId)))
-    .limit(limit)
-    .offset(offset);
-};
-
-const cacheUserBooksInALibrary = unstable_cache(userBooksInALibrary, [], { tags: [USER_BOOKS_CACHE_TAG] });
-
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const getRecentlyAddedBooks = async function ({
@@ -267,16 +226,3 @@ export const getRecentlyAddedBooks = async function ({
     return { success: false, status: 500, errors: ["Something went wrong while getting the recently added books"] };
   }
 };
-
-const recentlyAddedBooks = async function ({ userId }: { userId: number }) {
-  const books = await db
-    .select()
-    .from(userBooks)
-    .where(eq(userBooks.userId, userId))
-    .limit(5)
-    .orderBy(desc(userBooks.updatedAt));
-
-  return books;
-};
-
-const cacheRecentlyAddedBooks = unstable_cache(recentlyAddedBooks, [], { tags: [USER_BOOKS_CACHE_TAG] });

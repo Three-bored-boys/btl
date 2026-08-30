@@ -74,3 +74,5 @@ export const bookFormNames: BookUI & { image: string; categories: string } = {
   isbn13: "bookIsbn13",
   categories: "bookCategories",
 };
+
+export const USER_BOOKS_CACHE_TAG_KEY = "user-books";
