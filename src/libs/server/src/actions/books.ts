@@ -5,7 +5,7 @@ import { GoogleBooksService } from "@/server/services/google.service";
 import { BadResponse, Book, GoodResponse } from "@/shared/types";
 import { z } from "zod";
 import { PaginationObjectType, SearchObjectType, fullSearchObjectSchema } from "@/shared/validators";
-import { cacheNYTBestSellers, cacheBookByISBN, cacheBooksByGenre } from "@/server/cache";
+import { cacheNYTBestSellers, cacheBookByISBN, cacheBooksByGenre, cacheQuickSearchResults } from "@/server/cache";
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -96,26 +96,20 @@ export const getQuickSearchResults = async function (search: unknown) {
   }
   const validSearch = validationResult.data;
 
-  const cachedQuickSearchResults = await cacheQuickSearchResults(validSearch);
-  return cachedQuickSearchResults;
+  try {
+    const cachedQuickSearchResults = await cacheQuickSearchResults(validSearch);
+
+    return cachedQuickSearchResults;
+  } catch (er) {
+    const e = er as Error;
+    const responseData: BadResponse = {
+      success: false,
+      errors: [e.message],
+      status: 404,
+    };
+    return responseData;
+  }
 };
-
-const quickSearchResults = async function (search: string) {
-  const googleBooksAPIKey = process.env.GOOGLE_BOOKS_API_KEY;
-  const googleBooksService = new GoogleBooksService(googleBooksAPIKey);
-
-  const allBooksResults = await googleBooksService.getBooksByAllParameters({
-    searchObject: { search },
-    paginationObject: { maxResults: (8).toString() },
-  });
-
-  const responseData: GoodResponse<Book[]> = { success: true, data: allBooksResults.books };
-  return responseData;
-};
-
-const cacheQuickSearchResults = unstable_cache(quickSearchResults, [], {
-  tags: ["quick-search"],
-});
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 

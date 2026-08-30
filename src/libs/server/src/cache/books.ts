@@ -89,3 +89,32 @@ const bookByISBN = async function (isbn: string) {
 export const cacheBookByISBN = unstable_cache(bookByISBN, ["book-isbn"], { revalidate: 604800 });
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+const quickSearchResults = async function (search: string) {
+  const googleBooksAPIKey = process.env.GOOGLE_BOOKS_API_KEY;
+  const googleBooksService = new GoogleBooksService(googleBooksAPIKey);
+
+  const allBooksResults = await googleBooksService.getBooksByAllParameters({
+    searchObject: { search },
+    paginationObject: { maxResults: (8).toString() },
+  });
+
+  const validBooksWithIsbn = allBooksResults.books.filter((book) => book.isbn10 !== null && book.isbn13 !== null);
+
+  if (validBooksWithIsbn.length === 0) {
+    throw new Error(`Trouble getting valid books for the search: ${search}`);
+  }
+
+  const responseData: GoodResponse<Book[]> = {
+    success: true,
+    data: validBooksWithIsbn,
+  };
+
+  return responseData;
+};
+
+export const cacheQuickSearchResults = unstable_cache(quickSearchResults, ["books-quick-search-results"], {
+  revalidate: 3600,
+});
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
