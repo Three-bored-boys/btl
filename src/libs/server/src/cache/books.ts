@@ -136,9 +136,9 @@ const fullSearchResults = async function (fullSearchObject: SearchObjectType & P
     throw new Error("Trouble getting valid books for the full search");
   }
 
-  const responseData: GoodResponse<Book[]> = {
+  const responseData: GoodResponse<{ books: Book[]; totalItems: number }> = {
     success: true,
-    data: validBooksWithIsbn,
+    data: { books: validBooksWithIsbn, totalItems: validBooksWithIsbn.length },
   };
 
   return responseData;
