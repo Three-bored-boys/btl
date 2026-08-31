@@ -4,11 +4,11 @@ import { db } from "@/server/db/db";
 import { ServerResult, Book } from "@/shared/types";
 import { bookLibraryValues } from "@/shared/utils";
 import { userBooks, users, books } from "@/server/db/schema";
-import { desc, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 
 export const revalidate = 3600;
 
-export async function GET(): Promise<NextResponse<ServerResult<Book[] | null>>> {
+export async function GET(): Promise<NextResponse<ServerResult<Book[]>>> {
   const headersList = await headers();
 
   const authorisationHeader = headersList.get("Authorization");
@@ -48,12 +48,7 @@ export async function GET(): Promise<NextResponse<ServerResult<Book[] | null>>> 
     .from(books)
     .innerJoin(userBooks, eq(userBooks.bookId, books.id))
     .innerJoin(userRowFromEmailSq, eq(userRowFromEmailSq.userId, userBooks.userId))
-    .where(eq(userBooks.libraryValue, bookLibraryValues[0]))
-    .orderBy(desc(userBooks.updatedAt));
-
-  if (booksCurrentlyReading.length === 0) {
-    return NextResponse.json({ success: true, data: null });
-  }
+    .where(eq(userBooks.libraryValue, bookLibraryValues[0]));
 
   return NextResponse.json({ success: true, data: booksCurrentlyReading });
 }
