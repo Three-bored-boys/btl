@@ -1,14 +1,14 @@
 import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 import { db } from "@/server/db/db";
-import { getBookByISBN } from "@/server/actions/books";
 import { ServerResult, Book } from "@/shared/types";
-import { userBooks, users } from "@/server/db/schema";
+import { bookLibraryValues } from "@/shared/utils";
+import { userBooks, users, books } from "@/server/db/schema";
 import { desc, eq } from "drizzle-orm";
 
 export const revalidate = 3600;
 
-export async function GET(): Promise<NextResponse<ServerResult<Book | null>>> {
+export async function GET(): Promise<NextResponse<ServerResult<Book[] | null>>> {
   const headersList = await headers();
 
   const authorisationHeader = headersList.get("Authorization");
@@ -28,23 +28,32 @@ export async function GET(): Promise<NextResponse<ServerResult<Book | null>>> {
     );
   }
 
-  const bookISBNs = await db
-    .select({ isbn: userBooks.isbn })
-    .from(userBooks)
-    .where(eq(userBooks.libraryValue, "currently-reading"))
-    .innerJoin(users, eq(users.emailAddress, process.env.USER_EMAIL))
-    .limit(1)
+  const userRowFromEmailSq = db
+    .select({ userId: users.id })
+    .from(users)
+    .where(eq(users.emailAddress, process.env.USER_EMAIL))
+    .as("user_row_from_email_sq");
+
+  const booksCurrentlyReading = await db
+    .select({
+      title: books.title,
+      author: books.author,
+      description: books.description,
+      image: books.image,
+      isbn13: books.isbn13,
+      isbn10: books.isbn10,
+      publisher: books.publisher,
+      categories: books.categories,
+    })
+    .from(books)
+    .innerJoin(userBooks, eq(userBooks.bookId, books.id))
+    .innerJoin(userRowFromEmailSq, eq(userRowFromEmailSq.userId, userBooks.userId))
+    .where(eq(userBooks.libraryValue, bookLibraryValues[0]))
     .orderBy(desc(userBooks.updatedAt));
 
-  if (bookISBNs.length === 0) {
+  if (booksCurrentlyReading.length === 0) {
     return NextResponse.json({ success: true, data: null });
   }
 
-  const bookSearchRes = await getBookByISBN(bookISBNs[0].isbn);
-
-  if (!bookSearchRes.success) {
-    return NextResponse.json(bookSearchRes, { status: bookSearchRes.status });
-  }
-
-  return NextResponse.json(bookSearchRes);
+  return NextResponse.json({ success: true, data: booksCurrentlyReading });
 }
