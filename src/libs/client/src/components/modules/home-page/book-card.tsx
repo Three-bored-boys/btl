@@ -19,11 +19,15 @@ export function BookCard({ book, ...props }: BookCardTypes): React.ReactElement 
   return (
     <div
       title={`${getUIForBook(book).title} by ${getUIForBook(book).author}`}
-      onClick={() =>
-        startTransition(async () => {
-          await addBookToTable({ book });
-          router.push(getBookCoverLinkHrefFromBook(book));
-        })
+      onClick={
+        isPending
+          ? undefined
+          : () => {
+              startTransition(async () => {
+                await addBookToTable({ book });
+                router.push(getBookCoverLinkHrefFromBook(book));
+              });
+            }
       }
       className={cn({ "cursor-pointer": !isPending, "cursor-wait": isPending })}
     >
