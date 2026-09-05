@@ -10,6 +10,9 @@ import {
 import Link from "next/link";
 import { ExclamationTriangle } from "@/client/components/ui/icons/exclamation-triangle";
 import { BadResponse, GoodResponse, Book } from "@/shared/types";
+import { useRouter } from "next/navigation";
+import { addBookToTable } from "@/server/actions";
+import { cn } from "@/client/utils";
 
 export function QuickSearchResults({
   search,
@@ -20,6 +23,9 @@ export function QuickSearchResults({
   setSearchResultsVisible: React.Dispatch<React.SetStateAction<boolean>>;
   result: BadResponse | GoodResponse<Book[]> | null;
 }) {
+  const router = useRouter();
+  const [isPending, startTransition] = React.useTransition();
+
   if (result === null) {
     return <></>;
   }
@@ -46,13 +52,23 @@ export function QuickSearchResults({
   return (
     <div className="h-full max-h-[95vh] overflow-y-auto">
       {booksWithISBN.map((book, i) => (
-        <Link
-          className="grid w-full grid-cols-[40px_1fr] grid-rows-[auto] gap-1 rounded-xl py-2 hover:bg-secondary-100 xs:grid-cols-[45px_1fr] max-lg:md:grid-cols-[40px_1fr]"
-          href={getBookCoverLinkHrefFromBook(book)}
+        <div
           key={i}
-          onClick={() => {
-            setSearchResultsVisible(false);
-          }}
+          onClick={
+            isPending
+              ? undefined
+              : () => {
+                  startTransition(async () => {
+                    await addBookToTable({ book });
+                    setSearchResultsVisible(false);
+                    router.push(getBookCoverLinkHrefFromBook(book));
+                  });
+                }
+          }
+          className={cn(
+            "grid w-full grid-cols-[40px_1fr] grid-rows-[auto] gap-1 rounded-xl py-2 hover:bg-secondary-100 xs:grid-cols-[45px_1fr] max-lg:md:grid-cols-[40px_1fr]",
+            { "cursor-pointer": !isPending, "cursor-wait": isPending },
+          )}
         >
           <div className="aspect-square">
             <BookCoverImage book={book} {...imageWH} className="mx-auto h-full w-full rounded-lg object-cover" />
@@ -61,7 +77,7 @@ export function QuickSearchResults({
             <p className="mb-1 truncate font-medium leading-4">{getUIForBook(book).title}</p>
             <p className="truncate font-light leading-4">{getUIForBook(book).author}</p>
           </div>
-        </Link>
+        </div>
       ))}
       <div className="flex items-center justify-between">
         <Link
