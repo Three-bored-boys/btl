@@ -1,6 +1,6 @@
 "use server";
 
-import { BadResponse } from "@/shared/types";
+import { BadResponse, Book, GoodResponse, ServerResult } from "@/shared/types";
 import { z } from "zod";
 import { fullSearchObjectSchema } from "@/shared/validators";
 import {
@@ -10,6 +10,8 @@ import {
   cacheQuickSearchResults,
   cacheFullSearchResults,
 } from "@/server/cache";
+import { db } from "@/server/db/db";
+import { books } from "@/shared/db/schema";
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -138,5 +140,22 @@ export const getFullSearchResults = async function (fullSearchObject: unknown) {
       status: 404,
     };
     return responseData;
+  }
+};
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const addBookToTable = async function ({ book }: { book: Book }): Promise<ServerResult<string>> {
+  try {
+    await db.insert(books).values(book).onConflictDoNothing();
+    const response: GoodResponse<string> = {
+      success: true,
+      data: "Successfully added book to database!",
+    };
+    console.log(response.data);
+    return response;
+  } catch (er) {
+    const e = er as Error;
+    console.log(e.message);
+    return { success: false, status: 500, errors: ["Something went wrong while adding book to database"] };
   }
 };
